@@ -1,0 +1,25 @@
+﻿@using PetParadise.Extras.Extensions.JwtSecurity
+@using PetParadise.Extras
+
+@{ 
+    string accessToken = Context.Request.Cookies["access_token"] != null ? Context.Request.Cookies["access_token"].Value : "";
+    JwtToken token = new JwtToken(accessToken, new SessionManager().CreateValidationParameters(SessionType.ACCESS));
+}
+
+@if (token.Value == null || token.Value == "" )
+{
+    <script>
+        alert('Access expired!');
+        window.location.replace('/Home');
+    </script>
+}
+else
+{
+    <div class="vh-100 d-flex flex-column align-items-center justify-content-center gap-lg-5">
+        <div class="container-fluid d-flex flex-column align-items-center justify-content-center">
+            <h1 class="w-25 text-lg-center text-center fw-bold">
+                You are logged in!
+            </h1>
+        </div>
+    </div>
+}

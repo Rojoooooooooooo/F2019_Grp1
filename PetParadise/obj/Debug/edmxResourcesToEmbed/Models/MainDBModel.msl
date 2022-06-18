@@ -1,0 +1,88 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+  <EntityContainerMapping StorageEntityContainer="MainDBModelStoreContainer" CdmEntityContainer="MainDBEntities">
+    <EntitySetMapping Name="account_credential">
+      <EntityTypeMapping TypeName="MainDBModel.account_credential">
+        <MappingFragment StoreEntitySet="account_credential">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Email" ColumnName="Email" />
+          <ScalarProperty Name="Username" ColumnName="Username" />
+          <ScalarProperty Name="Password" ColumnName="Password" />
+          <ScalarProperty Name="AccountTypeId" ColumnName="AccountTypeId" />
+          <ScalarProperty Name="IsArchived" ColumnName="IsArchived" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="clinic_contact">
+      <EntityTypeMapping TypeName="MainDBModel.clinic_contact">
+        <MappingFragment StoreEntitySet="clinic_contact">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="ClinicId" ColumnName="ClinicId" />
+          <ScalarProperty Name="Contact" ColumnName="Contact" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="clinic_profile">
+      <EntityTypeMapping TypeName="MainDBModel.clinic_profile">
+        <MappingFragment StoreEntitySet="clinic_profile">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="VetFirstName" ColumnName="VetFirstName" />
+          <ScalarProperty Name="VetMiddleName" ColumnName="VetMiddleName" />
+          <ScalarProperty Name="VetLastName" ColumnName="VetLastName" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="login_sessions">
+      <EntityTypeMapping TypeName="MainDBModel.login_sessions">
+        <MappingFragment StoreEntitySet="login_sessions">
+          <ScalarProperty Name="AccountId" ColumnName="AccountId" />
+          <ScalarProperty Name="Token" ColumnName="Token" />
+          <ScalarProperty Name="ExpiresAt" ColumnName="ExpiresAt" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="owner_contact">
+      <EntityTypeMapping TypeName="MainDBModel.owner_contact">
+        <MappingFragment StoreEntitySet="owner_contact">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="UserId" ColumnName="UserId" />
+          <ScalarProperty Name="Contact" ColumnName="Contact" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="owner_profile">
+      <EntityTypeMapping TypeName="MainDBModel.owner_profile">
+        <MappingFragment StoreEntitySet="owner_profile">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+          <ScalarProperty Name="MiddleName" ColumnName="MiddleName" />
+          <ScalarProperty Name="LastName" ColumnName="LastName" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="owner_address">
+      <EntityTypeMapping TypeName="MainDBModel.owner_address">
+        <MappingFragment StoreEntitySet="owner_address">
+          <ScalarProperty Name="Line" ColumnName="Line" />
+          <ScalarProperty Name="Barangay" ColumnName="Barangay" />
+          <ScalarProperty Name="City" ColumnName="City" />
+          <ScalarProperty Name="Country" ColumnName="Country" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="clinic_address">
+      <EntityTypeMapping TypeName="MainDBModel.clinic_address">
+        <MappingFragment StoreEntitySet="clinic_address">
+          <ScalarProperty Name="Line" ColumnName="Line" />
+          <ScalarProperty Name="Barangay" ColumnName="Barangay" />
+          <ScalarProperty Name="City" ColumnName="City" />
+          <ScalarProperty Name="Country" ColumnName="Country" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+  </EntityContainerMapping>
+</Mapping>

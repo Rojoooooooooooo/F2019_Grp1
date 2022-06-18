@@ -1,0 +1,482 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="MainDBModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="account_credential">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="nvarchar" MaxLength="8" Nullable="false" />
+          <Property Name="Email" Type="nvarchar" MaxLength="60" Nullable="false" />
+          <Property Name="Username" Type="nvarchar" MaxLength="16" Nullable="false" />
+          <Property Name="Password" Type="nvarchar" MaxLength="60" Nullable="false" />
+          <Property Name="AccountTypeId" Type="int" Nullable="false" />
+          <Property Name="IsArchived" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="clinic_address">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="nvarchar" MaxLength="8" Nullable="false" />
+          <Property Name="Country" Type="nvarchar" MaxLength="35" Nullable="false" />
+          <Property Name="City" Type="nvarchar" MaxLength="35" Nullable="false" />
+          <Property Name="Barangay" Type="nvarchar" MaxLength="35" Nullable="false" />
+          <Property Name="Line" Type="nvarchar" MaxLength="64" Nullable="false" />
+        </EntityType>
+        <EntityType Name="clinic_contact">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="nvarchar" MaxLength="8" Nullable="false" />
+          <Property Name="ClinicId" Type="nvarchar" MaxLength="8" />
+          <Property Name="Contact" Type="nvarchar" MaxLength="15" />
+        </EntityType>
+        <EntityType Name="clinic_profile">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="nvarchar" MaxLength="8" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="VetFirstName" Type="nvarchar" MaxLength="35" Nullable="false" />
+          <Property Name="VetMiddleName" Type="nvarchar" MaxLength="35" />
+          <Property Name="VetLastName" Type="nvarchar" MaxLength="35" Nullable="false" />
+        </EntityType>
+        <EntityType Name="login_sessions">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="AccountId" Type="nvarchar" MaxLength="8" Nullable="false" />
+          <Property Name="Token" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="ExpiresAt" Type="datetime2" Precision="7" Nullable="false" />
+          <Property Name="Id" Type="nvarchar" MaxLength="8" Nullable="false" />
+        </EntityType>
+        <EntityType Name="owner_address">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="nvarchar" MaxLength="8" Nullable="false" />
+          <Property Name="Country" Type="nvarchar" MaxLength="35" Nullable="false" />
+          <Property Name="City" Type="nvarchar" MaxLength="35" Nullable="false" />
+          <Property Name="Barangay" Type="nvarchar" MaxLength="35" Nullable="false" />
+          <Property Name="Line" Type="nvarchar" MaxLength="35" Nullable="false" />
+        </EntityType>
+        <EntityType Name="owner_contact">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="nvarchar" MaxLength="8" Nullable="false" />
+          <Property Name="UserId" Type="nvarchar" MaxLength="8" Nullable="false" />
+          <Property Name="Contact" Type="nvarchar" MaxLength="15" Nullable="false" />
+        </EntityType>
+        <EntityType Name="owner_profile">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="nvarchar" MaxLength="8" Nullable="false" />
+          <Property Name="FirstName" Type="nvarchar" MaxLength="35" Nullable="false" />
+          <Property Name="MiddleName" Type="nvarchar" MaxLength="35" />
+          <Property Name="LastName" Type="nvarchar" MaxLength="35" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_clinic_address_clinic_profile">
+          <End Role="clinic_profile" Type="Self.clinic_profile" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="clinic_address" Type="Self.clinic_address" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="clinic_profile">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="clinic_address">
+              <PropertyRef Name="Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_clinic_contact_clinic_profile">
+          <End Role="clinic_profile" Type="Self.clinic_profile" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="clinic_contact" Type="Self.clinic_contact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="clinic_profile">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="clinic_contact">
+              <PropertyRef Name="ClinicId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_login_sessions_account_credential">
+          <End Role="account_credential" Type="Self.account_credential" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="login_sessions" Type="Self.login_sessions" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="account_credential">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="login_sessions">
+              <PropertyRef Name="AccountId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_owner_address_owner_profile">
+          <End Role="owner_profile" Type="Self.owner_profile" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="owner_address" Type="Self.owner_address" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="owner_profile">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="owner_address">
+              <PropertyRef Name="Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_owner_contact_owner_profile">
+          <End Role="owner_profile" Type="Self.owner_profile" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="owner_contact" Type="Self.owner_contact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="owner_profile">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="owner_contact">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="MainDBModelStoreContainer">
+          <EntitySet Name="account_credential" EntityType="Self.account_credential" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="clinic_address" EntityType="Self.clinic_address" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="clinic_contact" EntityType="Self.clinic_contact" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="clinic_profile" EntityType="Self.clinic_profile" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="login_sessions" EntityType="Self.login_sessions" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="owner_address" EntityType="Self.owner_address" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="owner_contact" EntityType="Self.owner_contact" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="owner_profile" EntityType="Self.owner_profile" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_clinic_address_clinic_profile" Association="Self.FK_clinic_address_clinic_profile">
+            <End Role="clinic_profile" EntitySet="clinic_profile" />
+            <End Role="clinic_address" EntitySet="clinic_address" />
+          </AssociationSet>
+          <AssociationSet Name="FK_clinic_contact_clinic_profile" Association="Self.FK_clinic_contact_clinic_profile">
+            <End Role="clinic_profile" EntitySet="clinic_profile" />
+            <End Role="clinic_contact" EntitySet="clinic_contact" />
+          </AssociationSet>
+          <AssociationSet Name="FK_login_sessions_account_credential" Association="Self.FK_login_sessions_account_credential">
+            <End Role="account_credential" EntitySet="account_credential" />
+            <End Role="login_sessions" EntitySet="login_sessions" />
+          </AssociationSet>
+          <AssociationSet Name="FK_owner_address_owner_profile" Association="Self.FK_owner_address_owner_profile">
+            <End Role="owner_profile" EntitySet="owner_profile" />
+            <End Role="owner_address" EntitySet="owner_address" />
+          </AssociationSet>
+          <AssociationSet Name="FK_owner_contact_owner_profile" Association="Self.FK_owner_contact_owner_profile">
+            <End Role="owner_profile" EntitySet="owner_profile" />
+            <End Role="owner_contact" EntitySet="owner_contact" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="MainDBModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="account_credential">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="String" MaxLength="8" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Email" Type="String" MaxLength="60" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Username" Type="String" MaxLength="16" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Password" Type="String" MaxLength="60" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="AccountTypeId" Type="Int32" Nullable="false" />
+          <Property Name="IsArchived" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="login_sessions" Relationship="Self.FK_login_sessions_account_credential" FromRole="account_credential" ToRole="login_sessions" />
+        </EntityType>
+        <EntityType Name="clinic_contact">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="String" MaxLength="8" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="ClinicId" Type="String" MaxLength="8" FixedLength="false" Unicode="true" />
+          <Property Name="Contact" Type="String" MaxLength="15" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="clinic_profile" Relationship="Self.FK_clinic_contact_clinic_profile" FromRole="clinic_contact" ToRole="clinic_profile" />
+        </EntityType>
+        <EntityType Name="clinic_profile">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="String" MaxLength="8" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="VetFirstName" Type="String" MaxLength="35" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="VetMiddleName" Type="String" MaxLength="35" FixedLength="false" Unicode="true" />
+          <Property Name="VetLastName" Type="String" MaxLength="35" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="clinic_contact" Relationship="Self.FK_clinic_contact_clinic_profile" FromRole="clinic_profile" ToRole="clinic_contact" />
+          <NavigationProperty Name="clinic_address" Relationship="MainDBModel.FK_clinic_address_clinic_profile" FromRole="clinic_profile" ToRole="clinic_address" />
+        </EntityType>
+        <EntityType Name="login_sessions">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="AccountId" Type="String" MaxLength="8" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Token" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="ExpiresAt" Type="DateTime" Nullable="false" Precision="7" />
+          <Property Name="Id" Type="String" MaxLength="8" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="account_credential" Relationship="Self.FK_login_sessions_account_credential" FromRole="login_sessions" ToRole="account_credential" />
+        </EntityType>
+        <EntityType Name="owner_contact">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="String" MaxLength="8" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="UserId" Type="String" MaxLength="8" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Contact" Type="String" MaxLength="15" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="owner_profile" Relationship="Self.FK_owner_contact_owner_profile" FromRole="owner_contact" ToRole="owner_profile" />
+        </EntityType>
+        <EntityType Name="owner_profile">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="String" MaxLength="8" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="FirstName" Type="String" MaxLength="35" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="MiddleName" Type="String" MaxLength="35" FixedLength="false" Unicode="true" />
+          <Property Name="LastName" Type="String" MaxLength="35" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="owner_contact" Relationship="Self.FK_owner_contact_owner_profile" FromRole="owner_profile" ToRole="owner_contact" />
+          <NavigationProperty Name="owner_address" Relationship="MainDBModel.FK_owner_address_owner_profile" FromRole="owner_profile" ToRole="owner_address" />
+        </EntityType>
+        <Association Name="FK_login_sessions_account_credential">
+          <End Role="account_credential" Type="Self.account_credential" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="login_sessions" Type="Self.login_sessions" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="account_credential">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="login_sessions">
+              <PropertyRef Name="AccountId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_clinic_contact_clinic_profile">
+          <End Role="clinic_profile" Type="Self.clinic_profile" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="clinic_contact" Type="Self.clinic_contact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="clinic_profile">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="clinic_contact">
+              <PropertyRef Name="ClinicId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_owner_contact_owner_profile">
+          <End Role="owner_profile" Type="Self.owner_profile" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="owner_contact" Type="Self.owner_contact" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="owner_profile">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="owner_contact">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="MainDBEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="account_credential" EntityType="Self.account_credential" />
+          <EntitySet Name="clinic_contact" EntityType="Self.clinic_contact" />
+          <EntitySet Name="clinic_profile" EntityType="Self.clinic_profile" />
+          <EntitySet Name="login_sessions" EntityType="Self.login_sessions" />
+          <EntitySet Name="owner_contact" EntityType="Self.owner_contact" />
+          <EntitySet Name="owner_profile" EntityType="Self.owner_profile" />
+          <AssociationSet Name="FK_login_sessions_account_credential" Association="Self.FK_login_sessions_account_credential">
+            <End Role="account_credential" EntitySet="account_credential" />
+            <End Role="login_sessions" EntitySet="login_sessions" />
+          </AssociationSet>
+          <AssociationSet Name="FK_clinic_contact_clinic_profile" Association="Self.FK_clinic_contact_clinic_profile">
+            <End Role="clinic_profile" EntitySet="clinic_profile" />
+            <End Role="clinic_contact" EntitySet="clinic_contact" />
+          </AssociationSet>
+          <AssociationSet Name="FK_owner_contact_owner_profile" Association="Self.FK_owner_contact_owner_profile">
+            <End Role="owner_profile" EntitySet="owner_profile" />
+            <End Role="owner_contact" EntitySet="owner_contact" />
+          </AssociationSet>
+          <EntitySet Name="owner_address" EntityType="MainDBModel.owner_address" />
+          <AssociationSet Name="FK_owner_address_owner_profile" Association="MainDBModel.FK_owner_address_owner_profile">
+            <End Role="owner_profile" EntitySet="owner_profile" />
+            <End Role="owner_address" EntitySet="owner_address" />
+          </AssociationSet>
+          <EntitySet Name="clinic_address" EntityType="MainDBModel.clinic_address" />
+          <AssociationSet Name="FK_clinic_address_clinic_profile" Association="MainDBModel.FK_clinic_address_clinic_profile">
+            <End Role="clinic_profile" EntitySet="clinic_profile" />
+            <End Role="clinic_address" EntitySet="clinic_address" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="owner_address">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="String" Nullable="false" MaxLength="8" FixedLength="false" Unicode="true" />
+          <Property Name="Country" Type="String" Nullable="false" MaxLength="35" FixedLength="false" Unicode="true" />
+          <Property Name="City" Type="String" Nullable="false" MaxLength="35" FixedLength="false" Unicode="true" />
+          <Property Name="Barangay" Type="String" Nullable="false" MaxLength="35" FixedLength="false" Unicode="true" />
+          <Property Name="Line" Type="String" Nullable="false" MaxLength="35" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="owner_profile" Relationship="MainDBModel.FK_owner_address_owner_profile" FromRole="owner_address" ToRole="owner_profile" />
+        </EntityType>
+        <Association Name="FK_owner_address_owner_profile">
+          <End Type="MainDBModel.owner_profile" Role="owner_profile" Multiplicity="1" />
+          <End Type="MainDBModel.owner_address" Role="owner_address" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="owner_profile">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="owner_address">
+              <PropertyRef Name="Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="clinic_address">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="String" Nullable="false" MaxLength="8" FixedLength="false" Unicode="true" />
+          <Property Name="Country" Type="String" Nullable="false" MaxLength="35" FixedLength="false" Unicode="true" />
+          <Property Name="City" Type="String" Nullable="false" MaxLength="35" FixedLength="false" Unicode="true" />
+          <Property Name="Barangay" Type="String" Nullable="false" MaxLength="35" FixedLength="false" Unicode="true" />
+          <Property Name="Line" Type="String" Nullable="false" MaxLength="64" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="clinic_profile" Relationship="MainDBModel.FK_clinic_address_clinic_profile" FromRole="clinic_address" ToRole="clinic_profile" />
+        </EntityType>
+        <Association Name="FK_clinic_address_clinic_profile">
+          <End Type="MainDBModel.clinic_profile" Role="clinic_profile" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="MainDBModel.clinic_address" Role="clinic_address" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="clinic_profile">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="clinic_address">
+              <PropertyRef Name="Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="MainDBModelStoreContainer" CdmEntityContainer="MainDBEntities">
+          <EntitySetMapping Name="account_credential">
+            <EntityTypeMapping TypeName="MainDBModel.account_credential">
+              <MappingFragment StoreEntitySet="account_credential">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="Username" ColumnName="Username" />
+                <ScalarProperty Name="Password" ColumnName="Password" />
+                <ScalarProperty Name="AccountTypeId" ColumnName="AccountTypeId" />
+                <ScalarProperty Name="IsArchived" ColumnName="IsArchived" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="clinic_contact">
+            <EntityTypeMapping TypeName="MainDBModel.clinic_contact">
+              <MappingFragment StoreEntitySet="clinic_contact">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="ClinicId" ColumnName="ClinicId" />
+                <ScalarProperty Name="Contact" ColumnName="Contact" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="clinic_profile">
+            <EntityTypeMapping TypeName="MainDBModel.clinic_profile">
+              <MappingFragment StoreEntitySet="clinic_profile">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="VetFirstName" ColumnName="VetFirstName" />
+                <ScalarProperty Name="VetMiddleName" ColumnName="VetMiddleName" />
+                <ScalarProperty Name="VetLastName" ColumnName="VetLastName" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="login_sessions">
+            <EntityTypeMapping TypeName="MainDBModel.login_sessions">
+              <MappingFragment StoreEntitySet="login_sessions">
+                <ScalarProperty Name="AccountId" ColumnName="AccountId" />
+                <ScalarProperty Name="Token" ColumnName="Token" />
+                <ScalarProperty Name="ExpiresAt" ColumnName="ExpiresAt" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="owner_contact">
+            <EntityTypeMapping TypeName="MainDBModel.owner_contact">
+              <MappingFragment StoreEntitySet="owner_contact">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="Contact" ColumnName="Contact" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="owner_profile">
+            <EntityTypeMapping TypeName="MainDBModel.owner_profile">
+              <MappingFragment StoreEntitySet="owner_profile">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+                <ScalarProperty Name="MiddleName" ColumnName="MiddleName" />
+                <ScalarProperty Name="LastName" ColumnName="LastName" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="owner_address">
+            <EntityTypeMapping TypeName="MainDBModel.owner_address">
+              <MappingFragment StoreEntitySet="owner_address">
+                <ScalarProperty Name="Line" ColumnName="Line" />
+                <ScalarProperty Name="Barangay" ColumnName="Barangay" />
+                <ScalarProperty Name="City" ColumnName="City" />
+                <ScalarProperty Name="Country" ColumnName="Country" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="clinic_address">
+            <EntityTypeMapping TypeName="MainDBModel.clinic_address">
+              <MappingFragment StoreEntitySet="clinic_address">
+                <ScalarProperty Name="Line" ColumnName="Line" />
+                <ScalarProperty Name="Barangay" ColumnName="Barangay" />
+                <ScalarProperty Name="City" ColumnName="City" />
+                <ScalarProperty Name="Country" ColumnName="Country" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

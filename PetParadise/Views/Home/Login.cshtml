@@ -1,0 +1,61 @@
+﻿@model PetParadise.Models.account_credential
+
+<h2 class="text-center fw-bold stext-darker" >Login</h2>
+
+@using (Html.BeginForm("Login", "Home", FormMethod.Post, new { @class="d-flex flex-column justify-content-evenly gap-2"}))
+{
+    <div class="w-100">
+        @Html.TextBoxFor(m => m.Username, new { @class = "form-control", title = "username", placeholder = "Username" })
+    </div>
+    
+    <div class="w-100">
+        @Html.PasswordFor(m => m.Password, new { @class = "form-control", title = "password", placeholder = "Password" })
+    </div>
+
+    <button class="btn btn-outline-dark sbg-dark fw-bold" id="loginBtn" type="submit" value="Login">Login</button>
+}
+<span>Or</span>
+@Html.ActionLink("Signup", "Signup", null, new { @class = "btn btn-outline-light sbg-base" })
+
+<script>
+    $('form').submit((e)=>{
+        e.preventDefault();
+
+        const username = $('#Username').val();
+        const password = $('#Password').val();
+
+        const data = {
+            username,
+            password
+        };
+
+        const url = '/auth/login';
+
+        $('#loader').show();
+
+        fetch(url, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(data)
+        })
+        .then(res=>res.json())
+        .then(data=> {
+            const session = data.session;
+            const userId = data.userId;
+            const accountTypeId = data.accountTypeId;
+
+            console.log("logged in")
+            localStorage.setItem("accountType", accountType);
+            sessionStorage.setItem("session_token", window.btoa(session));
+            
+            window.location.replace("/Account/CreateProfile?accountType=" + accountTypeId);
+
+            $('#loader').hide();
+        })
+        .catch(e=> {
+            $('#loader').hide();
+        });
+    })
+</script>

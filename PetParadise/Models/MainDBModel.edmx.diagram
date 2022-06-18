@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="4dbecffc2d78464d91a733377025b07b" Name="Diagram1" ZoomLevel="88">
+        <EntityTypeShape EntityType="MainDBModel.account_credential" Width="1.5" PointX="5.75" PointY="5" IsExpanded="true" />
+        <EntityTypeShape EntityType="MainDBModel.clinic_contact" Width="1.5" PointX="7.5" PointY="1.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="MainDBModel.clinic_profile" Width="1.5" PointX="5.25" PointY="1.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="MainDBModel.login_sessions" Width="1.5" PointX="8" PointY="5.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="MainDBModel.owner_contact" Width="1.5" PointX="3" PointY="4.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="MainDBModel.owner_profile" Width="1.5" PointX="0.75" PointY="2.375" IsExpanded="true" />
+        <AssociationConnector Association="MainDBModel.FK_login_sessions_account_credential" ManuallyRouted="false" />
+        <AssociationConnector Association="MainDBModel.FK_clinic_contact_clinic_profile" ManuallyRouted="false" />
+        <AssociationConnector Association="MainDBModel.FK_owner_contact_owner_profile" ManuallyRouted="false" />
+        <EntityTypeShape EntityType="MainDBModel.owner_address" Width="1.5" PointX="3" PointY="10.375" />
+        <AssociationConnector Association="MainDBModel.FK_owner_address_owner_profile" />
+        <EntityTypeShape EntityType="MainDBModel.clinic_address" Width="1.5" PointX="7.5" PointY="8.25" />
+        <AssociationConnector Association="MainDBModel.FK_clinic_address_clinic_profile" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>
