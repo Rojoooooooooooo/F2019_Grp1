@@ -28,6 +28,31 @@ namespace PetParadise.Controllers
             {
                 ClaimsIdentity identity = User.Identity as ClaimsIdentity;
                 var userId = identity.Claims.First(c => c.Type.Equals("userId")).Value;
+                if (string.IsNullOrEmpty(clinicInput.FirstName))
+                    return Content(HttpStatusCode.BadRequest, new
+                    {
+                        message = "Empty First name."
+                    });
+                if (string.IsNullOrEmpty(clinicInput.LastName))
+                    return Content(HttpStatusCode.BadRequest, new
+                    {
+                        message = "Empty Last name."
+                    });
+                if (string.IsNullOrEmpty(clinicInput.Line) ||
+                                   string.IsNullOrEmpty(clinicInput.Barangay) ||
+                                   string.IsNullOrEmpty(clinicInput.City) ||
+                                   string.IsNullOrEmpty(clinicInput.Country))
+                    return Content(HttpStatusCode.BadRequest, new
+                    {
+                        message = "Incomplete Address."
+                    });
+
+                if (string.IsNullOrEmpty(clinicInput.Contact))
+                    return Content(HttpStatusCode.BadRequest, new
+                    {
+                        message = "Empty Contact Number."
+                    });
+
 
                 clinicInput.ClinicName = clinicInput.ClinicName.Trim().ToTitleCase();
                 clinicInput.FirstName = clinicInput.FirstName.Trim().ToTitleCase();

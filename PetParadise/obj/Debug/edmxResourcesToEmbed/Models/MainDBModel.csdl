@@ -62,6 +62,7 @@
     <Property Name="LastName" Type="String" MaxLength="35" FixedLength="false" Unicode="true" Nullable="false" />
     <NavigationProperty Name="owner_contact" Relationship="Self.FK_owner_contact_owner_profile" FromRole="owner_profile" ToRole="owner_contact" />
     <NavigationProperty Name="owner_address" Relationship="MainDBModel.FK_owner_address_owner_profile" FromRole="owner_profile" ToRole="owner_address" />
+    <NavigationProperty Name="pet_profile" Relationship="MainDBModel.FK_pet_profile_owner_profile" FromRole="owner_profile" ToRole="pet_profile" />
   </EntityType>
   <Association Name="FK_login_sessions_account_credential">
     <End Role="account_credential" Type="Self.account_credential" Multiplicity="1">
@@ -134,6 +135,11 @@
       <End Role="clinic_profile" EntitySet="clinic_profile" />
       <End Role="clinic_address" EntitySet="clinic_address" />
     </AssociationSet>
+    <EntitySet Name="pet_profile" EntityType="MainDBModel.pet_profile" />
+    <AssociationSet Name="FK_pet_profile_owner_profile" Association="MainDBModel.FK_pet_profile_owner_profile">
+      <End Role="owner_profile" EntitySet="owner_profile" />
+      <End Role="pet_profile" EntitySet="pet_profile" />
+    </AssociationSet>
   </EntityContainer>
   <EntityType Name="owner_address">
     <Key>
@@ -180,6 +186,33 @@
       </Principal>
       <Dependent Role="clinic_address">
         <PropertyRef Name="Id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityType Name="pet_profile">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="String" Nullable="false" MaxLength="8" FixedLength="false" Unicode="true" />
+    <Property Name="OwnerId" Type="String" Nullable="false" MaxLength="8" FixedLength="false" Unicode="true" />
+    <Property Name="Name" Type="String" Nullable="false" MaxLength="35" FixedLength="false" Unicode="true" />
+    <Property Name="Birthdate" Type="DateTime" Nullable="false" Precision="0" />
+    <Property Name="CategoryId" Type="Int32" Nullable="false" />
+    <Property Name="BreedId" Type="Int32" />
+    <Property Name="Color" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="owner_profile" Relationship="MainDBModel.FK_pet_profile_owner_profile" FromRole="pet_profile" ToRole="owner_profile" />
+  </EntityType>
+  <Association Name="FK_pet_profile_owner_profile">
+    <End Type="MainDBModel.owner_profile" Role="owner_profile" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Type="MainDBModel.pet_profile" Role="pet_profile" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="owner_profile">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="pet_profile">
+        <PropertyRef Name="OwnerId" />
       </Dependent>
     </ReferentialConstraint>
   </Association>

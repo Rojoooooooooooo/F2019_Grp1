@@ -75,6 +75,18 @@
     <Property Name="MiddleName" Type="nvarchar" MaxLength="35" />
     <Property Name="LastName" Type="nvarchar" MaxLength="35" Nullable="false" />
   </EntityType>
+  <EntityType Name="pet_profile">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="nvarchar" MaxLength="8" Nullable="false" />
+    <Property Name="OwnerId" Type="nvarchar" MaxLength="8" Nullable="false" />
+    <Property Name="Name" Type="nvarchar" MaxLength="35" Nullable="false" />
+    <Property Name="Birthdate" Type="date" Nullable="false" />
+    <Property Name="CategoryId" Type="int" Nullable="false" />
+    <Property Name="BreedId" Type="int" />
+    <Property Name="Color" Type="nvarchar" MaxLength="50" Nullable="false" />
+  </EntityType>
   <Association Name="FK_clinic_address_clinic_profile">
     <End Role="clinic_profile" Type="Self.clinic_profile" Multiplicity="1">
       <OnDelete Action="Cascade" />
@@ -145,6 +157,20 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
+  <Association Name="FK_pet_profile_owner_profile">
+    <End Role="owner_profile" Type="Self.owner_profile" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="pet_profile" Type="Self.pet_profile" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="owner_profile">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="pet_profile">
+        <PropertyRef Name="OwnerId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
   <EntityContainer Name="MainDBModelStoreContainer">
     <EntitySet Name="account_credential" EntityType="Self.account_credential" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="clinic_address" EntityType="Self.clinic_address" Schema="dbo" store:Type="Tables" />
@@ -154,6 +180,7 @@
     <EntitySet Name="owner_address" EntityType="Self.owner_address" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="owner_contact" EntityType="Self.owner_contact" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="owner_profile" EntityType="Self.owner_profile" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="pet_profile" EntityType="Self.pet_profile" Schema="dbo" store:Type="Tables" />
     <AssociationSet Name="FK_clinic_address_clinic_profile" Association="Self.FK_clinic_address_clinic_profile">
       <End Role="clinic_profile" EntitySet="clinic_profile" />
       <End Role="clinic_address" EntitySet="clinic_address" />
@@ -173,6 +200,10 @@
     <AssociationSet Name="FK_owner_contact_owner_profile" Association="Self.FK_owner_contact_owner_profile">
       <End Role="owner_profile" EntitySet="owner_profile" />
       <End Role="owner_contact" EntitySet="owner_contact" />
+    </AssociationSet>
+    <AssociationSet Name="FK_pet_profile_owner_profile" Association="Self.FK_pet_profile_owner_profile">
+      <End Role="owner_profile" EntitySet="owner_profile" />
+      <End Role="pet_profile" EntitySet="pet_profile" />
     </AssociationSet>
   </EntityContainer>
 </Schema>

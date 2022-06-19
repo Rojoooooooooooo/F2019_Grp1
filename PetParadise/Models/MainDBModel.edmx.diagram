@@ -18,6 +18,8 @@
         <AssociationConnector Association="MainDBModel.FK_owner_address_owner_profile" />
         <EntityTypeShape EntityType="MainDBModel.clinic_address" Width="1.5" PointX="7.5" PointY="8.25" />
         <AssociationConnector Association="MainDBModel.FK_clinic_address_clinic_profile" />
+        <EntityTypeShape EntityType="MainDBModel.pet_profile" Width="1.5" PointX="3" PointY="0.75" />
+        <AssociationConnector Association="MainDBModel.FK_pet_profile_owner_profile" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

@@ -137,6 +137,10 @@
       <HintPath>..\packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Swashbuckle.Core, Version=1.0.0.0, Culture=neutral, PublicKeyToken=cd1bb07a5ac7c7bc, processorArchitecture=MSIL">
+      <HintPath>..\packages\Swashbuckle.Core.5.6.0\lib\net40\Swashbuckle.Core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System.IdentityModel.Tokens.Jwt, Version=6.18.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\System.IdentityModel.Tokens.Jwt.6.18.0\lib\net461\System.IdentityModel.Tokens.Jwt.dll</HintPath>
       <Private>True</Private>
@@ -176,6 +180,10 @@
     <Reference Include="System.Configuration" />
     <Reference Include="System.Web.Services" />
     <Reference Include="System.EnterpriseServices" />
+    <Reference Include="WebActivatorEx, Version=2.0.0.0, Culture=neutral, PublicKeyToken=7b26dc2a43f6a0d4, processorArchitecture=MSIL">
+      <HintPath>..\packages\WebActivatorEx.2.0\lib\net40\WebActivatorEx.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="WebGrease, Version=1.5.2.14234, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\WebGrease.1.5.2\lib\WebGrease.dll</HintPath>
       <Private>True</Private>
@@ -321,6 +329,7 @@
     <Compile Include="Models\Body\Interfaces\IOwnerInformationModel.cs" />
     <Compile Include="Models\Body\LoginModel.cs" />
     <Compile Include="Models\Body\OwnerInformationModel.cs" />
+    <Compile Include="Models\Body\PetInformationModel.cs" />
     <Compile Include="Models\clinic_address.cs">
       <DependentUpon>MainDBModel.tt</DependentUpon>
     </Compile>
@@ -355,6 +364,9 @@
       <DependentUpon>MainDBModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\owner_profile.cs">
+      <DependentUpon>MainDBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\pet_profile.cs">
       <DependentUpon>MainDBModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />

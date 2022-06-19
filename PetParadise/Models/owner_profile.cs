@@ -18,6 +18,7 @@ namespace PetParadise.Models
         public owner_profile()
         {
             this.owner_contact = new HashSet<owner_contact>();
+            this.pet_profile = new HashSet<pet_profile>();
         }
     
         public string Id { get; set; }
@@ -28,5 +29,7 @@ namespace PetParadise.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<owner_contact> owner_contact { get; set; }
         public virtual owner_address owner_address { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<pet_profile> pet_profile { get; set; }
     }
 }

@@ -33,5 +33,6 @@ namespace PetParadise.Models
         public virtual DbSet<owner_profile> owner_profile { get; set; }
         public virtual DbSet<owner_address> owner_address { get; set; }
         public virtual DbSet<clinic_address> clinic_address { get; set; }
+        public virtual DbSet<pet_profile> pet_profile { get; set; }
     }
 }

@@ -29,6 +29,42 @@ namespace PetParadise.Controllers
                 ClaimsIdentity identity = User.Identity as ClaimsIdentity;
                 var userId = identity.Claims.First(c => c.Type.Equals("userId")).Value;
 
+                if (string.IsNullOrEmpty(ownerInput.FirstName))
+                    return Content(HttpStatusCode.BadRequest, new
+                    {
+                        message = "Empty First name."
+                    });
+                if (string.IsNullOrEmpty(ownerInput.LastName))
+                    return Content(HttpStatusCode.BadRequest, new
+                    {
+                        message = "Empty Last name."
+                    });
+                if (string.IsNullOrEmpty(ownerInput.Line) ||
+                                   string.IsNullOrEmpty(ownerInput.Barangay) ||
+                                   string.IsNullOrEmpty(ownerInput.City) ||
+                                   string.IsNullOrEmpty(ownerInput.Country))
+                    return Content(HttpStatusCode.BadRequest, new   
+                    {
+                        message = "Incomplete Address."
+                    });
+
+                if (string.IsNullOrEmpty(ownerInput.Contact))
+                    return Content(HttpStatusCode.BadRequest, new
+                    {
+                        message = "Empty Contact Number."
+                    });
+
+                ownerInput.FirstName = ownerInput.FirstName.Trim().ToTitleCase();
+                ownerInput.MiddleName = ownerInput.MiddleName.Trim().ToTitleCase();
+                ownerInput.LastName = ownerInput.LastName.Trim().ToTitleCase();
+                ownerInput.Line = ownerInput.Line.Trim().ToTitleCase();
+                ownerInput.Barangay = ownerInput.Barangay.Trim().ToTitleCase();
+                ownerInput.City = ownerInput.City.Trim().ToTitleCase();
+                ownerInput.Country = ownerInput.Country.Trim().ToTitleCase();
+                ownerInput.Contact = ownerInput.Contact.Trim().ToTitleCase();
+                
+
+
                 using (MainDBEntities db = new MainDBEntities())
                 {
                     owner_contact contactNumber = new owner_contact()
@@ -58,7 +94,6 @@ namespace PetParadise.Controllers
                     db.owner_profile.Add(profile);
                     
                     await db.SaveChangesAsync();
-                    
                 }
                 return Content(HttpStatusCode.Created, "Profile created!");
             }
