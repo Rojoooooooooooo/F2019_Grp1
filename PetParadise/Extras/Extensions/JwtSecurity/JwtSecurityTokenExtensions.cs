@@ -16,23 +16,15 @@ namespace PetParadise.Extras.Extensions.JwtSecurity
             var handler = new JwtSecurityTokenHandler();
             var jwt = handler.ReadJwtToken(token.Value);
 
-            PayloadModel payload = null;
-                jwt.Claims
-                    .ToList()
-                    .ForEach(claim =>
-                    {
-                        payload = new PayloadModel()
-                        {
-                            JTI = claim.Type.Equals("jti") ? claim.Value : "",
-                            UserId = claim.Type.Equals("userId") ? claim.Value : "",
-                            Username = claim.Type.Equals("username") ? claim.Value : "",
-                            Expiration = claim.Type.Equals("exp") ? claim.Value : "",
-                            Issuer = claim.Type.Equals("iss") ? claim.Value : "",
-                            Audience = claim.Type.Equals("aud") ? claim.Value : ""
-                        };
+            PayloadModel payload = new PayloadModel();
+            payload.JTI = jwt.Claims.Where(c => c.Type.Equals("jti")).First().Value;
+            payload.UserId = jwt.Claims.Where(c => c.Type.Equals("userId")).First().Value;
+            payload.Username = jwt.Claims.Where(c => c.Type.Equals("username")).First().Value;
+            payload.Expiration = jwt.Claims.Where(c => c.Type.Equals("exp")).First().Value;
+            payload.Issuer = jwt.Claims.Where(c => c.Type.Equals("iss")).First().Value;
+            payload.Audience = jwt.Claims.Where(c => c.Type.Equals("aud")).First().Value;
 
-                    });
-  
+            Debug.WriteLine("payload: " + payload.Username);
             return payload;
         }
 
