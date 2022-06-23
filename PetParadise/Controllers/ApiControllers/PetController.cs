@@ -91,7 +91,7 @@ namespace PetParadise.Controllers.ApiControllers
             }
             catch (Exception e)
             {
-                Debug.WriteLine(e.StackTrace);
+                Debug.WriteLine(e.InnerException);
                 return InternalServerError();
             }
         }
@@ -148,6 +148,59 @@ namespace PetParadise.Controllers.ApiControllers
             catch (Exception e)
             {
                 Debug.WriteLine(e.InnerException);
+                Debug.WriteLine(e.StackTrace);
+                return InternalServerError();
+            }
+        }
+
+        [Route("pet/categories")]
+        [HttpGet]
+        public IHttpActionResult GetCategories() {
+            try
+            {
+                using (MainDBEntities db = new MainDBEntities())
+                {
+                    var categories = db.pet_category
+                                    .Select(c=>new {
+                                        c.Id,
+                                        c.Category
+                                    })
+                                    .ToList();
+
+                    return Ok(categories);
+                }
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine(e.StackTrace);
+
+                return InternalServerError();
+            }
+
+        }
+
+        [Route("pet/{catId}/breed")]
+        [HttpGet]
+        public IHttpActionResult GetBreeds(int catId)
+        {
+            try
+            {
+                using (MainDBEntities db = new MainDBEntities())
+                {
+                    var breeds = db.pet_category
+                                    .Single(p=>p.Id == catId)
+                                    .pet_breeds
+                                    .Select(c => new {
+                                        c.Id,
+                                        c.Breed
+                                    })
+                                    .ToList();
+
+                    return Ok(breeds);
+                }
+            }
+            catch (Exception e)
+            {
                 Debug.WriteLine(e.StackTrace);
                 return InternalServerError();
             }

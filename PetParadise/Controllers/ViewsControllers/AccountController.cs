@@ -33,8 +33,23 @@ namespace PetParadise.Controllers.ViewsControllers
             else return View("Index");
         }
 
-        public ActionResult PetDashboard() {
-            return View();
+        public ActionResult PetDashboard()
+        {
+            try
+            {
+                string accessToken = HttpContext.Request.Cookies["access_token"].Value;
+
+                JwtToken token = new JwtToken(accessToken, new SessionManager().CreateValidationParameters(SessionType.ACCESS));
+                var payload = token.GetPayload();
+                string username = payload.Username;
+                ViewBag.Username = username;
+                Debug.WriteLine(username);
+                return View();
+            }
+            catch (Exception)
+            {
+                return RedirectToAction("Index", "Home");
+            }
         }
     }
 }

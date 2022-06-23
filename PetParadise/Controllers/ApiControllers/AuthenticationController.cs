@@ -36,6 +36,7 @@ namespace PetParadise.Controllers.ApiControllers
 
             try
             {
+
                 using (MainDBEntities db = new MainDBEntities())
                 {
                     bool userExists = await db.account_credential
@@ -136,8 +137,12 @@ namespace PetParadise.Controllers.ApiControllers
                     user = await db.account_credential
                              .FirstOrDefaultAsync(u => u.Username.Equals(userLogin.Username));
 
+
                     if (user == null)
                         return Content(HttpStatusCode.BadRequest, new { message = "Invalid username/password." });
+
+                    bool hasProfile = await db.owner_profile
+                                        .AnyAsync(u => u.Id.Equals(user.Id));
 
                     // if password doesn't match
                     if (!await PasswordManager.IsMatchedAsync(userLogin.Password, user.Password))
@@ -159,6 +164,8 @@ namespace PetParadise.Controllers.ApiControllers
                         ExpiresAt = DateTime.Now.AddDays(30)
                     };
 
+
+
                     user.login_sessions.Add(loginSession);
                     await db.SaveChangesAsync();
 
@@ -166,6 +173,7 @@ namespace PetParadise.Controllers.ApiControllers
                     {
                         userId = user.Id,
                         accountTypeId = user.AccountTypeId,
+                        HasProfile = hasProfile,
                         session = loginSession.Token
                     });
 

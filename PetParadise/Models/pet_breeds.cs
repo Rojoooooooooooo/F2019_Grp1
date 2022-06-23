@@ -12,18 +12,20 @@ namespace PetParadise.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class pet_profile
+    public partial class pet_breeds
     {
-        public string Id { get; set; }
-        public string OwnerId { get; set; }
-        public string Name { get; set; }
-        public System.DateTime Birthdate { get; set; }
-        public int CategoryId { get; set; }
-        public Nullable<int> BreedId { get; set; }
-        public string Color { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        public pet_breeds()
+        {
+            this.pet_profile = new HashSet<pet_profile>();
+        }
     
-        public virtual owner_profile owner_profile { get; set; }
-        public virtual pet_breeds pet_breeds { get; set; }
+        public int Id { get; set; }
+        public int CategoryId { get; set; }
+        public string Breed { get; set; }
+    
         public virtual pet_category pet_category { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<pet_profile> pet_profile { get; set; }
     }
 }

@@ -45,16 +45,24 @@
             const session = data.session;
             const userId = data.userId;
             const accountTypeId = data.accountTypeId;
+            const hasProfile = data.HasProfile;
 
-            console.log("logged in")
-            localStorage.setItem("accountType", accountType);
+            localStorage.setItem("accountType", accountTypeId);
+            
             sessionStorage.setItem("session_token", window.btoa(session));
             
-            window.location.replace("/Account/CreateProfile?accountType=" + accountTypeId);
+            console.log(data)
+            if (hasProfile) {
+                window.location.replace("/Account/PetDashboard");
+            } else {
+                window.location.replace("/Account/CreateProfile?accountType=" + accountTypeId);
+            }
+
 
             $('#loader').hide();
         })
         .catch(e=> {
+            console.log(e)
             $('#loader').hide();
         });
     })

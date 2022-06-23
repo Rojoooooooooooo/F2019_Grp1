@@ -233,6 +233,14 @@
     <Content Include="Content\bootstrap.rtl.css" />
     <Content Include="Content\bootstrap.rtl.min.css" />
     <Content Include="Content\fontawesome.css" />
+    <Content Include="Content\images\ui-icons_444444_256x240.png" />
+    <Content Include="Content\images\ui-icons_555555_256x240.png" />
+    <Content Include="Content\images\ui-icons_777620_256x240.png" />
+    <Content Include="Content\images\ui-icons_777777_256x240.png" />
+    <Content Include="Content\images\ui-icons_cc0000_256x240.png" />
+    <Content Include="Content\images\ui-icons_ffffff_256x240.png" />
+    <Content Include="Content\jquery-ui.structure.css" />
+    <Content Include="Content\jquery-ui.css" />
     <Content Include="Content\Site.css" />
     <Content Include="Content\uikit.css" />
     <Content Include="Content\uikit.min.css" />
@@ -276,6 +284,7 @@
     <Content Include="Content\bootstrap-grid.min.css.map" />
     <Content Include="Content\bootstrap-grid.css.map" />
     <None Include=".bin\node.cmd" />
+    <Content Include="Content\jquery-ui.theme.css" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -286,6 +295,7 @@
     <Content Include="Scripts\bootstrap.esm.min.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
+    <Content Include="Scripts\jquery-ui.js" />
     <Content Include="Scripts\ValidationHandler\InvalidObject.js" />
     <Content Include="Scripts\ValidationHandler\Validator.js" />
     <Content Include="Scripts\jquery-3.6.js" />
@@ -364,6 +374,12 @@
       <DependentUpon>MainDBModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\owner_profile.cs">
+      <DependentUpon>MainDBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\pet_breeds.cs">
+      <DependentUpon>MainDBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\pet_category.cs">
       <DependentUpon>MainDBModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\pet_profile.cs">

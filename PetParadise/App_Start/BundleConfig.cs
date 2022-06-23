@@ -13,20 +13,20 @@ namespace PetParadise.App_Start
             bundles.Add(new ScriptBundle("~/bundles/jquery").Include(
                 "~/Scripts/jquery-{version}.js"));
 
+            bundles.Add(new ScriptBundle("~/bundles/jqueryui").Include(
+                "~/Scripts/jquery-ui.js"));
+
             bundles.Add(new ScriptBundle("~/bundles/jqueryval").Include(
                 "~/Scripts/jquery.unobtrusive*",
                 "~/Scripts/jquery.validate*"));
 
-
             bundles.Add(new ScriptBundle("~/bundles/modernizr").Include(
                 "~/Scripts/modernizr-*"));
 
-            bundles.Add(new ScriptBundle("~/bundles/uikit").Include(
-                "~/Scripts/uikit.js",
-                "~/Scripts/respond.js"));
-
             bundles.Add(new StyleBundle("~/Content/css").Include(
-                 "~/Content/uikit.css",
+                 "~/Content/jquery-ui.css",
+                 "~/Content/jquery-ui.theme.css",
+                 "~/Content/jquery-ui.structure.css",
                  "~/Content/bootstrap.css",
                  "~/Content/Site.css",
                  "~/Content/fontawesome.css"));

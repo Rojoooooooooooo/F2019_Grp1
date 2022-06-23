@@ -97,5 +97,22 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
+    <EntitySetMapping Name="pet_breeds">
+      <EntityTypeMapping TypeName="MainDBModel.pet_breeds">
+        <MappingFragment StoreEntitySet="pet_breeds">
+          <ScalarProperty Name="Breed" ColumnName="Breed" />
+          <ScalarProperty Name="CategoryId" ColumnName="CategoryId" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="pet_category">
+      <EntityTypeMapping TypeName="MainDBModel.pet_category">
+        <MappingFragment StoreEntitySet="pet_category">
+          <ScalarProperty Name="Category" ColumnName="Category" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
   </EntityContainerMapping>
 </Mapping>

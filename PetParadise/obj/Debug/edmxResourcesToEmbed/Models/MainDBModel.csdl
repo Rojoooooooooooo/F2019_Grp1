@@ -140,6 +140,20 @@
       <End Role="owner_profile" EntitySet="owner_profile" />
       <End Role="pet_profile" EntitySet="pet_profile" />
     </AssociationSet>
+    <EntitySet Name="pet_breeds" EntityType="MainDBModel.pet_breeds" />
+    <EntitySet Name="pet_category" EntityType="MainDBModel.pet_category" />
+    <AssociationSet Name="FK_pet_breeds_pet_category" Association="MainDBModel.FK_pet_breeds_pet_category">
+      <End Role="pet_category" EntitySet="pet_category" />
+      <End Role="pet_breeds" EntitySet="pet_breeds" />
+    </AssociationSet>
+    <AssociationSet Name="FK_pet_profile_pet_breeds" Association="MainDBModel.FK_pet_profile_pet_breeds">
+      <End Role="pet_breeds" EntitySet="pet_breeds" />
+      <End Role="pet_profile" EntitySet="pet_profile" />
+    </AssociationSet>
+    <AssociationSet Name="FK_pet_profile_pet_category" Association="MainDBModel.FK_pet_profile_pet_category">
+      <End Role="pet_category" EntitySet="pet_category" />
+      <End Role="pet_profile" EntitySet="pet_profile" />
+    </AssociationSet>
   </EntityContainer>
   <EntityType Name="owner_address">
     <Key>
@@ -201,6 +215,8 @@
     <Property Name="BreedId" Type="Int32" />
     <Property Name="Color" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
     <NavigationProperty Name="owner_profile" Relationship="MainDBModel.FK_pet_profile_owner_profile" FromRole="pet_profile" ToRole="owner_profile" />
+    <NavigationProperty Name="pet_breeds" Relationship="MainDBModel.FK_pet_profile_pet_breeds" FromRole="pet_profile" ToRole="pet_breeds" />
+    <NavigationProperty Name="pet_category" Relationship="MainDBModel.FK_pet_profile_pet_category" FromRole="pet_profile" ToRole="pet_category" />
   </EntityType>
   <Association Name="FK_pet_profile_owner_profile">
     <End Type="MainDBModel.owner_profile" Role="owner_profile" Multiplicity="1">
@@ -213,6 +229,63 @@
       </Principal>
       <Dependent Role="pet_profile">
         <PropertyRef Name="OwnerId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityType Name="pet_breeds">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="CategoryId" Type="Int32" Nullable="false" />
+    <Property Name="Breed" Type="String" Nullable="false" MaxLength="25" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="pet_category" Relationship="MainDBModel.FK_pet_breeds_pet_category" FromRole="pet_breeds" ToRole="pet_category" />
+    <NavigationProperty Name="pet_profile" Relationship="MainDBModel.FK_pet_profile_pet_breeds" FromRole="pet_breeds" ToRole="pet_profile" />
+  </EntityType>
+  <EntityType Name="pet_category">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Category" Type="String" Nullable="false" MaxLength="25" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="pet_breeds" Relationship="MainDBModel.FK_pet_breeds_pet_category" FromRole="pet_category" ToRole="pet_breeds" />
+    <NavigationProperty Name="pet_profile" Relationship="MainDBModel.FK_pet_profile_pet_category" FromRole="pet_category" ToRole="pet_profile" />
+  </EntityType>
+  <Association Name="FK_pet_breeds_pet_category">
+    <End Type="MainDBModel.pet_category" Role="pet_category" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Type="MainDBModel.pet_breeds" Role="pet_breeds" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="pet_category">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="pet_breeds">
+        <PropertyRef Name="CategoryId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_pet_profile_pet_breeds">
+    <End Type="MainDBModel.pet_breeds" Role="pet_breeds" Multiplicity="0..1" />
+    <End Type="MainDBModel.pet_profile" Role="pet_profile" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="pet_breeds">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="pet_profile">
+        <PropertyRef Name="BreedId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_pet_profile_pet_category">
+    <End Type="MainDBModel.pet_category" Role="pet_category" Multiplicity="1" />
+    <End Type="MainDBModel.pet_profile" Role="pet_profile" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="pet_category">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="pet_profile">
+        <PropertyRef Name="CategoryId" />
       </Dependent>
     </ReferentialConstraint>
   </Association>
