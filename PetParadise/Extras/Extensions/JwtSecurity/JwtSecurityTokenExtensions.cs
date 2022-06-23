@@ -23,8 +23,7 @@ namespace PetParadise.Extras.Extensions.JwtSecurity
             payload.Expiration = jwt.Claims.Where(c => c.Type.Equals("exp")).First().Value;
             payload.Issuer = jwt.Claims.Where(c => c.Type.Equals("iss")).First().Value;
             payload.Audience = jwt.Claims.Where(c => c.Type.Equals("aud")).First().Value;
-
-            Debug.WriteLine("payload: " + payload.Username);
+            
             return payload;
         }
 
