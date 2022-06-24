@@ -5,7 +5,8 @@
 
 **Atomic Update** 
 - Fixed JwtToken class returning the input token even it is null or invalid. The culprit is an absurd use of if-else statement.
-
+- Fixed [Issue #1](https://github.com/Rojoooooooooooo/F2019_Grp1/issues/1#issue-1282520612)
+- API error response for /auth/login and /auth/refresh refactored
 > **Note:** Those with **(x)** mark are currently specific for **WEB API only**. Standby for future developments.
 
 
