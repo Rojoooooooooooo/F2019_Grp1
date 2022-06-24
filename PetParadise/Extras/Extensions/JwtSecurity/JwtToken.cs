@@ -14,12 +14,11 @@ namespace PetParadise.Extras.Extensions.JwtSecurity
 
         public JwtToken(string token, TokenValidationParameters validationParams)
         {
-            if (token == null) this.Value = null; 
-            if (!this.ValidateToken(token, validationParams))
-            { 
-                this.Value = null;
-            }
-            Value = token;
+            if (token == null) this.Value = ""; 
+            if (!this.ValidateToken(token, validationParams))             
+                this.Value = "";
+            else
+                this.Value = token;
         }
         private bool ValidateToken(string token, TokenValidationParameters validationParams)
         {
