@@ -96,7 +96,7 @@
             const accountTypeId = data.accountTypeId;
 
             localStorage.setItem("accountType", accountTypeId);
-            sessionStorage.setItem("session_token", window.btoa(session));
+            localStorage.setItem("session_token", window.btoa(session));
 
             window.location.replace("/Account/CreateProfile?accountType=" + accountTypeId);
             $('#loader').hide();

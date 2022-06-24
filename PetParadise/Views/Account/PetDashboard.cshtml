@@ -189,15 +189,10 @@
             const cardContainer = document.createElement('div');
             const image = document.createElement('img');
             const nameContainer = document.createElement('h6');
-            const removeButton = document.createElement('div');
-
-            removeButton.setAttribute("role", "button");
-            removeButton.innerHTML = '<i class="fa-solid fa-circle-xmark"></i>';
-            removeButton.classList.add("");
 
             image.classList.add("rounded-circle");
             image.alt = petname;
-            image.src = 'https://ui-avatars.com/api/?background=random&name=' + petname;
+            image.src = 'https://ui-avatars.com/api/?background=random&bold=true&name=' + petname;
             image.setAttribute("data-petId", window.btoa(petId));
 
             nameContainer.innerHTML = petname;

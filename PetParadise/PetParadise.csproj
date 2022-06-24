@@ -318,6 +318,8 @@
     <Compile Include="Controllers\ApiControllers\PetController.cs" />
     <Compile Include="Controllers\ViewsControllers\AccountController.cs" />
     <Compile Include="Controllers\ViewsControllers\HomeController.cs" />
+    <Compile Include="Extras\Error\HttpErrorContent.cs" />
+    <Compile Include="Extras\Error\HttpError.cs" />
     <Compile Include="Extras\Expiration.cs" />
     <Compile Include="Extras\Extensions\HttpRequestHeaders\HttpRequestHeadersExtensions.cs" />
     <Compile Include="Extras\Extensions\JwtSecurity\JwtSecurityTokenExtensions.cs" />

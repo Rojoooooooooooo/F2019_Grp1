@@ -33,7 +33,7 @@ function getCookieToken() {
 }
 
 function getSessionToken(){
-    const encToken = sessionStorage.getItem("session_token");
+    const encToken = localStorage.getItem("session_token");
     return decToken = window.atob(encToken);
 }
 

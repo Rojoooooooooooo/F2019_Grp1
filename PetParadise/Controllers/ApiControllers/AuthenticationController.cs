@@ -18,6 +18,7 @@ using System.Diagnostics;
 using PetParadise.Extras.Extensions.HttpRequestHeaders;
 using System.Data.Entity;
 using PetParadise.Extras.Extensions.Models;
+using PetParadise.Extras.Error;
 
 namespace PetParadise.Controllers.ApiControllers
 {   
@@ -42,7 +43,9 @@ namespace PetParadise.Controllers.ApiControllers
                     bool userExists = await db.account_credential
                                     .AnyAsync(u => u.Username.Equals(newAcc.Username) || u.Email.Equals(newAcc.Email));
 
-                    if (userExists) return BadRequest();
+                    if (userExists) return new HttpErrorContent(Request, 
+                        HttpStatusCode.BadRequest, 
+                        Extras.Error.HttpError.LoginAuthError);
 
                     string accountId = await uid.GenerateIdAsync();
                     newAcc.Id = accountId;
@@ -139,14 +142,18 @@ namespace PetParadise.Controllers.ApiControllers
 
 
                     if (user == null)
-                        return Content(HttpStatusCode.BadRequest, new { message = "Invalid username/password." });
+                        return new HttpErrorContent(Request, 
+                            HttpStatusCode.BadRequest, 
+                            Extras.Error.HttpError.LoginAuthError);
 
                     bool hasProfile = await db.owner_profile
                                         .AnyAsync(u => u.Id.Equals(user.Id));
 
                     // if password doesn't match
                     if (!await PasswordManager.IsMatchedAsync(userLogin.Password, user.Password))
-                        return Content(HttpStatusCode.BadRequest, new { message = "Invalid username/password." });
+                        return new HttpErrorContent(Request,
+                            HttpStatusCode.BadRequest, 
+                            Extras.Error.HttpError.LoginAuthError);
 
 
 
@@ -249,12 +256,18 @@ namespace PetParadise.Controllers.ApiControllers
                 var headers = Request.Headers;
                 // check if session header exists
                 if (!headers.HasSessionTokenHeader())
-                    return Content(HttpStatusCode.Forbidden, "You have no right for this request.");
+                    return new HttpErrorContent(Request,
+                        HttpStatusCode.Forbidden,
+                        Extras.Error.HttpError.InvalidSession);
+
                 // check if session is valid
                 JwtToken token = new JwtToken(headers.GetSessionToken(),
                                         new SessionManager().CreateValidationParameters(SessionType.SESSION));
                 if (token == null)
-                    return Content(HttpStatusCode.Forbidden, "Invalid session token.");
+                    return new HttpErrorContent(Request,
+                        HttpStatusCode.Forbidden,
+                        Extras.Error.HttpError.InvalidSession);
+
                 // check if session is in database
                 using (MainDBEntities db = new MainDBEntities())
                 {
@@ -263,8 +276,10 @@ namespace PetParadise.Controllers.ApiControllers
                                     .First();
 
                     if (session == null)
-                        return Content(HttpStatusCode.Forbidden,
-                            "Nice try! Your session is not recognized in the database.");
+                        return new HttpErrorContent(Request,
+                        HttpStatusCode.Forbidden,
+                        Extras.Error.HttpError.InvalidSession);
+
                 }
 
                 // reuse session userId and username for access token generation
@@ -304,13 +319,22 @@ namespace PetParadise.Controllers.ApiControllers
             {
                 var headers = Request.Headers;
                 // check if session header exists
+                
                 if (!headers.HasSessionTokenHeader())
-                    return Content(HttpStatusCode.Forbidden, "You have no right for this request.");
+                    return new HttpErrorContent(Request,
+                        HttpStatusCode.Forbidden,
+                        Extras.Error.HttpError.InvalidSession);
+
                 // check if session is valid
                 JwtToken token = new JwtToken(headers.GetSessionToken(),
                                         new SessionManager().CreateValidationParameters(SessionType.SESSION));
-                if (token == null)
-                    return Content(HttpStatusCode.Forbidden, "Invalid session token.");
+                Debug.WriteLine(token.Value);
+
+                if (string.IsNullOrEmpty(token.Value))
+                    return new HttpErrorContent(Request,
+                        HttpStatusCode.Forbidden,
+                        Extras.Error.HttpError.InvalidSession);
+
                 // check if session is in database
                 using (MainDBEntities db = new MainDBEntities())
                 {
@@ -319,8 +343,9 @@ namespace PetParadise.Controllers.ApiControllers
                                     .First();
 
                     if (session == null)
-                        return Content(HttpStatusCode.Forbidden,
-                            "Nice try! Your session is not recognized in the database.");
+                        return new HttpErrorContent(Request,
+                        HttpStatusCode.Forbidden,
+                        Extras.Error.HttpError.InvalidSession);
                 }
 
                 // reuse session userId and username for access token generation

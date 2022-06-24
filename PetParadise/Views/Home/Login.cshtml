@@ -2,7 +2,7 @@
 
 <h2 class="text-center fw-bold stext-darker" >Login</h2>
 
-@using (Html.BeginForm("Login", "Home", FormMethod.Post, new { @class="d-flex flex-column justify-content-evenly gap-2"}))
+@using (Html.BeginForm("Index", "Home", FormMethod.Post, new { @class="d-flex flex-column justify-content-evenly gap-2"}))
 {
     <div class="w-100">
         @Html.TextBoxFor(m => m.Username, new { @class = "form-control", title = "username", placeholder = "Username" })
@@ -11,15 +11,19 @@
     <div class="w-100">
         @Html.PasswordFor(m => m.Password, new { @class = "form-control", title = "password", placeholder = "Password" })
     </div>
-
+    <div id="validationNotes" class="w-100">
+        <ul id="notes-container"></ul>
+    </div>
     <button class="btn btn-outline-dark sbg-dark fw-bold" id="loginBtn" type="submit" value="Login">Login</button>
 }
 <span>Or</span>
 @Html.ActionLink("Signup", "Signup", null, new { @class = "btn btn-outline-light sbg-base" })
 
 <script>
+    const validator = new Validator("#notes-container");
     $('form').submit((e)=>{
         e.preventDefault();
+        validator.removeErrors();
 
         const username = $('#Username').val();
         const password = $('#Password').val();
@@ -31,7 +35,7 @@
 
         const url = '/auth/login';
 
-        $('#loader').show();
+        $('#loader').show(300)
 
         fetch(url, {
             method: "POST",
@@ -42,28 +46,42 @@
         })
         .then(res=>res.json())
         .then(data=> {
+            if (data.error) {
+                const error = data.error.message;
+                console.log(error);
+                validator.addError(new InvalidObject("username/password", error));
+                validator.updateParent();
+                return;
+            }
+
             const session = data.session;
             const userId = data.userId;
             const accountTypeId = data.accountTypeId;
             const hasProfile = data.HasProfile;
 
             localStorage.setItem("accountType", accountTypeId);
-            
-            sessionStorage.setItem("session_token", window.btoa(session));
-            
+            localStorage.setItem("session_token", window.btoa(session));
+
             console.log(data)
-            if (hasProfile) {
+            if (hasProfile && accountTypeId == 1) {
                 window.location.replace("/Account/PetDashboard");
-            } else {
+            }
+            else if (hasProfile && accountTypeId == 2) {
+                //window.location.replace("/Account/PetDashboard");
+                console.log("a clinic logged in")
+            }
+            else {
                 window.location.replace("/Account/CreateProfile?accountType=" + accountTypeId);
             }
-
-
-            $('#loader').hide();
         })
         .catch(e=> {
-            console.log(e)
+            console.log(e);
+            
+        })
+        .finally(_=> {
             $('#loader').hide();
-        });
+        })
+
+        
     })
 </script>
