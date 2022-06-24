@@ -1,6 +1,14 @@
 # Changelog
 > The source code is also available in the [source-code branch](https://github.com/Rojoooooooooooo/F2019_Grp1/tree/source-code). Standby for regular updates.
 
+## As of 06/24/2022
+
+**Atomic Update** 
+- Fixed JwtToken class returning the input token even it is null or invalid. The culprit is an absurd use of if-else statement.
+
+> **Note:** Those with **(x)** mark are currently specific for **WEB API only**. Standby for future developments.
+
+
 ## As of 06/23/2022 [06/22/2022 commit](https://github.com/Rojoooooooooooo/F2019_Grp1/commit/dc7062b0803759998f7ed34c200d38d6845e4807) 
 
 **Atomic Update** 
