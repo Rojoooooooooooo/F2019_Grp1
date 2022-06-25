@@ -87,6 +87,7 @@ else
         const validator = new Validator("#notes-container");
         const url = '/user/owner';
         $('form').submit((e) => {
+
             e.preventDefault();
             validator.removeErrors();
 
@@ -101,6 +102,12 @@ else
             const barangay = $('#Barangay').val();
             const city = $('#City').val();
             const country = $('#Country').val();
+
+            if (!firstName || !lastName || !contact || !line || !barangay || !city || !country) {
+                validator.addError(new InvalidObject("All", "Please fill out all required fields."));
+                validator.updateParent();
+                return $('#loader').hide();
+            }
 
             const data = {
                 firstName,
@@ -123,6 +130,7 @@ else
             })
             .then(res=>res.json())
             .then(data => {
+                console.log(data);
                 if (data.stack) {
                     const stack = data.stack;
                     stack.forEach(s=> {
@@ -131,12 +139,14 @@ else
                         validator.addError(error);
                     })
                     validator.updateParent();
+                } else {
+                    window.location.replace('/owner/petdashboard');
                 }
-
-
-                $('#loader').hide();
             })
             .catch(e=> {
+                console.log(e);
+            })
+            .finally(_=> {
                 $('#loader').hide();
             });
         });

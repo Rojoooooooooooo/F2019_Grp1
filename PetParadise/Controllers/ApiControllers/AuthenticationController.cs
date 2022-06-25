@@ -45,7 +45,7 @@ namespace PetParadise.Controllers.ApiControllers
 
                     if (userExists) return new HttpErrorContent(Request, 
                         HttpStatusCode.BadRequest, 
-                        Extras.Error.HttpError.LoginAuthError);
+                        Extras.Error.HttpError.UserExists);
 
                     string accountId = await uid.GenerateIdAsync();
                     newAcc.Id = accountId;

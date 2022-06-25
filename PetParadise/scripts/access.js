@@ -7,7 +7,7 @@ function checkpoint() {
         if (!accessToken) {
             console.log("no access token, getting u some")
             const sessionToken = getSessionToken();
-            if (!sessionToken) return console.log("invalid request");
+            if (!sessionToken) return console.log("invalid request, you need to login.");
 
             // if sessionToken exists, request access_token from auth server
             getAccessToken(sessionToken);  

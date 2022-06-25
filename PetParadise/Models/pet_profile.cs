@@ -11,15 +11,23 @@ namespace PetParadise.Models
 {
     using System;
     using System.Collections.Generic;
-    
+    using System.ComponentModel.DataAnnotations;
+
     public partial class pet_profile
     {
         public string Id { get; set; }
         public string OwnerId { get; set; }
+
+        [Required]
+        [RegularExpression(@"^[a-zA-Z0-9\s#'.,\-()]*$", ErrorMessage = @"Acceptable characters are: a-z A-Z 0-9#'.,\-()")]
+        [MaxLength(35, ErrorMessage = "Pet name must be less than 35 characters.")]
         public string Name { get; set; }
+
         public System.DateTime Birthdate { get; set; }
         public int CategoryId { get; set; }
         public Nullable<int> BreedId { get; set; }
+
+        [RegularExpression("[a-zA-Z,-\\s]*", ErrorMessage = "Please use english characters or commas")]
         public string Color { get; set; }
     
         public virtual owner_profile owner_profile { get; set; }

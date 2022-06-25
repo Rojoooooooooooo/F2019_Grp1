@@ -14,8 +14,7 @@ namespace PetParadise.Extras.Error
 
         public static HttpError LoginAuthError { get { return new HttpError("Invalid username / password."); } }
         public static HttpError InvalidSession { get { return new HttpError("Invalid session token."); } }
-
-        //public HttpError Invalid { get { return new HttpError("Invalid username / password.") } }
+        public static HttpError UserExists { get { return new HttpError("Username or email is invalid."); } }
         //public HttpError LoginError { get { return new HttpError("Invalid username / password.") } }
         //public HttpError LoginError { get { return new HttpError("Invalid username / password.") } }
 

@@ -25,7 +25,6 @@ Validator.prototype.updateParent = function () {
     const element = document.querySelector(this.parentElement);
     element.innerHTML = "";
     this.ErrorMessages.forEach(error=> {
-        console.log("update: ", error.property)
         const li = document.createElement('li');
         li.class = "text-danger";
         li.innerText = error.message;

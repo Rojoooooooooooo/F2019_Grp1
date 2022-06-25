@@ -24,9 +24,16 @@
     $('form').submit((e)=>{
         e.preventDefault();
         validator.removeErrors();
+        $('#loader').show(300)
 
         const username = $('#Username').val();
         const password = $('#Password').val();
+        
+        if (!username || !password) {
+            validator.addError(new InvalidObject("All", "Please fill out all required fields."));
+            validator.updateParent();
+            return $('#loader').hide();
+        }
 
         const data = {
             username,
@@ -35,7 +42,7 @@
 
         const url = '/auth/login';
 
-        $('#loader').show(300)
+        
 
         fetch(url, {
             method: "POST",

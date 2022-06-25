@@ -46,8 +46,8 @@ else
 
             <div class="w-100 d-flex flex-row gap-2 justify-content-start align-items-start">
                 <div class="flex-grow-1">
-                    @Html.EditorFor(model => model.Contact, new { htmlAttributes = new { @class = "form-control", placeholder = "Mobile Number" } })
                     @Html.ValidationMessageFor(model => model.Contact, "", new { @class = "text-danger" })
+                    @Html.EditorFor(model => model.Contact, new { htmlAttributes = new { @class = "form-control", placeholder = "Mobile Number" } })
                 </div>
             </div>
 
@@ -92,62 +92,64 @@ else
     }
 
     <script>
-    const validator = new Validator("#notes-container");
-    const url = '/user/clinic';
-    $('form').submit((e) => {
-        e.preventDefault();
-        validator.removeErrors();
 
-        const clinicName = $('#ClinicName').val();
+        const validator = new Validator("#notes-container");
+        const url = '/user/clinic';
+        $('form').submit((e) => {
+            e.preventDefault();
+            validator.removeErrors();
 
-        const firstName = $('#FirstName').val();
-        const middleName = $('#MiddleName').val();
-        const lastName = $('#LastName').val();
+            const clinicName = $('#ClinicName').val();
 
-        const contact = $('#Contact').val();
-        const line = $('#Line').val();
-        const barangay = $('#Barangay').val();
-        const city = $('#City').val();
-        const country = $('#Country').val();
+            const firstName = $('#FirstName').val();
+            const middleName = $('#MiddleName').val();
+            const lastName = $('#LastName').val();
 
-        const data = {
-            clinicName,
-            firstName,
-            middleName,
-            lastName,
-            contact,
-            line,
-            barangay,
-            city,
-            country
-        };
+            const contact = $('#Contact').val();
+            const line = $('#Line').val();
+            const barangay = $('#Barangay').val();
+            const city = $('#City').val();
+            const country = $('#Country').val();
 
-        fetch(url, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": "Bearer " + getCookieToken()
-            },
-            body: JSON.stringify(data)
-        })
-        .then(res=>res.json())
-        .then(data => {
-            if (data.stack) {
-                const stack = data.stack;
-                stack.forEach(s=> {
-                    const e = s._validationErrors[0];
-                    const error = new InvalidObject(e._propertyName, e._errorMessage);
-                    validator.addError(error);
-                })
-                validator.updateParent();
-            }
+            const data = {
+                clinicName,
+                firstName,
+                middleName,
+                lastName,
+                contact,
+                line,
+                barangay,
+                city,
+                country
+            };
 
-
-            $('#loader').hide();
-        })
-        .catch(e=> {
-            $('#loader').hide();
+            fetch(url, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": "Bearer " + getCookieToken()
+                },
+                body: JSON.stringify(data)
+            })
+            .then(res=>res.json())
+            .then(data => {
+                console.log(data);
+                if (data.stack) {
+                    const stack = data.stack;
+                    stack.forEach(s=> {
+                        const e = s._validationErrors[0];
+                        const error = new InvalidObject(e._propertyName, e._errorMessage);
+                        validator.addError(error);
+                    })
+                    validator.updateParent();
+                }
+            })
+            .catch(e=> {
+                console.log(e);
+            })
+            .finally(e=> {
+                $('#loader').hide();
+            });
         });
-    });
     </script>
 }

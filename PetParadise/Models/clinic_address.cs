@@ -11,15 +11,36 @@ namespace PetParadise.Models
 {
     using System;
     using System.Collections.Generic;
-    
+    using System.ComponentModel.DataAnnotations;
+
     public partial class clinic_address
     {
         public string Id { get; set; }
+
+        [Required]
+        [RegularExpression(@"^[a-zA-Z0-9\s#'.,\-()]*$", ErrorMessage = @"Acceptable characters are: a-z A-Z 0-9#'.,\-()")]
+        [MaxLength(35, ErrorMessage = "Country must be 2-35 characters.")]
+        [MinLength(2, ErrorMessage = "Country must be 2-35 characters.")]
         public string Country { get; set; }
+
+        [Required]
+        [RegularExpression(@"^[a-zA-Z0-9\s#'.,\-()]*$", ErrorMessage = @"Acceptable characters are: a-z A-Z 0-9#'.,\-()")]
+        [MaxLength(35, ErrorMessage = "City must be 2-35 characters.")]
+        [MinLength(2, ErrorMessage = "City must be 2-35 characters.")]
         public string City { get; set; }
+
+        [Required]
+        [RegularExpression(@"^[a-zA-Z0-9\s#'.,\-()]*$", ErrorMessage = @"Acceptable characters are: a-z A-Z 0-9#'.,\-()")]
+        [MaxLength(35, ErrorMessage = "Barangay/Village/Subdivision must be 2-35 characters.")]
+        [MinLength(2, ErrorMessage = "Barangay/Village/Subdivision must be 2-35 characters.")]
         public string Barangay { get; set; }
+
+        [Required]
+        [RegularExpression(@"^[a-zA-Z0-9\s#'.,\-()]*$", ErrorMessage = @"Acceptable characters are: a-z A-Z 0-9#'.,\-()")]
+        [MaxLength(35, ErrorMessage = "Room/Floor/House #/Block/Lot/Street must be 2-35 characters.")]
+        [MinLength(2, ErrorMessage = "Room/Floor/House #/Block/Lot/Street must be 2-35 characters.")]
         public string Line { get; set; }
-    
+
         public virtual clinic_profile clinic_profile { get; set; }
     }
 }
