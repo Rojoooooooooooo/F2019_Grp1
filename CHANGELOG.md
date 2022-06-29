@@ -1,8 +1,16 @@
 # Changelog
 > The source code is also available in the [source-code branch](https://github.com/Rojoooooooooooo/F2019_Grp1/tree/source-code). Standby for regular updates.
 
+## As of 06/30/2022
+
+**Major Features Added** 
+ - Users can now post, comment and like (x)
+ 
+> **Note:** Those with **(x)** mark are currently specific for **WEB API only**. Standby for future developments.
+
+
 ## As of 06/29/2022
-> New path released!
+> New patch released!
 
 **Major Update**
 - Session handling reworked
