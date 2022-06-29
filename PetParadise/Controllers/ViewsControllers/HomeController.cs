@@ -18,23 +18,73 @@ namespace PetParadise.Controllers.ViewsControllers
         // GET: Home
         public async Task<ActionResult> Index()
         {
+            ViewBag.EnableSearchMenu = false;
+            ViewBag.EnableUserMenu = false;
 
-            SessionManager sessionManager = new SessionManager("123456", "druloloy");
-            string token = await sessionManager.TokenHandlerAsync(SessionType.SESSION);
+            var session = Request.Cookies["session_token"] != null ? Request.Cookies["session_token"].Value : "";
+            if (!string.IsNullOrEmpty(session)) {
+                var token = new JwtToken(session, new SessionManager().CreateValidationParameters(SessionType.SESSION));
 
-            Session["session_token"] = token;
+                if (token.Value != null)
+                {
+                    var payload = await token.GetPayloadAsync();
+                    if (payload.AccountTypeId == 1)
+                    {
+                        return RedirectToAction("PetDashboard", "Account");
+                    }
+                    else if (payload.AccountTypeId == 2) {
+                        return View();
+                        //return RedirectToAction("PetDashboard", "Account");
+                    }
+                }
+            } 
             return View();
         }
 
         // GET: Home/Signup
         public ActionResult Signup()
         {
+            ViewBag.EnableSearchMenu = false;
+            ViewBag.EnableUserMenu = false;
+
+            var session = Request.Cookies["session_token"] != null ? Request.Cookies["session_token"].Value : "";
+            if (!string.IsNullOrEmpty(session))
+            {
+                var token = new JwtToken(session, new SessionManager().CreateValidationParameters(SessionType.SESSION));
+
+                if (token.Value != null)
+                {
+                    var payload = token.GetPayload();
+                    if (payload.AccountTypeId == 1)
+                    {
+                        return RedirectToAction("PetDashboard", "Account");
+                    }
+                    else if (payload.AccountTypeId == 2)
+                    {
+                        return View();
+                        //return RedirectToAction("PetDashboard", "Account");
+                    }
+                }
+            }
             return View();
         }
 
         public ActionResult Feeds(string uid)
         {
-            return View();
+            ViewBag.EnableSearchMenu = true;
+            ViewBag.EnableUserMenu = false;
+
+            var session = Request.Cookies["session_token"] != null ? Request.Cookies["session_token"].Value : "";
+            if (!string.IsNullOrEmpty(session))
+            {
+                var token = new JwtToken(session, new SessionManager().CreateValidationParameters(SessionType.SESSION));
+                if (token.Value != null)
+                {
+                    var payload = token.GetPayload();
+                    return View(payload);
+                }
+            }
+            return RedirectToAction("Index", "Home");
         }
     }
 }

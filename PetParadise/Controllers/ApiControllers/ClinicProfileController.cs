@@ -58,10 +58,12 @@ namespace PetParadise.Controllers
                 clinicInput.FirstName = clinicInput.FirstName.Trim().ToTitleCase();
                 clinicInput.MiddleName = clinicInput.MiddleName.Trim().ToTitleCase();
                 clinicInput.LastName = clinicInput.LastName.Trim().ToTitleCase();
-                clinicInput.Line = clinicInput.Line.Trim().ToTitleCase();
-                clinicInput.Barangay = clinicInput.Barangay.Trim().ToTitleCase();
-                clinicInput.City = clinicInput.City.Trim().ToTitleCase();
-                clinicInput.Country = clinicInput.Country.Trim().ToTitleCase();
+
+                clinicInput.Line = clinicInput.Line.Trim().ToUpper();
+                clinicInput.Barangay = clinicInput.Barangay.Trim().ToUpper();
+                clinicInput.City = clinicInput.City.Trim().ToUpper();
+                clinicInput.Country = clinicInput.Country.Trim().ToUpper();
+
                 clinicInput.Contact = clinicInput.Contact.Trim().ToTitleCase();
 
                 using (MainDBEntities db = new MainDBEntities())
@@ -192,10 +194,10 @@ namespace PetParadise.Controllers
                                         message = "You haven't added one yet."
                                     });
 
-                                infoModel.Line = infoModel.Line.Trim().ToTitleCase();
-                                infoModel.Barangay = infoModel.Barangay.Trim().ToTitleCase();
-                                infoModel.City = infoModel.City.Trim().ToTitleCase();
-                                infoModel.Country = infoModel.Country.Trim().ToTitleCase();
+                                infoModel.Line = infoModel.Line.Trim().ToUpper();
+                                infoModel.Barangay = infoModel.Barangay.Trim().ToUpper();
+                                infoModel.City = infoModel.City.Trim().ToUpper();
+                                infoModel.Country = infoModel.Country.Trim().ToUpper();
 
                                 if (string.IsNullOrEmpty(infoModel.Line) ||
                                     string.IsNullOrEmpty(infoModel.Barangay) ||

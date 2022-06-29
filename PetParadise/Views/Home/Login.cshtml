@@ -67,7 +67,7 @@
             const hasProfile = data.HasProfile;
 
             localStorage.setItem("accountType", accountTypeId);
-            localStorage.setItem("session_token", window.btoa(session));
+            setSessionToken(session);
 
             console.log(data)
             if (hasProfile && accountTypeId == 1) {
@@ -83,12 +83,9 @@
         })
         .catch(e=> {
             console.log(e);
-            
         })
         .finally(_=> {
             $('#loader').hide();
         })
-
-        
     })
 </script>

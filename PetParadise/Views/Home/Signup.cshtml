@@ -122,7 +122,7 @@
                 const accountTypeId = data.accountTypeId;
 
                 localStorage.setItem("accountType", accountTypeId);
-                localStorage.setItem("session_token", window.btoa(session));
+                setSessionToken(session);
 
                 window.location.replace("/Account/CreateProfile?accountType=" + accountTypeId);
             }
@@ -137,4 +137,31 @@
     });
 
 </script>
-
+<script>
+    const accountTypeId = localStorage.accountType;
+    console.log(accountTypeId)
+    const url = "/auth/verify";
+    const sesh = getSessionToken();
+    fetch(url, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "Session-Token": sesh
+        }
+    })
+    .then(res=> {
+        console.log(res);
+        if (res.ok) {
+            console.log("logging you in, "+accountTypeId);
+            if (accountTypeId == 1) {
+                window.location.replace('/account/petdashboard');
+            }
+            else if (accountTypeId == 2) {
+                console.log('clinic you are, soon!');
+            }
+        }
+        else {
+            console.log("hey please log in!");
+        }
+    })
+</script>

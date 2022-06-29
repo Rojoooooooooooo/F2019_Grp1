@@ -31,34 +31,34 @@ namespace PetParadise.Extras
         private string Audience;
         private string UserId;
         private string Username;
+        private int accountTypeId;
 
         public SessionManager()
         {
             this.SessionKey = Environment.ExpandEnvironmentVariables(
                 ConfigurationManager.AppSettings["JWT_SESSION_KEY"]);
-            this.AccessKey = Environment.ExpandEnvironmentVariables(
-                ConfigurationManager.AppSettings["JWT_ACCESS_KEY"]);
+            this.AccessKey = ""; // subject for cleanup soon
             this.Issuer = Environment.ExpandEnvironmentVariables(
                 ConfigurationManager.AppSettings["JWT_ISSUER"]);
             this.Audience = Environment.ExpandEnvironmentVariables(
                 ConfigurationManager.AppSettings["JWT_AUDIENCE"]);
         }
 
-        public SessionManager(string id, string username)
+        public SessionManager(string id, string username, int accountTypeId)
         {
             /**
              * Make sure you have "env.config.json" on your root folder before you call on json key
              **/
             this.SessionKey = Environment.ExpandEnvironmentVariables(
                 ConfigurationManager.AppSettings["JWT_SESSION_KEY"]);
-            this.AccessKey = Environment.ExpandEnvironmentVariables(
-                ConfigurationManager.AppSettings["JWT_ACCESS_KEY"]);
+            this.AccessKey = ""; // subject for cleanup soon
             this.Issuer = Environment.ExpandEnvironmentVariables(
                 ConfigurationManager.AppSettings["JWT_ISSUER"]);
             this.Audience = Environment.ExpandEnvironmentVariables(
                 ConfigurationManager.AppSettings["JWT_AUDIENCE"]);
             this.UserId = id;
             this.Username = username;
+            this.accountTypeId = accountTypeId;
         }
         private SigningCredentials Credentials(string key)
         {
@@ -77,6 +77,7 @@ namespace PetParadise.Extras
                                     Guid.NewGuid().ToString()));
                 claims.Add(new Claim("userId", this.UserId));
                 claims.Add(new Claim("username", this.Username));
+                claims.Add(new Claim("accountTypeId", this.accountTypeId.ToString()));
                 return claims;
             }
             catch (Exception e)

@@ -27,7 +27,7 @@ namespace PetParadise.Models
         public int CategoryId { get; set; }
         public Nullable<int> BreedId { get; set; }
 
-        [RegularExpression("[a-zA-Z,-\\s]*", ErrorMessage = "Please use english characters or commas")]
+        [RegularExpression(@"[\w\s,-]*", ErrorMessage = "Please use english characters or commas")]
         public string Color { get; set; }
     
         public virtual owner_profile owner_profile { get; set; }

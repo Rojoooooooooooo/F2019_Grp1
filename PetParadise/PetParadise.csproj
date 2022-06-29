@@ -423,6 +423,8 @@
     <Content Include="Views\Shared\_ValidationNotes.cshtml" />
     <Content Include="Views\Home\Feeds.cshtml" />
     <Content Include="Views\Account\PetDashboard.cshtml" />
+    <Content Include="Views\Account\Profile.cshtml" />
+    <Content Include="Views\Account\Clinic.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

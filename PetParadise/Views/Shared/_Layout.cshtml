@@ -14,12 +14,12 @@
 
         <script src="https://kit.fontawesome.com/025a8d6676.js" crossorigin="anonymous"></script>
     </head>
-    <body>
-        <div class="w-100">
+    <body class="d-flex flex-column justify-content-start align-items-center">
+        <div class="w-100 sbg-dark" style="height:9vh;">
             @RenderPage("_Header.cshtml")
         </div>
 
-        <div class="w-100">
+        <div class="w-100 h-auto p-2 overflow-auto">
             @RenderBody()
             @RenderSection("PPViews", required: false)
         </div>
@@ -34,10 +34,6 @@
         
         <script>
             $('#loader').hide();
-        </script>
-        <script>
-            checkpoint();
-            autopilotAccessGenerator();
         </script>
 
     @RenderSection("Scripts", required: false)

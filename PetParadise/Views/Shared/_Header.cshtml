@@ -1,2 +1,56 @@
-﻿<div class="h-25 w-100 sbg-dark">
+﻿<div class="navbar navbar-dark h-100">
+    <div class="container-fluid h-100 d-flex flex-row justify-content-start align-items-center">
+        <div class="navbar-brand h-100 d-flex flex-row gap-2" role="button" onclick="window.location.replace('/')">
+            <img src="~/Images/pet-paradise-logo.png" style="height:100%">
+            <h1 class="navbar-brand h3 fw-bolder stext-lighter">PetParadise</h1>
+        </div>
+        
+        @if (ViewBag.EnableSearchMenu)
+        {
+            <div id="pet-nav-controls" class="d-none flex-row gap-4">
+                <form class="d-flex">
+                    <input class="form-control" type="search" placeholder="Search Pet name or clinic" aria-label="Search">
+                    <button class="btn btn-outline-light border-0 sbg-darker" type="submit">Search</button>
+                </form>
+                <ul class="navbar-nav d-flex flex-row gap-3">
+                    <li class="nav-item" role="button">
+                        <a class="nav-link">Feeds</a>
+                    </li>
+                    <li class="nav-item" role="button">
+                        <a class="nav-link">Nearby Clinics</a>
+                    </li>
+                </ul>
+            </div>
+        }
+    </div>
+    @if (ViewBag.EnableUserMenu)
+    {
+        <div class="navbar navbar-dark position-absolute end-0 me-2 d-flex flex-row">
+            <ul class="navbar-nav">
+                <li class="nav-item d-flex flex-row justify-content-center align-items-center gap-1">
+                    <span class="stext-lighter">Welcome back, </span>
+                    <a class="nav-link text-decoration-underline fw-bold" role="button">@ViewBag.Username</a>
+                    <button id="logout" class="btn btn-outline-danger ms-2 fw-bold stext-darker" role="button">Logout</button>
+                </li>
+            </ul>
+        </div>
+    }
 </div>
+
+<script>
+    $('#logout').click(() => {
+        fetch('/auth/logout', {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Session-Token": getSessionToken(),
+                "Authorization": "Bearer " + getSessionToken()
+            },
+            body: ""
+        })
+        .then((res) => {
+            localStorage.clear();
+            window.location.replace('/');
+        })
+    })
+</script>

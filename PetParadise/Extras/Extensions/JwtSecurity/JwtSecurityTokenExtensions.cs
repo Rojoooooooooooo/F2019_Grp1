@@ -20,6 +20,7 @@ namespace PetParadise.Extras.Extensions.JwtSecurity
             payload.JTI = jwt.Claims.Where(c => c.Type.Equals("jti")).First().Value;
             payload.UserId = jwt.Claims.Where(c => c.Type.Equals("userId")).First().Value;
             payload.Username = jwt.Claims.Where(c => c.Type.Equals("username")).First().Value;
+            payload.AccountTypeId = int.Parse(jwt.Claims.Where(c => c.Type.Equals("accountTypeId")).First().Value);
             payload.Expiration = jwt.Claims.Where(c => c.Type.Equals("exp")).First().Value;
             payload.Issuer = jwt.Claims.Where(c => c.Type.Equals("iss")).First().Value;
             payload.Audience = jwt.Claims.Where(c => c.Type.Equals("aud")).First().Value;
@@ -42,6 +43,7 @@ namespace PetParadise.Extras.Extensions.JwtSecurity
                         payload.JTI = jwt.Claims.First(claim => claim.Type.Equals("jti")).Value;
                         payload.UserId = jwt.Claims.First(claim => claim.Type.Equals("userId")).Value;
                         payload.Username = jwt.Claims.First(claim => claim.Type.Equals("username")).Value;
+                        payload.AccountTypeId = int.Parse(jwt.Claims.Where(c => c.Type.Equals("accountTypeId")).First().Value);
                         payload.Expiration = jwt.Claims.First(claim => claim.Type.Equals("exp")).Value;
                         payload.Audience = jwt.Claims.First(claim => claim.Type.Equals("aud")).Value;
                         payload.Issuer = jwt.Claims.First(claim => claim.Type.Equals("iss")).Value;

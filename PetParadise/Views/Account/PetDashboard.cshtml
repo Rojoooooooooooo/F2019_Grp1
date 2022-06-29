@@ -1,7 +1,6 @@
 ﻿@model PetParadise.Models.Body.PetInformationModel
 <div class="w-100 d-flex flex-column justify-content-center align-items-center">
-    <h2>Welcome, <span class="fw-bold"> @ViewBag.Username</span>!</h2>
-    <h3>My Pets</h3>
+    <h3 class="fw-bold">My Pets</h3>
    
     <div class="w-75 d-flex flex-column justify-content-center align-items-center">
         <div id="petContainer" class="w-50 p-4 d-flex flex-wrap flex-row justify-content-center align-items-center gap-5 cursor-pointer">
@@ -75,13 +74,14 @@
     const fadeSpeed = 300;
     const addPetCard = $("#addPetCard");
     addPetCard.hide();
-   
+    const validator = new Validator("#notes-container");
     $(document).ready(()=>{
-       
+        
         loadPets();
 
         $('#addPetBtn').click(()=>addPetCard.fadeIn(fadeSpeed));
         $('form').ready(_ => {
+            
             const cancel = $('#cancelBtn');
             const petBtn = $('#addPetBtn');
             const petNameInput = $('#Name');
@@ -99,6 +99,7 @@
                 yearRange: "1960:"+new Date().getFullYear(),
                 maxDate: "+0d"
             });
+
 
             loadCategories()
                     .then(res=> {
@@ -120,6 +121,7 @@
                 const petName = petNameInput.val();
                 const birthdate = birthdateInput.val();
                 const color = colorInput.val();
+                validator.removeErrors();
 
                 const breedValue = $(breedsSelect).val();
                 const categoryValue = $(categoriesSelect).val();
@@ -138,13 +140,31 @@
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
-                        "Authorization": "Bearer " + getCookieToken()
+                        "Authorization": "Bearer " + getSessionToken()
                     },
                     body: JSON.stringify(data)
                 })
                     .then(res=>res.json())
                     .then(data=> {
-                        insertPet(data.petId, petName);
+                        if (data.error) {
+                            const error = new InvalidObject("", data.error.message);
+                            validator.addError(error);
+                            validator.updateParent();
+                        }
+                        else if (data.stack) {
+                            const stack = data.stack;
+                            stack.forEach(s=> {
+                                const e = s._validationErrors[0];
+                                const error = new InvalidObject(e._propertyName, e._errorMessage);
+                                validator.addError(error);
+                            })
+                            validator.updateParent();
+                        }
+                        else {
+                            insertPet(data.petId, petName);
+                            addPetCard.fadeOut(fadeSpeed)
+                        }
+                        
                     })
             })
             cancel.click(()=>addPetCard.fadeOut(fadeSpeed));
@@ -169,7 +189,7 @@
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json",
-                    "Authorization": "Bearer " + getCookieToken()
+                    "Authorization": "Bearer " + getSessionToken()
                 }
             })
             .then(res=>res.json())

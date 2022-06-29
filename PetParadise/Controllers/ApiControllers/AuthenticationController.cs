@@ -30,14 +30,13 @@ namespace PetParadise.Controllers.ApiControllers
         public async Task<IHttpActionResult> CreateAccount(account_credential newAcc)
         {
             string hashedPassword = "", sessionId = "",
-                sessionToken = "", accessToken = "";
+                sessionToken = "";
             SessionManager session = null;
             login_sessions loginSession = null;
             UID uid = new UID(IdSize.SHORT);
 
             try
             {
-
                 using (MainDBEntities db = new MainDBEntities())
                 {
                     bool userExists = await db.account_credential
@@ -52,11 +51,10 @@ namespace PetParadise.Controllers.ApiControllers
                     hashedPassword = await PasswordManager.HashAsync(newAcc.Password);
                     newAcc.Password = hashedPassword;
 
-                    session = new SessionManager(newAcc.Id, newAcc.Username);
+                    session = new SessionManager(newAcc.Id, newAcc.Username, newAcc.AccountTypeId);
 
                     sessionId = await uid.GenerateIdAsync();
                     sessionToken = await session.TokenHandlerAsync(SessionType.SESSION);
-                    accessToken = await session.TokenHandlerAsync(SessionType.ACCESS);
 
                     loginSession = new login_sessions()
                     {
@@ -78,11 +76,12 @@ namespace PetParadise.Controllers.ApiControllers
                         session = loginSession.Token
                     });
 
-                    var cookie = new CookieHeaderValue("access_token", accessToken);
+                    var cookie = new CookieHeaderValue("session_token", sessionToken);
                     cookie.Domain = Request.RequestUri.Host;
                     cookie.Path = "/";
-                    cookie.Expires = Expiration.SHORT;
-
+                    cookie.HttpOnly = true;
+                    cookie.Expires = Expiration.MONTH;
+                    cookie.Path += "; SameSite=Strict"; // add samesite constraint
                     response.Headers.AddCookies(new CookieHeaderValue[] { cookie });
 
 
@@ -129,7 +128,7 @@ namespace PetParadise.Controllers.ApiControllers
         {
             login_sessions loginSession = null;
             account_credential user = null;
-            string sessionId = "", accessToken = "", sessionToken = "";
+            string sessionId = "", sessionToken = "";
             SessionManager session = null;
             UID uid = new UID(IdSize.SHORT);
 
@@ -158,10 +157,9 @@ namespace PetParadise.Controllers.ApiControllers
 
 
                     // generate new token 
-                    session = new SessionManager(user.Id, user.Username);
+                    session = new SessionManager(user.Id, user.Username, user.AccountTypeId);
                     sessionId = await uid.GenerateIdAsync();
                     sessionToken = await session.TokenHandlerAsync(SessionType.SESSION);
-                    accessToken = await session.TokenHandlerAsync(SessionType.ACCESS);
 
                     loginSession = new login_sessions()
                     {
@@ -184,18 +182,16 @@ namespace PetParadise.Controllers.ApiControllers
                         session = loginSession.Token
                     });
 
-                    var cookie = new CookieHeaderValue("access_token", accessToken)
+                    var cookie = new CookieHeaderValue("session_token", sessionToken)
                     {
                         Domain = Request.RequestUri.Host,
-                        Path = "/",
-                        Expires = Expiration.SHORT,
+                        Path = "/; SameSite=Strict",
+                        Expires = Expiration.MONTH,
+                        HttpOnly = true,
                         Secure = true
                     };
 
-
-
                     response.Headers.AddCookies(new CookieHeaderValue[] { cookie });
-
 
                     return ResponseMessage(response);
                 }
@@ -238,7 +234,21 @@ namespace PetParadise.Controllers.ApiControllers
                     db.login_sessions.Remove(activeSession);
                     db.SaveChanges();
                 }
-                return Ok("If you reached here, your session is now removed from the database.");
+
+                var response = Request.CreateResponse(HttpStatusCode.OK, "If you reached here, your session is now removed from the database.");
+
+                var cookie = new CookieHeaderValue("session_token", "")
+                {
+                    Domain = Request.RequestUri.Host,
+                    Path = "/; SameSite=Strict",
+                    HttpOnly = true,
+                    Expires = new DateTime(1960, 01, 01),
+                    Secure = true
+                };
+
+                response.Headers.AddCookies(new CookieHeaderValue[] { cookie });
+
+                return ResponseMessage(response);
             }
             catch (Exception)
             {
@@ -246,129 +256,130 @@ namespace PetParadise.Controllers.ApiControllers
             }
         }
 
-        [AllowAnonymous]
-        [HttpPost]
-        [Route("auth/refresh")]
-        public async Task<IHttpActionResult> GetAccessToken()
-        {
-            try
-            {
-                var headers = Request.Headers;
-                // check if session header exists
-                if (!headers.HasSessionTokenHeader())
-                    return new HttpErrorContent(Request,
-                        HttpStatusCode.Forbidden,
-                        Extras.Error.HttpError.InvalidSession);
+        //[AllowAnonymous]
+        //[HttpPost]
+        //[Route("auth/refresh")]
+        //public async Task<IHttpActionResult> GetAccessToken()
+        //{
+        //    try
+        //    {
+        //        var headers = Request.Headers;
+        //        // check if session header exists
+        //        if (!headers.HasSessionTokenHeader())
+        //            return new HttpErrorContent(Request,
+        //                HttpStatusCode.Forbidden,
+        //                Extras.Error.HttpError.InvalidSession);
 
-                // check if session is valid
-                JwtToken token = new JwtToken(headers.GetSessionToken(),
-                                        new SessionManager().CreateValidationParameters(SessionType.SESSION));
-                if (token == null)
-                    return new HttpErrorContent(Request,
-                        HttpStatusCode.Forbidden,
-                        Extras.Error.HttpError.InvalidSession);
+        //        // check if session is valid
+        //        JwtToken token = new JwtToken(headers.GetSessionToken(),
+        //                                new SessionManager().CreateValidationParameters(SessionType.SESSION));
+        //        if (token == null)
+        //            return new HttpErrorContent(Request,
+        //                HttpStatusCode.Forbidden,
+        //                Extras.Error.HttpError.InvalidSession);
 
-                // check if session is in database
-                using (MainDBEntities db = new MainDBEntities())
-                {
-                    var session = db.login_sessions
-                                    .Where(s => s.Token.Equals(token.Value))
-                                    .First();
+        //        // check if session is in database
+        //        using (MainDBEntities db = new MainDBEntities())
+        //        {
+        //            var session = db.login_sessions
+        //                            .Where(s => s.Token.Equals(token.Value))
+        //                            .First();
 
-                    if (session == null)
-                        return new HttpErrorContent(Request,
-                        HttpStatusCode.Forbidden,
-                        Extras.Error.HttpError.InvalidSession);
+        //            if (session == null)
+        //                return new HttpErrorContent(Request,
+        //                HttpStatusCode.Forbidden,
+        //                Extras.Error.HttpError.InvalidSession);
 
-                }
+        //        }
 
-                // reuse session userId and username for access token generation
-                PayloadModel payload = await token.GetPayloadAsync();
+        //        // reuse session userId and username for access token generation
+        //        PayloadModel payload = await token.GetPayloadAsync();
 
-                string accessToken = await new SessionManager(payload.UserId, payload.Username)
-                                        .TokenHandlerAsync(SessionType.ACCESS);
-
-
-                var response = Request.CreateResponse(HttpStatusCode.OK, "Access token is granted.");
-
-                var cookie = new CookieHeaderValue("access_token", accessToken)
-                {
-                    Domain = Request.RequestUri.Host,
-                    Path = "/",
-                    Expires = Expiration.SHORT,
-                    Secure = true
-                };
-                response.Headers.AddCookies(new CookieHeaderValue[] { cookie });
-
-                return ResponseMessage(response);
-            }
-            catch (Exception e)
-            {
-                Debug.WriteLine(e.InnerException);
-                return InternalServerError();
-            }
-        }
+        //        string sessionToken = await new SessionManager(payload.UserId, payload.Username)
+        //                                .TokenHandlerAsync(SessionType.SESSION);
 
 
-        [AllowAnonymous]
-        [HttpPost]
-        [Route("dev/refresh")]
-        public async Task<IHttpActionResult> GetAccessTokenDevMode()
-        {
-            try
-            {
-                var headers = Request.Headers;
-                // check if session header exists
+        //        var response = Request.CreateResponse(HttpStatusCode.OK, "Session token is granted.");
+
+        //        var cookie = new CookieHeaderValue("session_token", sessionToken)
+        //        {
+        //            Domain = Request.RequestUri.Host,
+        //            Path = "/; SameSite=Strict",
+        //            HttpOnly = true,
+        //            Expires = Expiration.MONTH,
+        //            Secure = true
+        //        };
+        //        response.Headers.AddCookies(new CookieHeaderValue[] { cookie });
+
+        //        return ResponseMessage(response);
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        Debug.WriteLine(e.InnerException);
+        //        return InternalServerError();
+        //    }
+        //}
+
+
+        //[AllowAnonymous]
+        //[HttpPost]
+        //[Route("dev/refresh")]
+        //public async Task<IHttpActionResult> GetAccessTokenDevMode()
+        //{
+        //    try
+        //    {
+        //        var headers = Request.Headers;
+        //        // check if session header exists
                 
-                if (!headers.HasSessionTokenHeader())
-                    return new HttpErrorContent(Request,
-                        HttpStatusCode.Forbidden,
-                        Extras.Error.HttpError.InvalidSession);
+        //        if (!headers.HasSessionTokenHeader())
+        //            return new HttpErrorContent(Request,
+        //                HttpStatusCode.Forbidden,
+        //                Extras.Error.HttpError.InvalidSession);
 
-                // check if session is valid
-                JwtToken token = new JwtToken(headers.GetSessionToken(),
-                                        new SessionManager().CreateValidationParameters(SessionType.SESSION));
-                Debug.WriteLine(token.Value);
+        //        // check if session is valid
+        //        JwtToken token = new JwtToken(headers.GetSessionToken(),
+        //                                new SessionManager().CreateValidationParameters(SessionType.SESSION));
 
-                if (string.IsNullOrEmpty(token.Value))
-                    return new HttpErrorContent(Request,
-                        HttpStatusCode.Forbidden,
-                        Extras.Error.HttpError.InvalidSession);
+        //        if (string.IsNullOrEmpty(token.Value))
+        //            return new HttpErrorContent(Request,
+        //                HttpStatusCode.Forbidden,
+        //                Extras.Error.HttpError.InvalidSession);
 
-                // check if session is in database
-                using (MainDBEntities db = new MainDBEntities())
-                {
-                    var session = db.login_sessions
-                                    .Where(s => s.Token.Equals(token.Value))
-                                    .First();
+        //        // check if session is in database
+        //        using (MainDBEntities db = new MainDBEntities())
+        //        {
+        //            var session = db.login_sessions
+        //                            .Where(s => s.Token.Equals(token.Value))
+        //                            .First();
 
-                    if (session == null)
-                        return new HttpErrorContent(Request,
-                        HttpStatusCode.Forbidden,
-                        Extras.Error.HttpError.InvalidSession);
-                }
+        //            if (session == null)
+        //                return new HttpErrorContent(Request,
+        //                HttpStatusCode.Forbidden,
+        //                Extras.Error.HttpError.InvalidSession);
+        //        }
 
-                // reuse session userId and username for access token generation
-                PayloadModel payload = await token.GetPayloadAsync();
+        //        // reuse session userId and username for access token generation
+        //        PayloadModel payload = await token.GetPayloadAsync();
 
-                string accessToken = await new SessionManager(payload.UserId, payload.Username)
-                                        .TokenHandlerAsync(SessionType.ACCESS);
-
-
-                var response = Request.CreateResponse(HttpStatusCode.OK, new
-                {
-                    token = accessToken
-                });
+        //        string sessionToken = await new SessionManager(payload.UserId, payload.Username)
+        //                                .TokenHandlerAsync(SessionType.SESSION);
 
 
-                return ResponseMessage(response);
-            }
-            catch (Exception e)
-            {
-                Debug.WriteLine(e.InnerException);
-                return InternalServerError();
-            }
-        }
+        //        var response = Request.CreateResponse(HttpStatusCode.OK, new
+        //        {
+        //            token = sessionToken
+        //        });
+
+
+        //        return ResponseMessage(response);
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        Debug.WriteLine(e.InnerException);
+        //        return InternalServerError();
+        //    }
+        //}
+
         [Authorize]
         [HttpPost]
         [Route("auth/archive")]
@@ -400,6 +411,51 @@ namespace PetParadise.Controllers.ApiControllers
                 }
 
                 return Ok();
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine(e.StackTrace);
+                return InternalServerError();
+            }
+        }
+
+
+        [Route("auth/verify")]
+        [HttpPost]
+        public IHttpActionResult VerifySession()
+        {
+            try
+            {
+                var headers = Request.Headers;
+                // check if session header exists
+                if (!headers.HasSessionTokenHeader())
+                    return new HttpErrorContent(Request,
+                        HttpStatusCode.Forbidden,
+                        Extras.Error.HttpError.InvalidSession);
+
+                // check if session is valid
+                JwtToken token = new JwtToken(headers.GetSessionToken(),
+                                        new SessionManager().CreateValidationParameters(SessionType.SESSION));
+                if (token.Value == null)
+                    return new HttpErrorContent(Request,
+                        HttpStatusCode.Forbidden,
+                        Extras.Error.HttpError.InvalidSession);
+
+                // check if session is in database
+                using (MainDBEntities db = new MainDBEntities())
+                {
+                    var session = db.login_sessions
+                                    .Where(s => s.Token.Equals(token.Value))
+                                    .First();
+
+                    if (session == null)
+                        return new HttpErrorContent(Request,
+                        HttpStatusCode.Forbidden,
+                        Extras.Error.HttpError.InvalidSession);
+
+                }
+
+                return Content(HttpStatusCode.OK, new { authenticity = 100 });
             }
             catch (Exception e)
             {

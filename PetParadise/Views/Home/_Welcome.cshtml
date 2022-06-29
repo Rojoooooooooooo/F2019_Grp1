@@ -8,3 +8,30 @@
         @RenderPage("Login.cshtml")
     </div>
 </div>
+
+<script>
+    const accountTypeId = localStorage.accountType;
+    const url = "/auth/verify";
+    const sesh = getSessionToken();
+
+    fetch(url, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "Session-Token": sesh
+        }
+    })
+    .then(res=> {
+        if (res.ok) {
+            if (accountTypeId == 1) {
+                window.location.replace('/account/petdashboard');
+            }
+            else if (accountTypeId == 2) {
+                console.log('clinic you are, soon!');
+            }
+        }
+        else {
+            console.log("hey please log in!");
+        }
+    })
+</script>
