@@ -3,6 +3,7 @@
 
 ## As of 06/29/2022
 > New path released!
+
 **Major Update**
 - Session handling reworked
 
