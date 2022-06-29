@@ -5,6 +5,7 @@
 > New path released!
 **Major Update**
 - Session handling reworked
+
 **Atomic Update**
 - Added mock layout for Pet Profile and Clinic Profile
 
