@@ -1,12 +1,20 @@
 # Changelog
 > The source code is also available in the [source-code branch](https://github.com/Rojoooooooooooo/F2019_Grp1/tree/source-code). Standby for regular updates.
 
+## As of 06/29/2022
+> New path released!
+**Major Update**
+- Session handling reworked
+**Atomic Update**
+- Added mock layout for Pet Profile and Clinic Profile
+
 ## As of 06/26/2022
 > ANNOUNCEMENT: Authentication will be reworked until tomorrow to fit the future development plans.
 > Changes:
 > - Session / Refresh token will be removed
 > - Access Token will be used as session token using ASP.NET Identity.
 > Tomorrow will be the release of the new patch.
+
 ## As of 06/25/2022
 
 **Atomic Update** 
