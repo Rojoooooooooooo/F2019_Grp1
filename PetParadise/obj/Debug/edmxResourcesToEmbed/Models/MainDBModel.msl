@@ -114,5 +114,37 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
+    <EntitySetMapping Name="profile_post">
+      <EntityTypeMapping TypeName="MainDBModel.profile_post">
+        <MappingFragment StoreEntitySet="profile_post">
+          <ScalarProperty Name="post_points" ColumnName="post_points" />
+          <ScalarProperty Name="MediaContent" ColumnName="MediaContent" />
+          <ScalarProperty Name="PostContent" ColumnName="PostContent" />
+          <ScalarProperty Name="PostCreationDate" ColumnName="PostCreationDate" />
+          <ScalarProperty Name="ProfileId" ColumnName="ProfileId" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="profile_post_comment">
+      <EntityTypeMapping TypeName="MainDBModel.profile_post_comment">
+        <MappingFragment StoreEntitySet="profile_post_comment">
+          <ScalarProperty Name="CommentCreationDate" ColumnName="CommentCreationDate" />
+          <ScalarProperty Name="CommentContent" ColumnName="CommentContent" />
+          <ScalarProperty Name="ProfileId" ColumnName="ProfileId" />
+          <ScalarProperty Name="PostId" ColumnName="PostId" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="profile_post_like">
+      <EntityTypeMapping TypeName="MainDBModel.profile_post_like">
+        <MappingFragment StoreEntitySet="profile_post_like">
+          <ScalarProperty Name="ProfileId" ColumnName="ProfileId" />
+          <ScalarProperty Name="PostId" ColumnName="PostId" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
   </EntityContainerMapping>
 </Mapping>

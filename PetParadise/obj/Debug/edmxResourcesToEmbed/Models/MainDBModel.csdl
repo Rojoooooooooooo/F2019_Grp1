@@ -154,6 +154,25 @@
       <End Role="pet_category" EntitySet="pet_category" />
       <End Role="pet_profile" EntitySet="pet_profile" />
     </AssociationSet>
+    <EntitySet Name="profile_post" EntityType="MainDBModel.profile_post" />
+    <EntitySet Name="profile_post_comment" EntityType="MainDBModel.profile_post_comment" />
+    <EntitySet Name="profile_post_like" EntityType="MainDBModel.profile_post_like" />
+    <AssociationSet Name="FK_profile_post_pet_profile" Association="MainDBModel.FK_profile_post_pet_profile">
+      <End Role="pet_profile" EntitySet="pet_profile" />
+      <End Role="profile_post" EntitySet="profile_post" />
+    </AssociationSet>
+    <AssociationSet Name="FK_profile_post_comment_profile_post" Association="MainDBModel.FK_profile_post_comment_profile_post">
+      <End Role="profile_post" EntitySet="profile_post" />
+      <End Role="profile_post_comment" EntitySet="profile_post_comment" />
+    </AssociationSet>
+    <AssociationSet Name="FK_profile_post_like_profile_post" Association="MainDBModel.FK_profile_post_like_profile_post">
+      <End Role="profile_post" EntitySet="profile_post" />
+      <End Role="profile_post_like" EntitySet="profile_post_like" />
+    </AssociationSet>
+    <AssociationSet Name="FK_profile_post_comment_pet_profile" Association="MainDBModel.FK_profile_post_comment_pet_profile">
+      <End Role="pet_profile" EntitySet="pet_profile" />
+      <End Role="profile_post_comment" EntitySet="profile_post_comment" />
+    </AssociationSet>
   </EntityContainer>
   <EntityType Name="owner_address">
     <Key>
@@ -217,6 +236,8 @@
     <NavigationProperty Name="owner_profile" Relationship="MainDBModel.FK_pet_profile_owner_profile" FromRole="pet_profile" ToRole="owner_profile" />
     <NavigationProperty Name="pet_breeds" Relationship="MainDBModel.FK_pet_profile_pet_breeds" FromRole="pet_profile" ToRole="pet_breeds" />
     <NavigationProperty Name="pet_category" Relationship="MainDBModel.FK_pet_profile_pet_category" FromRole="pet_profile" ToRole="pet_category" />
+    <NavigationProperty Name="profile_post" Relationship="MainDBModel.FK_profile_post_pet_profile" FromRole="pet_profile" ToRole="profile_post" />
+    <NavigationProperty Name="profile_post_comment" Relationship="MainDBModel.FK_profile_post_comment_pet_profile" FromRole="pet_profile" ToRole="profile_post_comment" />
   </EntityType>
   <Association Name="FK_pet_profile_owner_profile">
     <End Type="MainDBModel.owner_profile" Role="owner_profile" Multiplicity="1">
@@ -286,6 +307,95 @@
       </Principal>
       <Dependent Role="pet_profile">
         <PropertyRef Name="CategoryId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityType Name="profile_post">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="String" Nullable="false" MaxLength="8" FixedLength="false" Unicode="true" />
+    <Property Name="ProfileId" Type="String" Nullable="false" MaxLength="8" FixedLength="false" Unicode="true" />
+    <Property Name="PostCreationDate" Type="DateTime" Nullable="false" Precision="7" />
+    <Property Name="PostContent" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="MediaContent" Type="String" MaxLength="8" FixedLength="false" Unicode="true" />
+    <Property Name="post_points" Type="Int32" Nullable="false" />
+    <NavigationProperty Name="pet_profile" Relationship="MainDBModel.FK_profile_post_pet_profile" FromRole="profile_post" ToRole="pet_profile" />
+    <NavigationProperty Name="profile_post_comment" Relationship="MainDBModel.FK_profile_post_comment_profile_post" FromRole="profile_post" ToRole="profile_post_comment" />
+    <NavigationProperty Name="profile_post_like" Relationship="MainDBModel.FK_profile_post_like_profile_post" FromRole="profile_post" ToRole="profile_post_like" />
+  </EntityType>
+  <EntityType Name="profile_post_comment">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="String" Nullable="false" MaxLength="16" FixedLength="false" Unicode="true" />
+    <Property Name="PostId" Type="String" Nullable="false" MaxLength="8" FixedLength="false" Unicode="true" />
+    <Property Name="ProfileId" Type="String" Nullable="false" MaxLength="8" FixedLength="false" Unicode="true" />
+    <Property Name="CommentContent" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="CommentCreationDate" Type="DateTime" Nullable="false" Precision="0" />
+    <NavigationProperty Name="profile_post" Relationship="MainDBModel.FK_profile_post_comment_profile_post" FromRole="profile_post_comment" ToRole="profile_post" />
+    <NavigationProperty Name="pet_profile" Relationship="MainDBModel.FK_profile_post_comment_pet_profile" FromRole="profile_post_comment" ToRole="pet_profile" />
+  </EntityType>
+  <EntityType Name="profile_post_like">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="String" Nullable="false" MaxLength="8" FixedLength="false" Unicode="true" />
+    <Property Name="PostId" Type="String" Nullable="false" MaxLength="8" FixedLength="false" Unicode="true" />
+    <Property Name="ProfileId" Type="String" Nullable="false" MaxLength="8" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="profile_post" Relationship="MainDBModel.FK_profile_post_like_profile_post" FromRole="profile_post_like" ToRole="profile_post" />
+  </EntityType>
+  <Association Name="FK_profile_post_pet_profile">
+    <End Type="MainDBModel.pet_profile" Role="pet_profile" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Type="MainDBModel.profile_post" Role="profile_post" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="pet_profile">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="profile_post">
+        <PropertyRef Name="ProfileId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_profile_post_comment_profile_post">
+    <End Type="MainDBModel.profile_post" Role="profile_post" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Type="MainDBModel.profile_post_comment" Role="profile_post_comment" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="profile_post">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="profile_post_comment">
+        <PropertyRef Name="PostId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_profile_post_like_profile_post">
+    <End Type="MainDBModel.profile_post" Role="profile_post" Multiplicity="1" />
+    <End Type="MainDBModel.profile_post_like" Role="profile_post_like" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="profile_post">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="profile_post_like">
+        <PropertyRef Name="PostId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_profile_post_comment_pet_profile">
+    <End Type="MainDBModel.pet_profile" Role="pet_profile" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Type="MainDBModel.profile_post_comment" Role="profile_post_comment" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="pet_profile">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="profile_post_comment">
+        <PropertyRef Name="ProfileId" />
       </Dependent>
     </ReferentialConstraint>
   </Association>

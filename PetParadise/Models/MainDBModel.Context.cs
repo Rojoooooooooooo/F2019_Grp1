@@ -36,5 +36,8 @@ namespace PetParadise.Models
         public virtual DbSet<pet_profile> pet_profile { get; set; }
         public virtual DbSet<pet_breeds> pet_breeds { get; set; }
         public virtual DbSet<pet_category> pet_category { get; set; }
+        public virtual DbSet<profile_post> profile_post { get; set; }
+        public virtual DbSet<profile_post_comment> profile_post_comment { get; set; }
+        public virtual DbSet<profile_post_like> profile_post_like { get; set; }
     }
 }

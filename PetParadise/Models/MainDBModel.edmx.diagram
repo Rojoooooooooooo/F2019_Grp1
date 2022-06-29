@@ -25,7 +25,14 @@
         <AssociationConnector Association="MainDBModel.FK_pet_breeds_pet_category" />
         <AssociationConnector Association="MainDBModel.FK_pet_profile_pet_breeds" />
         <AssociationConnector Association="MainDBModel.FK_pet_profile_pet_category" />
-      </Diagram>
+        <EntityTypeShape EntityType="MainDBModel.profile_post" Width="1.5" PointX="5.25" PointY="12.75" />
+        <EntityTypeShape EntityType="MainDBModel.profile_post_comment" Width="1.5" PointX="7.5" PointY="14.375" />
+        <EntityTypeShape EntityType="MainDBModel.profile_post_like" Width="1.5" PointX="7.5" PointY="11.875" />
+        <AssociationConnector Association="MainDBModel.FK_profile_post_pet_profile" />
+        <AssociationConnector Association="MainDBModel.FK_profile_post_comment_profile_post" />
+        <AssociationConnector Association="MainDBModel.FK_profile_post_like_profile_post" />
+        <AssociationConnector Association="MainDBModel.FK_profile_post_comment_pet_profile" />
+        </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>
 </edmx:Edmx>

@@ -12,29 +12,26 @@ namespace PetParadise.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class pet_profile
+    public partial class profile_post
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public pet_profile()
+        public profile_post()
         {
-            this.profile_post = new HashSet<profile_post>();
             this.profile_post_comment = new HashSet<profile_post_comment>();
+            this.profile_post_like = new HashSet<profile_post_like>();
         }
     
         public string Id { get; set; }
-        public string OwnerId { get; set; }
-        public string Name { get; set; }
-        public System.DateTime Birthdate { get; set; }
-        public int CategoryId { get; set; }
-        public Nullable<int> BreedId { get; set; }
-        public string Color { get; set; }
+        public string ProfileId { get; set; }
+        public System.DateTime PostCreationDate { get; set; }
+        public string PostContent { get; set; }
+        public string MediaContent { get; set; }
+        public int post_points { get; set; }
     
-        public virtual owner_profile owner_profile { get; set; }
-        public virtual pet_breeds pet_breeds { get; set; }
-        public virtual pet_category pet_category { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<profile_post> profile_post { get; set; }
+        public virtual pet_profile pet_profile { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<profile_post_comment> profile_post_comment { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<profile_post_like> profile_post_like { get; set; }
     }
 }

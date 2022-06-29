@@ -314,6 +314,7 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\ApiControllers\AuthenticationController.cs" />
     <Compile Include="Controllers\ApiControllers\ClinicProfileController.cs" />
+    <Compile Include="Controllers\ApiControllers\FeedController.cs" />
     <Compile Include="Controllers\ApiControllers\OwnerProfileController.cs" />
     <Compile Include="Controllers\ApiControllers\PetController.cs" />
     <Compile Include="Controllers\ViewsControllers\AccountController.cs" />
@@ -342,6 +343,7 @@
     <Compile Include="Models\Body\LoginModel.cs" />
     <Compile Include="Models\Body\OwnerInformationModel.cs" />
     <Compile Include="Models\Body\PetInformationModel.cs" />
+    <Compile Include="Models\Body\PostModel.cs" />
     <Compile Include="Models\clinic_address.cs">
       <DependentUpon>MainDBModel.tt</DependentUpon>
     </Compile>
@@ -385,6 +387,15 @@
       <DependentUpon>MainDBModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\pet_profile.cs">
+      <DependentUpon>MainDBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\profile_post.cs">
+      <DependentUpon>MainDBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\profile_post_comment.cs">
+      <DependentUpon>MainDBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\profile_post_like.cs">
       <DependentUpon>MainDBModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />

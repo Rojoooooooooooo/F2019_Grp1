@@ -11,8 +11,7 @@ namespace PetParadise.Models
 {
     using System;
     using System.Collections.Generic;
-    using System.ComponentModel.DataAnnotations;
-
+    
     public partial class account_credential
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
@@ -22,22 +21,9 @@ namespace PetParadise.Models
         }
     
         public string Id { get; set; }
-
-        [Required]
-        [EmailAddress(ErrorMessage = "Please use a valid email address.")]
         public string Email { get; set; }
-
-        [Required(ErrorMessage = "Username is required.")]
-        [RegularExpression("^(?=[a-zA-Z0-9._]{6,18}$)(?!.*[_.]{2})[^_.].*[^_.]$", ErrorMessage = "Invalid username.")]
-        [MinLength(8, ErrorMessage = "Username must be 8-16 characters.")]
-        [MaxLength(16, ErrorMessage = "Username must be 8-16 characters.")]
         public string Username { get; set; }
-
-        [Required(ErrorMessage = "Password is required.")]
-        [MinLength(16, ErrorMessage = "Password must be 8-128 characters.")]
-        [MaxLength(128, ErrorMessage = "Password must be 8-128 characters.")]
         public string Password { get; set; }
-
         public int AccountTypeId { get; set; }
         public bool IsArchived { get; set; }
     
