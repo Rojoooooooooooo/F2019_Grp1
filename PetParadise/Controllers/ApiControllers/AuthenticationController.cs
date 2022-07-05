@@ -146,7 +146,8 @@ namespace PetParadise.Controllers.ApiControllers
                             Extras.Error.HttpError.LoginAuthError);
 
                     bool hasProfile = await db.owner_profile
-                                        .AnyAsync(u => u.Id.Equals(user.Id));
+                                        .AnyAsync(u => u.Id.Equals(user.Id)) || 
+                                        await db.clinic_profile.AnyAsync(u => u.Id.Equals(user.Id));
 
                     // if password doesn't match
                     if (!await PasswordManager.IsMatchedAsync(userLogin.Password, user.Password))

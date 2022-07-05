@@ -146,5 +146,83 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
+    <EntitySetMapping Name="OwnerProfiles">
+      <EntityTypeMapping TypeName="MainDBModel.OwnerProfile">
+        <MappingFragment StoreEntitySet="OwnerProfile">
+          <ScalarProperty Name="Contact" ColumnName="Contact" />
+          <ScalarProperty Name="contactId" ColumnName="contactId" />
+          <ScalarProperty Name="Country" ColumnName="Country" />
+          <ScalarProperty Name="City" ColumnName="City" />
+          <ScalarProperty Name="Barangay" ColumnName="Barangay" />
+          <ScalarProperty Name="Line" ColumnName="Line" />
+          <ScalarProperty Name="LastName" ColumnName="LastName" />
+          <ScalarProperty Name="MiddleName" ColumnName="MiddleName" />
+          <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="followings">
+      <EntityTypeMapping TypeName="MainDBModel.following">
+        <MappingFragment StoreEntitySet="following">
+          <ScalarProperty Name="Type" ColumnName="Type" />
+          <ScalarProperty Name="FollowerId" ColumnName="FollowerId" />
+          <ScalarProperty Name="FollowingId" ColumnName="FollowingId" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="clinic_review">
+      <EntityTypeMapping TypeName="MainDBModel.clinic_review">
+        <MappingFragment StoreEntitySet="clinic_review">
+          <ScalarProperty Name="ReviewCreationDate" ColumnName="ReviewCreationDate" />
+          <ScalarProperty Name="ReviewContent" ColumnName="ReviewContent" />
+          <ScalarProperty Name="ReviewerId" ColumnName="ReviewerId" />
+          <ScalarProperty Name="Rating" ColumnName="Rating" />
+          <ScalarProperty Name="ClinicId" ColumnName="ClinicId" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="ClinicProfiles">
+      <EntityTypeMapping TypeName="MainDBModel.ClinicProfile">
+        <MappingFragment StoreEntitySet="ClinicProfile">
+          <ScalarProperty Name="Rating" ColumnName="Rating" />
+          <ScalarProperty Name="Followers" ColumnName="Followers" />
+          <ScalarProperty Name="Contact" ColumnName="Contact" />
+          <ScalarProperty Name="contactId" ColumnName="contactId" />
+          <ScalarProperty Name="Country" ColumnName="Country" />
+          <ScalarProperty Name="City" ColumnName="City" />
+          <ScalarProperty Name="Barangay" ColumnName="Barangay" />
+          <ScalarProperty Name="Line" ColumnName="Line" />
+          <ScalarProperty Name="VetLastName" ColumnName="VetLastName" />
+          <ScalarProperty Name="VetMiddleName" ColumnName="VetMiddleName" />
+          <ScalarProperty Name="VetFirstName" ColumnName="VetFirstName" />
+          <ScalarProperty Name="ClinicName" ColumnName="ClinicName" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="PetProfiles">
+      <EntityTypeMapping TypeName="MainDBModel.PetProfile">
+        <MappingFragment StoreEntitySet="PetProfile">
+          <ScalarProperty Name="ContactId" ColumnName="ContactId" />
+          <ScalarProperty Name="Contact" ColumnName="Contact" />
+          <ScalarProperty Name="Breed" ColumnName="Breed" />
+          <ScalarProperty Name="Category" ColumnName="Category" />
+          <ScalarProperty Name="Following" ColumnName="Following" />
+          <ScalarProperty Name="Followers" ColumnName="Followers" />
+          <ScalarProperty Name="Country" ColumnName="Country" />
+          <ScalarProperty Name="City" ColumnName="City" />
+          <ScalarProperty Name="Barangay" ColumnName="Barangay" />
+          <ScalarProperty Name="Line" ColumnName="Line" />
+          <ScalarProperty Name="Color" ColumnName="Color" />
+          <ScalarProperty Name="Birthdate" ColumnName="Birthdate" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="OwnerId" ColumnName="OwnerId" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
   </EntityContainerMapping>
 </Mapping>

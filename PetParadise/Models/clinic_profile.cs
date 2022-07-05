@@ -18,6 +18,7 @@ namespace PetParadise.Models
         public clinic_profile()
         {
             this.clinic_contact = new HashSet<clinic_contact>();
+            this.clinic_review = new HashSet<clinic_review>();
         }
     
         public string Id { get; set; }
@@ -29,5 +30,7 @@ namespace PetParadise.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<clinic_contact> clinic_contact { get; set; }
         public virtual clinic_address clinic_address { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<clinic_review> clinic_review { get; set; }
     }
 }

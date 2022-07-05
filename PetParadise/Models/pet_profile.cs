@@ -19,6 +19,7 @@ namespace PetParadise.Models
         {
             this.profile_post = new HashSet<profile_post>();
             this.profile_post_comment = new HashSet<profile_post_comment>();
+            this.clinic_review = new HashSet<clinic_review>();
         }
     
         public string Id { get; set; }
@@ -36,5 +37,7 @@ namespace PetParadise.Models
         public virtual ICollection<profile_post> profile_post { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<profile_post_comment> profile_post_comment { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<clinic_review> clinic_review { get; set; }
     }
 }

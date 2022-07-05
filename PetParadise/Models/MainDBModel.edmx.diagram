@@ -32,6 +32,13 @@
         <AssociationConnector Association="MainDBModel.FK_profile_post_comment_profile_post" />
         <AssociationConnector Association="MainDBModel.FK_profile_post_like_profile_post" />
         <AssociationConnector Association="MainDBModel.FK_profile_post_comment_pet_profile" />
+        <EntityTypeShape EntityType="MainDBModel.OwnerProfile" Width="1.5" PointX="10.375" PointY="7.75" />
+        <EntityTypeShape EntityType="MainDBModel.following" Width="1.5" PointX="0.75" PointY="6.75" />
+        <EntityTypeShape EntityType="MainDBModel.clinic_review" Width="1.5" PointX="7.5" PointY="0.75" />
+        <AssociationConnector Association="MainDBModel.FK_clinic_review_clinic_profile" />
+        <AssociationConnector Association="MainDBModel.FK_clinic_review_pet_profile" />
+        <EntityTypeShape EntityType="MainDBModel.ClinicProfile" Width="1.5" PointX="12.375" PointY="3.75" />
+        <EntityTypeShape EntityType="MainDBModel.PetProfile" Width="1.5" PointX="10.375" PointY="11.75" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

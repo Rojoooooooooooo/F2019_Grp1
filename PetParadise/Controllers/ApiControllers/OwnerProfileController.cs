@@ -96,8 +96,12 @@ namespace PetParadise.Controllers
                     db.owner_profile.Add(profile);
                     
                     await db.SaveChangesAsync();
+
+                    return Content(HttpStatusCode.Created, new {
+                        userId
+                    });
                 }
-                return Content(HttpStatusCode.Created, "Profile created!");
+               
             }
             catch (DbUpdateException e)
             {

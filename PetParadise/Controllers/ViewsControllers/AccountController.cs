@@ -13,8 +13,9 @@ namespace PetParadise.Controllers.ViewsControllers
     {
 
         // GET: Create
-        public ActionResult CreateProfile(int accountType)
+        public ActionResult CreateProfile()
         {
+            ViewBag.Title = "Create Profile";
             ViewBag.EnableSearchMenu = false;
             ViewBag.EnableUserMenu = false;
             var session = Request.Cookies["session_token"] != null ? Request.Cookies["session_token"].Value : "";
@@ -26,16 +27,17 @@ namespace PetParadise.Controllers.ViewsControllers
                 if (token.Value != null)
                 {
                     var payload = token.GetPayload();
+                    var accountType = payload.AccountTypeId;
 
                     // get account type
                     if (accountType == 1)
                     {
-                        ViewBag.Title = "Build Owner Profile";
+                        ViewBag.Title = "Create Owner Profile";
                         return View("CreateOwner");
                     }
                     else if (accountType == 2)
                     {
-                        ViewBag.Title = "Build Clinic Profile";
+                        ViewBag.Title = "Create Clinic Profile";
                         return View("CreateClinic");
                     }
                     else return View("Index");
@@ -45,10 +47,12 @@ namespace PetParadise.Controllers.ViewsControllers
             return View("Index");
         }
 
+        [Route("owner/{id}")]
         public ActionResult PetDashboard()
         {
             try
             {
+                ViewBag.Title = "Pets Dashboard";
                 ViewBag.EnableSearchMenu = false;
                 ViewBag.EnableUserMenu = true;
 
@@ -67,33 +71,64 @@ namespace PetParadise.Controllers.ViewsControllers
             }
         }
 
-        public new ActionResult Profile()
-        {
-            ViewBag.EnableSearchMenu = false;
-            ViewBag.EnableUserMenu = false;
-            return View();
-        }
-
-        public ActionResult Clinic()
+        [Route("clinic/{id}")]
+        public ActionResult Clinic(string id)
         {
             try
             {
-                ViewBag.EnableSearchMenu = false;
-                ViewBag.EnableUserMenu = true;
-
                 string sessionToken = HttpContext.Request.Cookies["session_token"].Value;
-
+                
                 JwtToken token = new JwtToken(sessionToken, new SessionManager().CreateValidationParameters(SessionType.SESSION));
                 var payload = token.GetPayload();
-                string uid = payload.UserId;
 
-                using (MainDBEntities db = new MainDBEntities())
-                {
+                var isUser = payload.UserId.Equals(id);
+
+                ViewBag.Username = payload.Username;
+
+
+                using (MainDBEntities db = new MainDBEntities()) {
+                    pet_profile pet = null;
+                    if(payload.AccountTypeId == 1)
+                    {
+                        string petId = Request.Cookies["pet_id"] != null ? Request.Cookies["pet_id"].Value : "";
+                        pet = db.pet_profile.Single(i => i.Id.Equals(petId));
+                        ViewBag.PetId = petId;
+                        ViewBag.PetName = pet.Name;
+                    }
                         
+
+                    var clinic = db.ClinicProfiles.Single(i => i.Id.Equals(id));
+                    if (clinic == null) return RedirectToAction("Index", "Home");
+
+                    ViewBag.Title = clinic.ClinicName; 
+                    
+                    ClinicProfile profile = new ClinicProfile()
+                    {
+                        Id = clinic.Id,
+                        ClinicName = clinic.ClinicName,
+                        VetFirstName = clinic.VetFirstName,
+                        VetMiddleName = clinic.VetMiddleName,
+                        VetLastName = clinic.VetLastName,
+                        Line = clinic.Line,
+                        Barangay = clinic.Barangay,
+                        City = clinic.City,
+                        Country = clinic.Country,
+                        Contact = clinic.Contact,
+                        Followers = clinic.Followers,
+                        Rating = clinic.Rating
+                    };
+
+
+                    ViewData["profile"] = profile;
+
+                    ViewBag.EnableSearchMenu = !isUser;
+                    ViewBag.EnableUserMenu = isUser;
+                    ViewBag.IsUser = isUser;
+                    
+                    return View();
                 }
 
-
-                return View();
+                
             }
             catch (Exception)
             {

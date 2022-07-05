@@ -71,11 +71,10 @@
 
             console.log(data)
             if (hasProfile && accountTypeId == 1) {
-                window.location.replace("/Account/PetDashboard");
+                window.location.replace("/owner/"+userId);
             }
             else if (hasProfile && accountTypeId == 2) {
-                //window.location.replace("/Account/PetDashboard");
-                console.log("a clinic logged in")
+                window.location.replace("/clinic/"+userId);
             }
             else {
                 window.location.replace("/Account/CreateProfile?accountType=" + accountTypeId);

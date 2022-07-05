@@ -1,0 +1,115 @@
+﻿@using PetParadise.Models.Body
+
+@{ 
+    var post = ViewData["post"] as PostModel;
+}
+<div id="post-container" class="w-100 d-flex flex-column justify-content-center align-items-center gap-2">
+
+    @* post box *@
+
+    <div id="comment-container" class="w-75 d-flex flex-column justify-content-center align-content-center gap-2 p-4 sbg-base rounded-2">
+        @{
+                for (int i = 0; i < post.CommentsCount; i++)
+                {
+                    CommentModel comment = post.Comments[i];
+                    var date = comment.CreatedAt.ToUniversalTime().Subtract(new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc)).TotalMilliseconds;
+                    <div class="w-100 px-4 py-2 sbg-light rounded-2">
+                        <div class="d-flex flex-row justify-content-start align-items-center gap-2">
+                            <img id="profile-photo" class="rounded-circle" alt="user" src="https://ui-avatars.com/api/?background=random&bold=true&name=@comment.Name" style="height:36px;width:36px;" />
+                            <h6 class="fw-bold fs-6">@comment.Name</h6>
+                        </div>
+                        <div class="w-100 d-flex flex-column justify-content-start align-items-start ps-4">
+                            <div class="w-100 ps-4">
+                                <p class="w-100 text-wrap text-break fs-5 lh-sm">@comment.Content</p>
+                                <p id="comment-@comment.Id" class="fst-italic fs-6"></p>
+                                <script>
+                                    $("#comment-@comment.Id").text( prettyDate(new Date(@date).toLocaleString("en-PH")) )
+                                </script>
+                            </div>
+                        </div>
+                    </div>
+            }
+        }
+        
+    </div
+    ><br />
+    <br />
+</div>
+<div class="position-absolute start-50 bottom-0 mb-2 shadow translate-middle-x w-50 px-4 py-2 sbg-light rounded-2">
+    <div class="d-flex flex-row justify-content-start align-items-center gap-1">
+        <img id="profile-photo" class="rounded-circle" alt="user" src="https://ui-avatars.com/api/?background=random&bold=true&name=@ViewBag.PetName" style="height:36px;width:36px;" />
+        <form id="commentForm" class="w-100 d-flex flex-row"  autocomplete="off">
+            <input name="comment-content"class="form-control flex-grow-1" type="text" placeholder="Write a comment..." />
+            <button class="flex-grow-0 btn btn-outline-dark sbg-dark" type="submit"><i class="fa-solid fa-paper-plane"></i></button>
+        </form>
+    </div>
+</div>
+<script>
+
+
+
+    function giveTreat(e) {
+        let postId = e.target.getAttribute("data-postid");
+        let likesHolder = document.querySelector(`#like-${postId} > span`).firstChild;
+        let btn = $("#like-" + postId);
+
+        let liked = btn.attr("data-postliked");
+        let likesCount = btn.attr("data-likescount");
+        if (liked == "true") {
+            btn.addClass("sbg-light").removeClass("sbg-base");
+            btn.attr("data-postliked", "false");
+            btn.attr("data-likescount", --likesCount);
+            likesHolder.textContent = likesCount + " ";
+        }
+        else {
+            btn.addClass("sbg-base").removeClass("sbg-light");
+            btn.attr("data-postliked", "true");
+            btn.attr("data-likescount", ++likesCount);
+            likesHolder.textContent = likesCount + " ";
+        }
+
+        fetch(`/post/like?id=${postId}&petid=`+window.atob(localStorage["current_pet"]), {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": "Bearer " + getSessionToken()
+            }
+        })
+        .catch(e=>console.log(e))
+    }
+
+    $(document).ready(() => {
+        const date = @post.CreatedAt.ToUniversalTime().Subtract(new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc)).TotalMilliseconds;
+        const post = PostBox.postBoxTemplate("@post.ProfileId", "@post.Id", "@post.Name", "@post.Content", prettyDate(new Date(date).toLocaleString("en-PH")), "@post.LikesCount", "@post.CommentsCount", "@post.Liked".toLowerCase());
+        $("#post-container").prepend(post);
+        $("#like-" + "@post.Id").click(giveTreat);
+        if ("@post.Liked".toLowerCase() == "true")
+            $("#like-" + "@post.Id").addClass("sbg-base").removeClass("sbg-light");
+
+        $("#commentForm").submit(e=>{
+            e.preventDefault();
+            const content = e.target["comment-content"].value;
+
+            const data = {
+                id: "@post.Id",
+                profileId: window.atob(localStorage["current_pet"]),
+                content
+            }
+
+            fetch("/post/comment", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": "Bearer "+getSessionToken()
+                },
+                body: JSON.stringify(data)
+            })
+            .then(res=>res.json())
+            .then(comment=>{
+                const date = new Date().toLocaleString("en-PH");
+                const commentBox = PostBox.commentBoxTemplate(comment.ProfileId, comment.Id, comment.Name, comment.CommentContent, date);
+                $("#comment-container").append(commentBox);
+            })
+        })
+    })
+</script>

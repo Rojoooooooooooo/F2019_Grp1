@@ -201,8 +201,11 @@
         }
 
         function selectPet(e) {
-            const petId = window.atob(e.target.getAttribute("data-petid")); // decode
-
+            const encId = e.target.getAttribute("data-petid");
+            const petId = window.atob(encId); // decode
+            localStorage.setItem("current_pet", encId);
+            setCookie("pet_id", petId, 30); // 30 days
+            window.location.replace("/pet/" + petId);
         }
 
         function insertPet(petId, petname) {
@@ -214,14 +217,17 @@
             image.alt = petname;
             image.src = 'https://ui-avatars.com/api/?background=random&bold=true&name=' + petname;
             image.setAttribute("data-petId", window.btoa(petId));
+            image.setAttribute("data-petName", petname);
 
             nameContainer.innerHTML = petname;
             nameContainer.classList.add("h6","stext-dark", "text-center");
             nameContainer.setAttribute("data-petId", window.btoa(petId));
+            nameContainer.setAttribute("data-petName", petname);
 
             cardContainer.appendChild(image);
             cardContainer.appendChild(nameContainer);
             cardContainer.setAttribute("data-petId", window.btoa(petId));
+            cardContainer.setAttribute("data-petName", petname);
             cardContainer.setAttribute("role", "button");
             cardContainer.addEventListener('click', selectPet);
 

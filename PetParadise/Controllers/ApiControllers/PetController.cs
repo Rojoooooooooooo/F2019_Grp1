@@ -1,10 +1,12 @@
 ﻿using PetParadise.Extras;
+using PetParadise.Extras.Error;
 using PetParadise.Extras.Extensions.String;
 using PetParadise.Models;
 using PetParadise.Models.Body;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
 using System.Data.Entity.Validation;
 using System.Diagnostics;
@@ -104,69 +106,69 @@ namespace PetParadise.Controllers.ApiControllers
             }
         }
 
-        [Route("owner/pet")]
-        [HttpGet]
-        [Authorize]
-        public IHttpActionResult GetPet(string petId)
-        {
-            try
-            {
-                ClaimsIdentity identity = User.Identity as ClaimsIdentity;
-                var userId = identity.Claims.First(c => c.Type.Equals("userId")).Value;
+        //[Route("owner/pet")]
+        //[HttpGet]
+        //[Authorize]
+        //public IHttpActionResult GetPet(string petId)
+        //{
+        //    try
+        //    {
+        //        ClaimsIdentity identity = User.Identity as ClaimsIdentity;
+        //        var userId = identity.Claims.First(c => c.Type.Equals("userId")).Value;
 
-                using (MainDBEntities db = new MainDBEntities())
-                {
-                    var pet = db.owner_profile
-                                .SingleOrDefault(o => o.Id.Equals(userId))
-                                .pet_profile
-                                .Select(p => new
-                                {
-                                    p.Id,
-                                    p.OwnerId,
-                                    p.Name,
-                                    p.BreedId,
-                                    p.CategoryId,
-                                    p.Color,
-                                    p.Birthdate
-                                })
-                                .Single(p => p.Id == petId);
+        //        using (MainDBEntities db = new MainDBEntities())
+        //        {
+        //            var pet = db.owner_profile
+        //                        .SingleOrDefault(o => o.Id.Equals(userId))
+        //                        .pet_profile
+        //                        .Select(p => new
+        //                        {
+        //                            p.Id,
+        //                            p.OwnerId,
+        //                            p.Name,
+        //                            p.BreedId,
+        //                            p.CategoryId,
+        //                            p.Color,
+        //                            p.Birthdate
+        //                        })
+        //                        .Single(p => p.Id == petId);
 
-                    return Ok(pet);
-                }
-            }
-            catch (DbUpdateException e)
-            {
-                Debug.WriteLine(e.InnerException);
-                return StatusCode(HttpStatusCode.BadRequest);
-            }
-            catch (DbEntityValidationException e)
-            {
-                var errs = e.EntityValidationErrors.ToList();
-                string errorMessage = errs[0].ValidationErrors.ToList()[0].ErrorMessage;
+        //            return Ok(pet);
+        //        }
+        //    }
+        //    catch (DbUpdateException e)
+        //    {
+        //        Debug.WriteLine(e.InnerException);
+        //        return StatusCode(HttpStatusCode.BadRequest);
+        //    }
+        //    catch (DbEntityValidationException e)
+        //    {
+        //        var errs = e.EntityValidationErrors.ToList();
+        //        string errorMessage = errs[0].ValidationErrors.ToList()[0].ErrorMessage;
 
-                errs.ForEach(err =>
-                {
-                    var validationErrors = err.ValidationErrors.ToList();
-                    validationErrors.ForEach(er =>
-                    {
-                        Debug.WriteLine($"property_name: {er.PropertyName}; errorMessage: {er.ErrorMessage}");
-                    });
-                });
-                var errObj = new
-                {
-                    message = errorMessage,
-                    code = HttpStatusCode.BadRequest,
-                    stack = e.EntityValidationErrors.ToList()
-                };
-                return Content(HttpStatusCode.BadRequest, errObj);
-            }
-            catch (Exception e)
-            {
-                Debug.WriteLine(e.InnerException);
-                Debug.WriteLine(e.StackTrace);
-                return InternalServerError();
-            }
-        }
+        //        errs.ForEach(err =>
+        //        {
+        //            var validationErrors = err.ValidationErrors.ToList();
+        //            validationErrors.ForEach(er =>
+        //            {
+        //                Debug.WriteLine($"property_name: {er.PropertyName}; errorMessage: {er.ErrorMessage}");
+        //            });
+        //        });
+        //        var errObj = new
+        //        {
+        //            message = errorMessage,
+        //            code = HttpStatusCode.BadRequest,
+        //            stack = e.EntityValidationErrors.ToList()
+        //        };
+        //        return Content(HttpStatusCode.BadRequest, errObj);
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        Debug.WriteLine(e.InnerException);
+        //        Debug.WriteLine(e.StackTrace);
+        //        return InternalServerError();
+        //    }
+        //}
 
         [Route("owner/pets")]
         [HttpGet]
@@ -190,21 +192,21 @@ namespace PetParadise.Controllers.ApiControllers
                                 .ToList();
                     return Ok(pet);
                 }
-        }
+            }
             catch (DbUpdateException e)
             {
                 Debug.WriteLine(e.InnerException);
                 return StatusCode(HttpStatusCode.BadRequest);
-    }
+            }
             catch (DbEntityValidationException e)
             {
                 var errs = e.EntityValidationErrors.ToList();
-    string errorMessage = errs[0].ValidationErrors.ToList()[0].ErrorMessage;
+                string errorMessage = errs[0].ValidationErrors.ToList()[0].ErrorMessage;
 
-    errs.ForEach(err =>
-                {
-                    var validationErrors = err.ValidationErrors.ToList();
-    validationErrors.ForEach(er =>
+                errs.ForEach(err =>
+                            {
+                                var validationErrors = err.ValidationErrors.ToList();
+                validationErrors.ForEach(er =>
                     {
                         Debug.WriteLine($"property_name: {er.PropertyName}; errorMessage: {er.ErrorMessage}");
                     });
@@ -270,6 +272,283 @@ namespace PetParadise.Controllers.ApiControllers
 
                     return Ok(breeds);
                 }
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine(e.StackTrace);
+                return InternalServerError();
+            }
+        }
+        
+        [Authorize]
+        [Route("follow")]
+        [HttpPost]
+        public async Task<IHttpActionResult> Follow(string followingId, string followerId, string type)
+        {
+            try
+            {
+                ClaimsIdentity identity = User.Identity as ClaimsIdentity;
+                var userId = identity.Claims.First(c => c.Type.Equals("userId")).Value;
+
+                using(MainDBEntities db = new MainDBEntities())
+                {
+                    var isValid = db.pet_profile
+                                    .Where(i => i.OwnerId.Equals(userId))
+                                    .Any(i => i.Id.Equals(followerId));
+                    if(!isValid)
+                        return new HttpErrorContent(Request,
+                            HttpStatusCode.BadRequest,
+                            Extras.Error.HttpError.InvalidSession);
+
+                    bool followingExists = false;
+
+                    switch (type) {
+                        case "clinic":
+                            {
+                                followingExists = await db.clinic_profile.AnyAsync(i => i.Id.Equals(followingId));
+                                break;
+                            }
+                        case "pet":
+                            {
+                                followingExists = await db.pet_profile.AnyAsync(i => i.Id.Equals(followingId));
+                                break;
+                            }
+                        default:
+                            followingExists = false;
+                            break;
+                    }
+
+                    if (!followingExists) 
+                        return new HttpErrorContent(Request, 
+                            HttpStatusCode.BadRequest, 
+                            Extras.Error.HttpError.InvalidSession);
+                    
+
+                    string followId = await new UID(IdSize.SHORT).GenerateIdAsync();
+
+                    db.followings.Add(new following() {
+                        Id = followId,
+                        FollowingId = followingId,
+                        FollowerId = followerId,
+                        Type = type
+                    });
+                    await db.SaveChangesAsync();
+                    return Ok();
+                }
+
+            }
+            catch (DbUpdateException e)
+            {
+                Debug.WriteLine(e.InnerException);
+                return StatusCode(HttpStatusCode.BadRequest);
+            }
+            catch (DbEntityValidationException e)
+            {
+                var errs = e.EntityValidationErrors.ToList();
+                string errorMessage = errs[0].ValidationErrors.ToList()[0].ErrorMessage;
+
+                errs.ForEach(err =>
+                {
+                    var validationErrors = err.ValidationErrors.ToList();
+                    validationErrors.ForEach(er =>
+                    {
+                        Debug.WriteLine($"property_name: {er.PropertyName}; errorMessage: {er.ErrorMessage}");
+                    });
+                });
+                var errObj = new
+                {
+                    message = errorMessage,
+                    code = HttpStatusCode.BadRequest,
+                    stack = e.EntityValidationErrors.ToList()
+                };
+                return Content(HttpStatusCode.BadRequest, errObj);
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine(e.InnerException);
+                Debug.WriteLine(e.StackTrace);
+                return InternalServerError();
+            }
+        }
+
+        [Authorize]
+        [Route("unfollow")]
+        [HttpPost]
+        public async Task<IHttpActionResult> Unfollow(string followingId, string followerId, string type)
+        {
+            try
+            {
+                ClaimsIdentity identity = User.Identity as ClaimsIdentity;
+                var userId = identity.Claims.First(c => c.Type.Equals("userId")).Value;
+
+                using (MainDBEntities db = new MainDBEntities())
+                {
+                    var follow = db.followings
+                                        .Single(i=>i.FollowingId.Equals(followingId) && i.FollowerId.Equals(followerId));
+                    if (follow == null)
+                        return new HttpErrorContent(Request,
+                            HttpStatusCode.BadRequest,
+                            Extras.Error.HttpError.InvalidSession);
+
+                    db.followings.Remove(follow);
+                    await db.SaveChangesAsync();
+
+                    return Ok();
+                }
+
+            }
+            catch (DbUpdateException e)
+            {
+                Debug.WriteLine(e.InnerException);
+                return StatusCode(HttpStatusCode.BadRequest);
+            }
+            catch (DbEntityValidationException e)
+            {
+                var errs = e.EntityValidationErrors.ToList();
+                string errorMessage = errs[0].ValidationErrors.ToList()[0].ErrorMessage;
+
+                errs.ForEach(err =>
+                {
+                    var validationErrors = err.ValidationErrors.ToList();
+                    validationErrors.ForEach(er =>
+                    {
+                        Debug.WriteLine($"property_name: {er.PropertyName}; errorMessage: {er.ErrorMessage}");
+                    });
+                });
+                var errObj = new
+                {
+                    message = errorMessage,
+                    code = HttpStatusCode.BadRequest,
+                    stack = e.EntityValidationErrors.ToList()
+                };
+                return Content(HttpStatusCode.BadRequest, errObj);
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine(e.InnerException);
+                Debug.WriteLine(e.StackTrace);
+                return InternalServerError();
+            }
+        }
+
+
+        [Route("pet/")]
+        [HttpGet]
+        public IHttpActionResult GetPet(string id)
+        {
+            try
+            {
+                using (MainDBEntities db = new MainDBEntities())
+                {
+                    var pet = db.PetProfiles
+                                    .Where(i => i.Id.Equals(id))
+                                    .ToList();
+                    return Ok(pet);
+                }
+            }
+            catch (DbUpdateException e)
+            {
+                Debug.WriteLine(e.InnerException);
+                return Content(HttpStatusCode.BadRequest, new
+                {
+                    message = "Request cancelled."
+                });
+            }
+            catch (DbEntityValidationException e)
+            {
+                var errs = e.EntityValidationErrors.ToList();
+                string errorMessage = errs[0].ValidationErrors.ToList()[0].ErrorMessage;
+
+                errs.ForEach(err =>
+                {
+                    var validationErrors = err.ValidationErrors.ToList();
+                    validationErrors.ForEach(er =>
+                    {
+                        Debug.WriteLine($"property_name: {er.PropertyName}; errorMessage: {er.ErrorMessage}");
+                    });
+                });
+                var errObj = new
+                {
+                    message = errorMessage,
+                    code = HttpStatusCode.BadRequest,
+                    stack = e.EntityValidationErrors.ToList()
+                };
+                return Content(HttpStatusCode.BadRequest, errObj);
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine(e.StackTrace);
+                return InternalServerError();
+            }
+        }
+
+        [Authorize]
+        [Route("pet/{id}/feedback")]
+        [HttpPost]
+        public async Task<IHttpActionResult> WriteFeedback(ReviewModel feedback, string id)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(feedback.Content))
+                    return BadRequest();
+
+                using (MainDBEntities db = new MainDBEntities())
+                {
+                    // check if pet id exists
+                    var petExists = db.pet_profile.Any(i => id.Equals(i.Id));
+                    if (!petExists)
+                        return new HttpErrorContent(Request, HttpStatusCode.BadRequest, Extras.Error.HttpError.InvalidSession);
+
+                    // check if clinic exists
+                    var clinicExists = db.clinic_profile.Any(i => feedback.ClinicId.Equals(i.Id));
+                    if(!clinicExists)
+                        return new HttpErrorContent(Request, HttpStatusCode.BadRequest, Extras.Error.HttpError.InvalidSession);
+
+                    string reviewId = await new UID(IdSize.SHORT).GenerateIdAsync();
+                    clinic_review review = new clinic_review()
+                    {
+                        Id = reviewId,
+                        ClinicId = feedback.ClinicId,
+                        ReviewerId = id,
+                        ReviewContent = feedback.Content,
+                        Rating = feedback.Rating,
+                        ReviewCreationDate = DateTime.Now
+                    };
+
+                    db.clinic_review.Add(review);
+                    await db.SaveChangesAsync();
+
+                    return Ok();
+                }
+            }
+            catch (DbUpdateException e)
+            {
+                Debug.WriteLine(e.InnerException);
+                return Content(HttpStatusCode.BadRequest, new
+                {
+                    message = "Request cancelled."
+                });
+            }
+            catch (DbEntityValidationException e)
+            {
+                var errs = e.EntityValidationErrors.ToList();
+                string errorMessage = errs[0].ValidationErrors.ToList()[0].ErrorMessage;
+
+                errs.ForEach(err =>
+                {
+                    var validationErrors = err.ValidationErrors.ToList();
+                    validationErrors.ForEach(er =>
+                    {
+                        Debug.WriteLine($"property_name: {er.PropertyName}; errorMessage: {er.ErrorMessage}");
+                    });
+                });
+                var errObj = new
+                {
+                    message = errorMessage,
+                    code = HttpStatusCode.BadRequest,
+                    stack = e.EntityValidationErrors.ToList()
+                };
+                return Content(HttpStatusCode.BadRequest, errObj);
             }
             catch (Exception e)
             {

@@ -313,5 +313,118 @@ namespace PetParadise.Controllers
                 return InternalServerError();
             }
         }
+
+
+        [Route("clinic/")]
+        [HttpGet]
+        public IHttpActionResult GetClinic(string id) {
+            try
+            {
+                using(MainDBEntities db = new MainDBEntities())
+                {
+                    var clinic = db.ClinicProfiles
+                                    .Where(i => i.Id.Equals(id))
+                                    .ToList();
+                    return Ok(clinic);
+                }
+            }
+            catch (DbUpdateException e)
+            {
+                Debug.WriteLine(e.InnerException);
+                return Content(HttpStatusCode.BadRequest, new
+                {
+                    message = "Request cancelled."
+                });
+            }
+            catch (DbEntityValidationException e)
+            {
+                var errs = e.EntityValidationErrors.ToList();
+                string errorMessage = errs[0].ValidationErrors.ToList()[0].ErrorMessage;
+
+                errs.ForEach(err =>
+                {
+                    var validationErrors = err.ValidationErrors.ToList();
+                    validationErrors.ForEach(er =>
+                    {
+                        Debug.WriteLine($"property_name: {er.PropertyName}; errorMessage: {er.ErrorMessage}");
+                    });
+                });
+                var errObj = new
+                {
+                    message = errorMessage,
+                    code = HttpStatusCode.BadRequest,
+                    stack = e.EntityValidationErrors.ToList()
+                };
+                return Content(HttpStatusCode.BadRequest, errObj);
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine(e.StackTrace);
+                return InternalServerError();
+            }
+        }
+
+        [Route("clinic/{id}/feedbacks")]
+        [HttpGet]
+        public IHttpActionResult GetFeedbacks(string id)
+        {
+            try
+            {
+                using (MainDBEntities db = new MainDBEntities())
+                {
+                    var feedback = db.clinic_review
+                                    .Where(i => i.ClinicId.Equals(id))
+                                    .Select(i => new
+                                    {
+                                        i.Id,
+                                        i.ClinicId,
+                                        ClinicName = i.clinic_profile.Name,
+                                        i.ReviewerId,
+                                        PetName = i.pet_profile.Name,
+                                        i.ReviewContent,
+                                        i.Rating,
+                                        i.ReviewCreationDate
+                                    })
+                                    .OrderByDescending(i => i.ReviewCreationDate)
+                                    .ToList();
+
+                    return Ok(feedback);
+                }
+            }
+            catch (DbUpdateException e)
+            {
+                Debug.WriteLine(e.InnerException);
+                return Content(HttpStatusCode.BadRequest, new
+                {
+                    message = "Request cancelled."
+                });
+            }
+            catch (DbEntityValidationException e)
+            {
+                var errs = e.EntityValidationErrors.ToList();
+                string errorMessage = errs[0].ValidationErrors.ToList()[0].ErrorMessage;
+
+                errs.ForEach(err =>
+                {
+                    var validationErrors = err.ValidationErrors.ToList();
+                    validationErrors.ForEach(er =>
+                    {
+                        Debug.WriteLine($"property_name: {er.PropertyName}; errorMessage: {er.ErrorMessage}");
+                    });
+                });
+                var errObj = new
+                {
+                    message = errorMessage,
+                    code = HttpStatusCode.BadRequest,
+                    stack = e.EntityValidationErrors.ToList()
+                };
+                return Content(HttpStatusCode.BadRequest, errObj);
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine(e.StackTrace);
+                return InternalServerError();
+            }
+        }
     }
 }

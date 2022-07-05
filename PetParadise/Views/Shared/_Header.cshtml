@@ -7,17 +7,20 @@
         
         @if (ViewBag.EnableSearchMenu)
         {
-            <div id="pet-nav-controls" class="d-none flex-row gap-4">
-                <form class="d-flex">
-                    <input class="form-control" type="search" placeholder="Search Pet name or clinic" aria-label="Search">
-                    <button class="btn btn-outline-light border-0 sbg-darker" type="submit">Search</button>
+            <div id="pet-nav-controls" class="w-50 d-flex flex-row gap-4">
+                <form id="searchForm" class="flex-grow-1 d-flex flex-row">
+                    <input id="search-input" type="search" name="search" autocomplete="on" class="form-control flex-grow-1" />
+                    <button type="submit" class="flex-grow-1 btn btn-secondary">Search</button>
                 </form>
-                <ul class="navbar-nav d-flex flex-row gap-3">
+                <ul class="flex-grow-1 nav navbar-nav d-flex flex-row gap-3">
                     <li class="nav-item" role="button">
-                        <a class="nav-link">Feeds</a>
+                        <a href="/pet/@ViewBag.PetId" class="nav-link @(ViewContext.RouteData.Values["Action"].ToString() == "Feeds" ? "active" : "")">Feeds</a>
                     </li>
                     <li class="nav-item" role="button">
-                        <a class="nav-link">Nearby Clinics</a>
+                        <a class="nav-link @(ViewContext.RouteData.Values["Action"].ToString() == "NearbyClinic" ? "active" : "")">Nearby Clinic</a>
+                    </li>
+                    <li class="nav-item" role="button">
+                        <a href="/profile/@ViewBag.PetId" class="nav-link @(ViewContext.RouteData.Values["Action"].ToString() == "Profile" ? "active" : "")">My Profile</a>
                     </li>
                 </ul>
             </div>
@@ -38,6 +41,16 @@
 </div>
 
 <script>
+
+    const form = $("#searchForm");
+
+    form.submit(e=> {
+        e.preventDefault();
+        const query = $("#search-input").val();
+        window.location.href = "/search/" + query;
+
+    });
+
     $('#logout').click(() => {
         fetch('/auth/logout', {
             method: "POST",

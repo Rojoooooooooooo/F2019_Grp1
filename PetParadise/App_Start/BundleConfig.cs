@@ -20,11 +20,15 @@ namespace PetParadise.App_Start
                 "~/Scripts/jquery.unobtrusive*",
                 "~/Scripts/jquery.validate*"));
 
+            bundles.Add(new ScriptBundle("~/bundles/jquerydebounce").Include(
+                "~/Scripts/jquery-debounce.js"));
+
             bundles.Add(new ScriptBundle("~/bundles/modernizr").Include(
                 "~/Scripts/modernizr-*"));
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
                  "~/Content/jquery-ui.css",
+                 "~/Content/star-rating.css",
                  "~/Content/jquery-ui.theme.css",
                  "~/Content/jquery-ui.structure.css",
                  "~/Content/bootstrap.css",
@@ -35,6 +39,8 @@ namespace PetParadise.App_Start
 
             bundles.Add(new ScriptBundle("~/bundles/helpers").Include(
                 "~/Scripts/access.js",
+                "~/Scripts/star-rating.js",
+                "~/Scripts/PostBox/PostBox.js",
                 "~/Scripts/ValidationHandler/Validator.js",
                 "~/Scripts/ValidationHandler/InvalidObject.js"));
 

@@ -233,6 +233,9 @@
     <Content Include="Content\bootstrap.rtl.css" />
     <Content Include="Content\bootstrap.rtl.min.css" />
     <Content Include="Content\fontawesome.css" />
+    <Content Include="Content\images\star-empty.svg" />
+    <Content Include="Content\images\star-full.svg" />
+    <Content Include="Content\images\star-half.svg" />
     <Content Include="Content\images\ui-icons_444444_256x240.png" />
     <Content Include="Content\images\ui-icons_555555_256x240.png" />
     <Content Include="Content\images\ui-icons_777620_256x240.png" />
@@ -295,7 +298,11 @@
     <Content Include="Scripts\bootstrap.esm.min.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
+    <Content Include="Scripts\jquery-debounce.js" />
     <Content Include="Scripts\jquery-ui.js" />
+    <Content Include="Scripts\PostBox\PostBox.js" />
+    <Content Include="Content\star-rating.css" />
+    <Content Include="Scripts\star-rating.js" />
     <Content Include="Scripts\ValidationHandler\InvalidObject.js" />
     <Content Include="Scripts\ValidationHandler\Validator.js" />
     <Content Include="Scripts\jquery-3.6.js" />
@@ -338,12 +345,18 @@
       <DependentUpon>MainDBModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Body\ClinicInformationModel.cs" />
+    <Compile Include="Models\Body\CommentModel.cs" />
     <Compile Include="Models\Body\Interfaces\IClinicInformationModel.cs" />
     <Compile Include="Models\Body\Interfaces\IOwnerInformationModel.cs" />
     <Compile Include="Models\Body\LoginModel.cs" />
     <Compile Include="Models\Body\OwnerInformationModel.cs" />
     <Compile Include="Models\Body\PetInformationModel.cs" />
+    <Compile Include="Models\Body\ReviewModel.cs" />
     <Compile Include="Models\Body\PostModel.cs" />
+    <Compile Include="Models\Body\SearchModel.cs" />
+    <Compile Include="Models\ClinicProfile.cs">
+      <DependentUpon>MainDBModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\clinic_address.cs">
       <DependentUpon>MainDBModel.tt</DependentUpon>
     </Compile>
@@ -351,6 +364,12 @@
       <DependentUpon>MainDBModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\clinic_profile.cs">
+      <DependentUpon>MainDBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\clinic_review.cs">
+      <DependentUpon>MainDBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\following.cs">
       <DependentUpon>MainDBModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\login_sessions.cs">
@@ -371,6 +390,9 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>MainDBModel.edmx</DependentUpon>
     </Compile>
+    <Compile Include="Models\OwnerProfile.cs">
+      <DependentUpon>MainDBModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\owner_address.cs">
       <DependentUpon>MainDBModel.tt</DependentUpon>
     </Compile>
@@ -378,6 +400,9 @@
       <DependentUpon>MainDBModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\owner_profile.cs">
+      <DependentUpon>MainDBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\PetProfile.cs">
       <DependentUpon>MainDBModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\pet_breeds.cs">
@@ -434,8 +459,10 @@
     <Content Include="Views\Shared\_ValidationNotes.cshtml" />
     <Content Include="Views\Home\Feeds.cshtml" />
     <Content Include="Views\Account\PetDashboard.cshtml" />
-    <Content Include="Views\Account\Profile.cshtml" />
+    <Content Include="Views\Home\Profile.cshtml" />
     <Content Include="Views\Account\Clinic.cshtml" />
+    <Content Include="Views\Home\Post.cshtml" />
+    <Content Include="Views\Home\Search.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

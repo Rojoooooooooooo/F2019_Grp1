@@ -24,7 +24,7 @@ namespace PetParadise.Controllers.ApiControllers
         [Authorize]
         [Route("posts")]
         [HttpGet]
-        public IHttpActionResult getPosts(string filter)
+        public IHttpActionResult GetPosts(string petid, string filter)
         {
             try
             {
@@ -35,87 +35,159 @@ namespace PetParadise.Controllers.ApiControllers
                 {
                     var userAddress = db.owner_address
                                          .Single((a) => a.Id.Equals(userId));
-                    string basis = "";
+
+                    
                     switch (filter)
                     {
+                        case "following": {
+                                // get following posts
+                                var followings = db.followings.Where(i => i.FollowerId.Equals(petid)).ToArray();
+                                List<List<PostModel>> postFollowings = new List<List<PostModel>>();
+
+                                int index = 0;
+                                foreach(var f in followings) {
+
+                                    var post = db.profile_post
+                                                .Where(i => i.ProfileId.Equals(f.FollowingId))
+                                                .Select(i => new PostModel
+                                                {
+                                                    Id = i.Id,
+                                                    Name = i.pet_profile.Name,
+                                                    Content = i.PostContent,
+                                                    ProfileId = i.ProfileId,
+                                                    CreatedAt = i.PostCreationDate,
+                                                    LikesCount = i.profile_post_like.Count(),
+                                                    CommentsCount = i.profile_post_comment.Count(),
+                                                    Liked = i.profile_post_like.Any(j => j.ProfileId.Equals(petid))
+                                                })
+                                                .ToList();
+
+                                    if (post == null) continue;
+
+                                    postFollowings.Add(post);
+                                    index++;
+                                }
+                                
+                                return Ok(postFollowings.SelectMany(i=>i).OrderByDescending(i=>i.CreatedAt));
+                       }
                         case "country":
                             {
-                                basis = userAddress.Country;
                                 var s = db.owner_profile
-                                        .Where(owner => owner.owner_address.Country.Equals(basis))
+                                        .Where(owner => owner.owner_address.Country.Equals(userAddress.Country))
                                         .SelectMany(i => i.pet_profile)
                                         .SelectMany(i => i.profile_post)
                                         .Select(i => new PostModel()
                                         {
                                             Id = i.Id,
+                                            Name = i.pet_profile.Name,
                                             Content = i.PostContent,
                                             ProfileId = i.ProfileId,
-                                            CreatedAt = i.PostCreationDate
+                                            CreatedAt = i.PostCreationDate,
+                                            LikesCount = i.profile_post_like.Count(),
+                                            CommentsCount = i.profile_post_comment.Count(),
+                                            Liked = i.profile_post_like.Any(j => j.ProfileId.Equals(petid))
                                         })
-                                        .OrderBy(i => i.CreatedAt)
-                                        .ToList();
+                                        .OrderByDescending(i => i.CreatedAt)
+                                        .ToArray();
 
                                 return Ok(s);
                             }
 
                         case "barangay":
                             {
-                                basis = userAddress.Barangay;
                                 var s = db.owner_profile
-                                        .Where(owner => owner.owner_address.Barangay.Equals(basis))
+                                        .Where(owner => owner.owner_address.Barangay.Equals(userAddress.Barangay) && 
+                                        owner.owner_address.City.Equals(userAddress.City) &&
+                                        owner.owner_address.Country.Equals(userAddress.Country))
                                         .SelectMany(i => i.pet_profile)
                                         .SelectMany(i => i.profile_post)
                                         .Select(i => new PostModel()
                                         {
                                             Id = i.Id,
+                                            Name = i.pet_profile.Name,
                                             Content = i.PostContent,
                                             ProfileId = i.ProfileId,
-                                            CreatedAt = i.PostCreationDate
+                                            CreatedAt = i.PostCreationDate,
+                                            LikesCount = i.profile_post_like.Count(),
+                                            CommentsCount = i.profile_post_comment.Count(),
+                                            Liked = i.profile_post_like.Any(j => j.ProfileId.Equals(petid))
                                         })
-                                        .OrderBy(i => i.CreatedAt)
-                                        .ToList();
+                                        .OrderByDescending(i => i.CreatedAt)
+                                        .ToArray();
 
                                 return Ok(s);
                             }
                         case "city":
                             {
-                                basis = userAddress.City;
                                 var s = db.owner_profile
-                                        .Where(owner => owner.owner_address.City.Equals(basis))
+                                        .Where(owner => owner.owner_address.City.Equals(userAddress.City) &&
+                                        owner.owner_address.Country.Equals(userAddress.Country))
                                         .SelectMany(i => i.pet_profile)
                                         .SelectMany(i => i.profile_post)
                                         .Select(i => new PostModel()
                                         {
                                             Id = i.Id,
+                                            Name = i.pet_profile.Name,
                                             Content = i.PostContent,
                                             ProfileId = i.ProfileId,
-                                            CreatedAt = i.PostCreationDate
+                                            CreatedAt = i.PostCreationDate,
+                                            LikesCount = i.profile_post_like.Count(),
+                                            CommentsCount = i.profile_post_comment.Count(),
+                                            Liked = i.profile_post_like.Any(j => j.ProfileId.Equals(petid))
                                         })
-                                        .OrderBy(i => i.CreatedAt)
-                                        .ToList();
+                                        .OrderByDescending(i => i.CreatedAt)
+                                        .ToArray();
 
                                 return Ok(s);
                             }
                         default:
                             {
-                                basis = userAddress.Country;
+                                // get following posts
+                                var followings = db.followings.Where(i => i.FollowerId.Equals(petid)).ToList();
+                                var postFollowings = new List<List<PostModel>>();
+
+                                followings.ForEach(f =>
+                                {
+                                    var post = db.profile_post
+                                                .Where(i => i.ProfileId.Equals(f.FollowingId))
+                                                .Select(i => new PostModel()
+                                                {
+                                                    Id = i.Id,
+                                                    Name = i.pet_profile.Name,
+                                                    Content = i.PostContent,
+                                                    ProfileId = i.ProfileId,
+                                                    CreatedAt = i.PostCreationDate,
+                                                    LikesCount = i.profile_post_like.Count(),
+                                                    CommentsCount = i.profile_post_comment.Count(),
+                                                    Liked = i.profile_post_like.Any(j => j.ProfileId.Equals(petid))
+                                                })
+                                                .ToList();
+                                    postFollowings.Add(post);
+                                });
+
                                 var s = db.owner_profile
-                                        .Where(owner => owner.owner_address.Country.Equals(basis))
+                                        .Where(owner => owner.owner_address.Country.Equals(userAddress.Country))
                                         .SelectMany(i => i.pet_profile)
                                         .SelectMany(i => i.profile_post)
                                         .Select(i => new PostModel()
                                         {
                                             Id = i.Id,
+                                            Name = i.pet_profile.Name,
                                             Content = i.PostContent,
                                             ProfileId = i.ProfileId,
                                             CreatedAt = i.PostCreationDate,
                                             LikesCount = i.profile_post_like.Count(),
-                                            CommentsCount = i.profile_post_comment.Count()
+                                            CommentsCount = i.profile_post_comment.Count(),
+                                            Liked = i.profile_post_like.Any(j => j.ProfileId.Equals(petid))
                                         })
-                                        .OrderBy(i => i.CreatedAt)
-                                        .ToList();
+                                        .ToArray();
+                                var p_follow = postFollowings.SelectMany(i => i).ToArray();
+                                PostModel[] posts = new PostModel[s.Length + p_follow.Length];
+                                s.CopyTo(posts, 0);
+                                p_follow.CopyTo(posts, s.Length);
 
-                                return Ok(s);
+                                var posts_final = posts.GroupBy(i => i.Id).Select(i => i.First()).OrderByDescending(i => i.CreatedAt).ToArray();
+                                return Ok(posts_final);
                             }
                     }
                 }
@@ -137,9 +209,12 @@ namespace PetParadise.Controllers.ApiControllers
             {
                 ClaimsIdentity identity = User.Identity as ClaimsIdentity;
                 var userId = identity.Claims.First(c => c.Type.Equals("userId")).Value;
-                
+
+                if (string.IsNullOrEmpty(post.Content))
+                    return BadRequest();
+
                 // check if post is from its owner
-                using(MainDBEntities db = new MainDBEntities())
+                using (MainDBEntities db = new MainDBEntities())
                 {
                     var profile = db.owner_profile
                                     .Single(u => userId.Equals(u.Id))
@@ -156,7 +231,7 @@ namespace PetParadise.Controllers.ApiControllers
                         Id = postId,
                         PostContent = post.Content,
                         ProfileId = post.ProfileId,
-                        PostCreationDate = DateTime.UtcNow
+                        PostCreationDate = DateTime.Now
                     };
 
                     profile.profile_post.Add(profilePost);
@@ -209,7 +284,7 @@ namespace PetParadise.Controllers.ApiControllers
         // remove post
 
         // get post (id)
-        [Route("post/")]
+        [Route("api/post/{id}")]
         [HttpGet]
         public IHttpActionResult GetPost(string id) {
             try
@@ -247,6 +322,7 @@ namespace PetParadise.Controllers.ApiControllers
             }
         }
 
+
         // comment in a post (id)
         [Authorize]
         [Route("post/comment")]
@@ -256,6 +332,9 @@ namespace PetParadise.Controllers.ApiControllers
             {
                 ClaimsIdentity identity = User.Identity as ClaimsIdentity;
                 var userId = identity.Claims.First(c => c.Type.Equals("userId")).Value;
+
+                if (string.IsNullOrEmpty(comment.Content))
+                    return BadRequest();
 
                 // check if comment is from its owner
                 using (MainDBEntities db = new MainDBEntities())
@@ -283,7 +362,7 @@ namespace PetParadise.Controllers.ApiControllers
                         ProfileId = profile.Id,
                         PostId = comment.Id,
                         CommentContent = comment.Content,
-                        CommentCreationDate = comment.CreatedAt
+                        CommentCreationDate = DateTime.Now
                     };
 
                     post.profile_post_comment.Add(postComment);
@@ -337,11 +416,11 @@ namespace PetParadise.Controllers.ApiControllers
         }
 
 
-        // like a post
+        // like/unlike a post
         [Authorize]
         [Route("post/like")]
         [HttpPost]
-        public async Task<IHttpActionResult> Like(string id, string petid)
+        public async Task<IHttpActionResult> ToggleLike(string id, string petid)
         {
             try
             {
@@ -357,17 +436,27 @@ namespace PetParadise.Controllers.ApiControllers
                     if (post == null) return new HttpErrorContent(Request,
                          HttpStatusCode.BadRequest, Extras.Error.HttpError.InvalidSession);
 
+                    var likeExists = post.profile_post_like.Any(i => i.ProfileId.Equals(petid));
+
+                    if (likeExists) {
+                        var existingLike = post.profile_post_like.Single(i=>i.ProfileId.Equals(petid));
+                        db.profile_post_like.Remove(existingLike);
+                        await db.SaveChangesAsync();
+
+                        return Ok(new { like = false });
+                    }
+
                     profile_post_like newLike = new profile_post_like()
                     {
                         Id = await new UID(IdSize.SHORT).GenerateIdAsync(),
-                        PostId = id,
+                        PostId = post.Id,
                         ProfileId = petid
                     };
 
                     post.profile_post_like.Add(newLike);
                     await db.SaveChangesAsync();
 
-                    return Ok();
+                    return Ok(new { like = true });
                 }
             }
             catch (DbUpdateException e)
@@ -403,55 +492,87 @@ namespace PetParadise.Controllers.ApiControllers
             }
         }
 
-        [Authorize]
-        [Route("post/unlike")]
-        [HttpPost]
-        public async Task<IHttpActionResult> Unlike(string id, string petid)
+        //[Authorize]
+        //[Route("post/unlike")]
+        //[HttpPost]
+        //public async Task<IHttpActionResult> Unlike(string id, string petid)
+        //{
+        //    try
+        //    {
+        //        using (MainDBEntities db = new MainDBEntities())
+        //        {
+        //            var postLikes = db.profile_post_like
+        //                                .Single(p => p.PostId.Equals(id) && p.ProfileId.Equals(petid));
+        //            if(postLikes == null) return new HttpErrorContent(Request,
+        //                 HttpStatusCode.BadRequest, Extras.Error.HttpError.InvalidSession);
+        //            db.profile_post_like.Remove(postLikes);
+        //            await db.SaveChangesAsync();
+
+        //            return Ok();
+        //        }
+        //    }
+        //    catch (DbUpdateException e)
+        //    {
+        //        Debug.WriteLine(e.InnerException);
+        //        return StatusCode(HttpStatusCode.BadRequest);
+        //    }
+        //    catch (DbEntityValidationException e)
+        //    {
+        //        var errs = e.EntityValidationErrors.ToList();
+        //        string errorMessage = errs[0].ValidationErrors.ToList()[0].ErrorMessage;
+
+        //        errs.ForEach(err =>
+        //        {
+        //            var validationErrors = err.ValidationErrors.ToList();
+        //            validationErrors.ForEach(er =>
+        //            {
+        //                Debug.WriteLine($"property_name: {er.PropertyName}; errorMessage: {er.ErrorMessage}");
+        //            });
+        //        });
+        //        var errObj = new
+        //        {
+        //            message = errorMessage,
+        //            code = HttpStatusCode.BadRequest,
+        //            stack = e.EntityValidationErrors.ToList()
+        //        };
+        //        return Content(HttpStatusCode.BadRequest, errObj);
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        Debug.WriteLine(e.StackTrace);
+        //        return InternalServerError();
+        //    }
+        //}
+
+        [Route("posts/{id}")]
+        [HttpGet]
+        public IHttpActionResult GetPetPost(string id)
         {
             try
             {
-                using (MainDBEntities db = new MainDBEntities())
-                {
-                    var postLikes = db.profile_post_like
-                                        .Single(p => p.PostId.Equals(id) && p.ProfileId.Equals(petid));
-                    if(postLikes == null) return new HttpErrorContent(Request,
-                         HttpStatusCode.BadRequest, Extras.Error.HttpError.InvalidSession);
-                    db.profile_post_like.Remove(postLikes);
-                    await db.SaveChangesAsync();
-
-                    return Ok();
+                using (MainDBEntities db = new MainDBEntities()) {
+                    var posts = db.profile_post
+                                .Where(i => i.ProfileId.Equals(id))
+                                .Select(i => new PostModel()
+                                {
+                                    Id = i.Id,
+                                    Name = i.pet_profile.Name,
+                                    Content = i.PostContent,
+                                    ProfileId = i.ProfileId,
+                                    CreatedAt = i.PostCreationDate,
+                                    LikesCount = i.profile_post_like.Count(),
+                                    CommentsCount = i.profile_post_comment.Count(),
+                                    Liked = i.profile_post_like.Any(f=>f.ProfileId.Equals(id))
+                                })
+                                .OrderByDescending(i=>i.CreatedAt)
+                                .ToList();
+                    return Ok(posts);
                 }
             }
-            catch (DbUpdateException e)
+            catch (Exception)
             {
-                Debug.WriteLine(e.InnerException);
-                return StatusCode(HttpStatusCode.BadRequest);
-            }
-            catch (DbEntityValidationException e)
-            {
-                var errs = e.EntityValidationErrors.ToList();
-                string errorMessage = errs[0].ValidationErrors.ToList()[0].ErrorMessage;
 
-                errs.ForEach(err =>
-                {
-                    var validationErrors = err.ValidationErrors.ToList();
-                    validationErrors.ForEach(er =>
-                    {
-                        Debug.WriteLine($"property_name: {er.PropertyName}; errorMessage: {er.ErrorMessage}");
-                    });
-                });
-                var errObj = new
-                {
-                    message = errorMessage,
-                    code = HttpStatusCode.BadRequest,
-                    stack = e.EntityValidationErrors.ToList()
-                };
-                return Content(HttpStatusCode.BadRequest, errObj);
-            }
-            catch (Exception e)
-            {
-                Debug.WriteLine(e.StackTrace);
-                return InternalServerError();
+                throw;
             }
         }
     }

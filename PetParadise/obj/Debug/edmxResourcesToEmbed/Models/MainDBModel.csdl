@@ -32,6 +32,7 @@
     <Property Name="VetLastName" Type="String" MaxLength="35" FixedLength="false" Unicode="true" Nullable="false" />
     <NavigationProperty Name="clinic_contact" Relationship="Self.FK_clinic_contact_clinic_profile" FromRole="clinic_profile" ToRole="clinic_contact" />
     <NavigationProperty Name="clinic_address" Relationship="MainDBModel.FK_clinic_address_clinic_profile" FromRole="clinic_profile" ToRole="clinic_address" />
+    <NavigationProperty Name="clinic_review" Relationship="MainDBModel.FK_clinic_review_clinic_profile" FromRole="clinic_profile" ToRole="clinic_review" />
   </EntityType>
   <EntityType Name="login_sessions">
     <Key>
@@ -173,6 +174,19 @@
       <End Role="pet_profile" EntitySet="pet_profile" />
       <End Role="profile_post_comment" EntitySet="profile_post_comment" />
     </AssociationSet>
+    <EntitySet Name="OwnerProfiles" EntityType="MainDBModel.OwnerProfile" />
+    <EntitySet Name="followings" EntityType="MainDBModel.following" />
+    <EntitySet Name="clinic_review" EntityType="MainDBModel.clinic_review" />
+    <AssociationSet Name="FK_clinic_review_clinic_profile" Association="MainDBModel.FK_clinic_review_clinic_profile">
+      <End Role="clinic_profile" EntitySet="clinic_profile" />
+      <End Role="clinic_review" EntitySet="clinic_review" />
+    </AssociationSet>
+    <AssociationSet Name="FK_clinic_review_pet_profile" Association="MainDBModel.FK_clinic_review_pet_profile">
+      <End Role="pet_profile" EntitySet="pet_profile" />
+      <End Role="clinic_review" EntitySet="clinic_review" />
+    </AssociationSet>
+    <EntitySet Name="ClinicProfiles" EntityType="MainDBModel.ClinicProfile" />
+    <EntitySet Name="PetProfiles" EntityType="MainDBModel.PetProfile" />
   </EntityContainer>
   <EntityType Name="owner_address">
     <Key>
@@ -238,6 +252,7 @@
     <NavigationProperty Name="pet_category" Relationship="MainDBModel.FK_pet_profile_pet_category" FromRole="pet_profile" ToRole="pet_category" />
     <NavigationProperty Name="profile_post" Relationship="MainDBModel.FK_profile_post_pet_profile" FromRole="pet_profile" ToRole="profile_post" />
     <NavigationProperty Name="profile_post_comment" Relationship="MainDBModel.FK_profile_post_comment_pet_profile" FromRole="pet_profile" ToRole="profile_post_comment" />
+    <NavigationProperty Name="clinic_review" Relationship="MainDBModel.FK_clinic_review_pet_profile" FromRole="pet_profile" ToRole="clinic_review" />
   </EntityType>
   <Association Name="FK_pet_profile_owner_profile">
     <End Type="MainDBModel.owner_profile" Role="owner_profile" Multiplicity="1">
@@ -399,4 +414,126 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
+  <EntityType Name="OwnerProfile">
+    <Key>
+      <PropertyRef Name="Id" />
+      <PropertyRef Name="FirstName" />
+      <PropertyRef Name="LastName" />
+      <PropertyRef Name="Line" />
+      <PropertyRef Name="Barangay" />
+      <PropertyRef Name="City" />
+      <PropertyRef Name="Country" />
+      <PropertyRef Name="contactId" />
+      <PropertyRef Name="Contact" />
+    </Key>
+    <Property Name="Id" Type="String" Nullable="false" MaxLength="8" FixedLength="false" Unicode="true" />
+    <Property Name="FirstName" Type="String" Nullable="false" MaxLength="35" FixedLength="false" Unicode="true" />
+    <Property Name="MiddleName" Type="String" MaxLength="35" FixedLength="false" Unicode="true" />
+    <Property Name="LastName" Type="String" Nullable="false" MaxLength="35" FixedLength="false" Unicode="true" />
+    <Property Name="Line" Type="String" Nullable="false" MaxLength="35" FixedLength="false" Unicode="true" />
+    <Property Name="Barangay" Type="String" Nullable="false" MaxLength="35" FixedLength="false" Unicode="true" />
+    <Property Name="City" Type="String" Nullable="false" MaxLength="35" FixedLength="false" Unicode="true" />
+    <Property Name="Country" Type="String" Nullable="false" MaxLength="35" FixedLength="false" Unicode="true" />
+    <Property Name="contactId" Type="String" Nullable="false" MaxLength="8" FixedLength="false" Unicode="true" />
+    <Property Name="Contact" Type="String" Nullable="false" MaxLength="15" FixedLength="false" Unicode="true" />
+  </EntityType>
+  <EntityType Name="following">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="String" Nullable="false" MaxLength="8" FixedLength="false" Unicode="true" />
+    <Property Name="FollowingId" Type="String" Nullable="false" MaxLength="8" FixedLength="false" Unicode="true" />
+    <Property Name="FollowerId" Type="String" Nullable="false" MaxLength="8" FixedLength="false" Unicode="true" />
+    <Property Name="Type" Type="String" Nullable="false" MaxLength="6" FixedLength="false" Unicode="true" />
+  </EntityType>
+  <EntityType Name="clinic_review">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="String" Nullable="false" MaxLength="16" FixedLength="false" Unicode="true" />
+    <Property Name="ClinicId" Type="String" Nullable="false" MaxLength="8" FixedLength="false" Unicode="true" />
+    <Property Name="Rating" Type="Double" />
+    <Property Name="ReviewerId" Type="String" Nullable="false" MaxLength="8" FixedLength="false" Unicode="true" />
+    <Property Name="ReviewContent" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+    <Property Name="ReviewCreationDate" Type="DateTime" Nullable="false" Precision="0" />
+    <NavigationProperty Name="clinic_profile" Relationship="MainDBModel.FK_clinic_review_clinic_profile" FromRole="clinic_review" ToRole="clinic_profile" />
+    <NavigationProperty Name="pet_profile" Relationship="MainDBModel.FK_clinic_review_pet_profile" FromRole="clinic_review" ToRole="pet_profile" />
+  </EntityType>
+  <Association Name="FK_clinic_review_clinic_profile">
+    <End Type="MainDBModel.clinic_profile" Role="clinic_profile" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Type="MainDBModel.clinic_review" Role="clinic_review" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="clinic_profile">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="clinic_review">
+        <PropertyRef Name="ClinicId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_clinic_review_pet_profile">
+    <End Type="MainDBModel.pet_profile" Role="pet_profile" Multiplicity="1" />
+    <End Type="MainDBModel.clinic_review" Role="clinic_review" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="pet_profile">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="clinic_review">
+        <PropertyRef Name="ReviewerId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityType Name="ClinicProfile">
+    <Key>
+      <PropertyRef Name="Id" />
+      <PropertyRef Name="ClinicName" />
+      <PropertyRef Name="VetFirstName" />
+      <PropertyRef Name="VetLastName" />
+      <PropertyRef Name="Line" />
+      <PropertyRef Name="Barangay" />
+      <PropertyRef Name="City" />
+      <PropertyRef Name="Country" />
+      <PropertyRef Name="contactId" />
+    </Key>
+    <Property Name="Id" Type="String" Nullable="false" MaxLength="8" FixedLength="false" Unicode="true" />
+    <Property Name="ClinicName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="VetFirstName" Type="String" Nullable="false" MaxLength="35" FixedLength="false" Unicode="true" />
+    <Property Name="VetMiddleName" Type="String" MaxLength="35" FixedLength="false" Unicode="true" />
+    <Property Name="VetLastName" Type="String" Nullable="false" MaxLength="35" FixedLength="false" Unicode="true" />
+    <Property Name="Line" Type="String" Nullable="false" MaxLength="64" FixedLength="false" Unicode="true" />
+    <Property Name="Barangay" Type="String" Nullable="false" MaxLength="35" FixedLength="false" Unicode="true" />
+    <Property Name="City" Type="String" Nullable="false" MaxLength="35" FixedLength="false" Unicode="true" />
+    <Property Name="Country" Type="String" Nullable="false" MaxLength="35" FixedLength="false" Unicode="true" />
+    <Property Name="contactId" Type="String" Nullable="false" MaxLength="8" FixedLength="false" Unicode="true" />
+    <Property Name="Contact" Type="String" MaxLength="15" FixedLength="false" Unicode="true" />
+    <Property Name="Followers" Type="Int32" />
+    <Property Name="Rating" Type="Double" />
+  </EntityType>
+  <EntityType Name="PetProfile">
+    <Key>
+      <PropertyRef Name="Line" />
+      <PropertyRef Name="Barangay" />
+      <PropertyRef Name="City" />
+      <PropertyRef Name="Country" />
+      <PropertyRef Name="Contact" />
+      <PropertyRef Name="ContactId" />
+    </Key>
+    <Property Name="Id" Type="String" MaxLength="8" FixedLength="false" Unicode="true" />
+    <Property Name="OwnerId" Type="String" MaxLength="8" FixedLength="false" Unicode="true" />
+    <Property Name="Name" Type="String" MaxLength="35" FixedLength="false" Unicode="true" />
+    <Property Name="Birthdate" Type="DateTime" Precision="0" />
+    <Property Name="Color" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="Line" Type="String" Nullable="false" MaxLength="35" FixedLength="false" Unicode="true" />
+    <Property Name="Barangay" Type="String" Nullable="false" MaxLength="35" FixedLength="false" Unicode="true" />
+    <Property Name="City" Type="String" Nullable="false" MaxLength="35" FixedLength="false" Unicode="true" />
+    <Property Name="Country" Type="String" Nullable="false" MaxLength="35" FixedLength="false" Unicode="true" />
+    <Property Name="Followers" Type="Int32" />
+    <Property Name="Following" Type="Int32" />
+    <Property Name="Category" Type="String" MaxLength="25" FixedLength="false" Unicode="true" />
+    <Property Name="Breed" Type="String" MaxLength="25" FixedLength="false" Unicode="true" />
+    <Property Name="Contact" Type="String" Nullable="false" MaxLength="15" FixedLength="false" Unicode="true" />
+    <Property Name="ContactId" Type="String" Nullable="false" MaxLength="8" FixedLength="false" Unicode="true" />
+  </EntityType>
 </Schema>
