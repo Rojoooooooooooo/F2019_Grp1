@@ -81,7 +81,9 @@ namespace PetParadise.Controllers
                         Line = clinicInput.Line,
                         Barangay = clinicInput.Barangay,
                         City = clinicInput.City,
-                        Country = clinicInput.Country
+                        Country = clinicInput.Country,
+                        Latitude = clinicInput.Latitude,
+                        Longitude = clinicInput.Longitude
                     };
                     clinic_profile profile = new clinic_profile()
                     {
@@ -128,7 +130,7 @@ namespace PetParadise.Controllers
             }
             catch (Exception e)
             {
-                Debug.WriteLine(e.StackTrace);
+                Debug.WriteLine(e.InnerException);
                 return InternalServerError();
             }
         }
@@ -425,6 +427,50 @@ namespace PetParadise.Controllers
                 Debug.WriteLine(e.StackTrace);
                 return InternalServerError();
             }
+        }
+
+
+        [Authorize]
+        [Route("findnearby")]
+        [HttpGet]
+        public IHttpActionResult FindNearbyClinic(string latlng, int range, int limit) {
+            try
+            {
+                string[] latlngArr = latlng.Split(',');
+                decimal lat = Convert.ToDecimal(latlngArr[0]);
+                decimal lng = Convert.ToDecimal(latlngArr[1]);
+
+                using(MainDBEntities db = new MainDBEntities())
+                {
+                    var nearbyAddress = db.Haversine(lat, lng)
+                                           .Where(i => i.Distance < range)
+                                           .Take(limit)
+                                           .ToList();
+
+                    return Ok(nearbyAddress);
+                }
+
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine(e.InnerException);
+                Debug.WriteLine(e.StackTrace);
+                return InternalServerError();
+            }
+        }
+
+
+        // https://stackoverflow.com/a/41623738
+        private static double Haversine(double lat1, double lon1, double lat2, double lon2)
+        {
+            const double r = 6378100; // meters
+
+            var sdlat = Math.Sin((lat2 - lat1) / 2);
+            var sdlon = Math.Sin((lon2 - lon1) / 2);
+            var q = Math.Pow(sdlat, 2) + Math.Cos(lat1) * Math.Cos(lat2) * Math.Pow(sdlon, 2);
+            var d = 2 * r * Math.Asin(Math.Sqrt(q));
+
+            return d / 1000; // to km;
         }
     }
 }
