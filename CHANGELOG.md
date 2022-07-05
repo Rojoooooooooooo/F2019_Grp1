@@ -1,6 +1,20 @@
 # Changelog
 > The source code is also available in the [source-code branch](https://github.com/Rojoooooooooooo/F2019_Grp1/tree/source-code). Standby for regular updates.
 
+## As of 07/05/2022
+
+**Major Features Updated** 
+ - Client support for posting, commenting and liking.
+ - Users can see other user's posts and visit their profile as well.
+ - Writing feedback for clinics are now supported.
+
+**Atomic Update**
+- Some libraries and models are updated.
+- APIs had rewritten parts also.
+ 
+> **Note:** Those with **(x)** mark are currently specific for **WEB API only**. Standby for future developments.
+
+
 ## As of 06/30/2022
 
 **Major Features Added** 
