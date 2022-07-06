@@ -1,6 +1,15 @@
 # Changelog
 > The source code is also available in the [source-code branch](https://github.com/Rojoooooooooooo/F2019_Grp1/tree/source-code). Standby for regular updates.
 
+## As of 07/06/2022
+
+**Major Features Updated** 
+ - Nearby Clinics feature added Powered By Google Maps and Directions API!
+ 
+> **Note:** This might be the last feature to be added on this project as the deadline is quickly approaching. Atomic updates will still continue
+> until the presentation on friday.
+
+
 ## As of 07/05/2022
 
 **Major Features Updated** 
