@@ -17,7 +17,7 @@
                         <a href="/pet/@ViewBag.PetId" class="nav-link @(ViewContext.RouteData.Values["Action"].ToString() == "Feeds" ? "active" : "")">Feeds</a>
                     </li>
                     <li class="nav-item" role="button">
-                        <a class="nav-link @(ViewContext.RouteData.Values["Action"].ToString() == "NearbyClinic" ? "active" : "")">Nearby Clinic</a>
+                        <a href="/nearby/clinics" class="nav-link @(ViewContext.RouteData.Values["Action"].ToString() == "NearbyClinics" ? "active" : "")">Nearby Clinics</a>
                     </li>
                     <li class="nav-item" role="button">
                         <a href="/profile/@ViewBag.PetId" class="nav-link @(ViewContext.RouteData.Values["Action"].ToString() == "Profile" ? "active" : "")">My Profile</a>

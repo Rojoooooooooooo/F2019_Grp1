@@ -29,6 +29,9 @@ namespace PetParadise.Models.Body.Interfaces
         [RegularExpression(@"^[a-zA-Z0-9\s#'.,\-()]*$", ErrorMessage = @"Acceptable characters are: a-z A-Z 0-9#'.,\-()")]
         string Country { get; set; }
 
+        decimal Latitude { get; set; }
+        decimal Longitude { get; set; }
+
         [RegularExpression("[0-9]", ErrorMessage = "0-9 characters only.")]
         [MaxLength(15, ErrorMessage = "Max characters are fifteen (15).")]
         string Contact { get; set; }

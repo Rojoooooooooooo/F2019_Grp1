@@ -26,6 +26,9 @@ namespace PetParadise.App_Start
             bundles.Add(new ScriptBundle("~/bundles/modernizr").Include(
                 "~/Scripts/modernizr-*"));
 
+            bundles.Add(new ScriptBundle("~/bundles/googlemaps").Include(
+                "~/Scripts/GoogleMaps.js"));
+
             bundles.Add(new StyleBundle("~/Content/css").Include(
                  "~/Content/jquery-ui.css",
                  "~/Content/star-rating.css",
@@ -39,6 +42,8 @@ namespace PetParadise.App_Start
 
             bundles.Add(new ScriptBundle("~/bundles/helpers").Include(
                 "~/Scripts/access.js",
+                "~/Scripts/MapManager.js",
+                "~/Scripts/DirectionsManager.js",
                 "~/Scripts/star-rating.js",
                 "~/Scripts/PostBox/PostBox.js",
                 "~/Scripts/ValidationHandler/Validator.js",

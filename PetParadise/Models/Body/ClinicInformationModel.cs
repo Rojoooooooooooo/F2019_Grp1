@@ -28,7 +28,11 @@ namespace PetParadise.Models.Body
 
         public string LastName { get; set; }
 
+        public decimal Latitude { get; set; }
+
         public string Line { get; set; }
+
+        public decimal Longitude { get; set; }
 
         public string MiddleName { get; set; }
 

@@ -293,5 +293,14 @@ namespace PetParadise.Controllers.ViewsControllers
                 return View("Index");
             }
         }
+
+        [Route("nearby/clinics")]
+        public ActionResult NearbyClinics()
+        {
+            ViewBag.EnableSearchMenu = true;
+            ViewBag.EnableUserMenu = false;
+
+            return View();
+        }
     }
 }

@@ -1,7 +1,5 @@
 ﻿@model PetParadise.Models.Body.ClinicInformationModel
 
-
-
 @using (Html.BeginForm("Signup", "Home", FormMethod.Post, new { @class = "d-flex flex-column justify-content-center align-items-center gap-2" }))
 {
     <div class="w-25 h-auto d-flex flex-column justify-content-center align-items-start flex-wrap gap-2">
@@ -11,7 +9,6 @@
         <div class="w-100 d-flex flex-row gap-2 justify-content-start align-items-start">
             <div class="flex-grow-1">
                 @Html.EditorFor(model => model.ClinicName, new { htmlAttributes = new { @class = "form-control", placeholder = "Clinic Name" } })
-                @Html.ValidationMessageFor(model => model.ClinicName, "", new { @class = "text-danger" })
             </div>
         </div>
 
@@ -19,18 +16,15 @@
         <div class="w-100 d-flex flex-row gap-2 justify-content-start align-items-start">
             <div class="flex-grow-1">
                 @Html.EditorFor(model => model.FirstName, new { htmlAttributes = new { @class = "form-control", placeholder = "First Name" } })
-                @Html.ValidationMessageFor(model => model.FirstName, "", new { @class = "text-danger" })
             </div>
         </div>
 
         <div class="w-100 d-flex flex-row gap-2">
             <div class="flex-grow-1">
                 @Html.EditorFor(model => model.MiddleName, new { htmlAttributes = new { @class = "form-control", placeholder = "Middle Name" } })
-                @Html.ValidationMessageFor(model => model.MiddleName, "", new { @class = "text-danger" })
             </div>
             <div class="flex-grow-1">
                 @Html.EditorFor(model => model.LastName, new { htmlAttributes = new { @class = "form-control", placeholder = "Last Name" } })
-                @Html.ValidationMessageFor(model => model.LastName, "", new { @class = "text-danger" })
             </div>
         </div>
 
@@ -38,7 +32,6 @@
 
         <div class="w-100 d-flex flex-row gap-2 justify-content-start align-items-start">
             <div class="flex-grow-1">
-                @Html.ValidationMessageFor(model => model.Contact, "", new { @class = "text-danger" })
                 @Html.EditorFor(model => model.Contact, new { htmlAttributes = new { @class = "form-control", placeholder = "Mobile Number" } })
             </div>
         </div>
@@ -48,7 +41,6 @@
         <div class="w-100 d-flex flex-row gap-2 justify-content-start align-items-start">
             <div class="w-100">
                 @Html.EditorFor(model => model.Line, new { htmlAttributes = new { @class = "form-control", placeholder = "Room/Floor/House #/Block/Lot/Street" } })
-                @Html.ValidationMessageFor(model => model.Line, "", new { @class = "text-danger" })
             </div>
         </div>
 
@@ -56,34 +48,133 @@
         <div class="w-100 d-flex flex-row gap-2 justify-content-start align-items-start">
             <div class="w-100">
                 @Html.EditorFor(model => model.Barangay, new { htmlAttributes = new { @class = "form-control", placeholder = "Barangay/Village/Subdivision" } })
-                @Html.ValidationMessageFor(model => model.Barangay, "", new { @class = "text-danger" })
             </div>
         </div>
+
 
         <div class="w-100 d-flex flex-row gap-2">
             <div class="flex-grow-1">
                 @Html.EditorFor(model => model.City, new { htmlAttributes = new { @class = "form-control", placeholder = "City" } })
-                @Html.ValidationMessageFor(model => model.City, "", new { @class = "text-danger" })
             </div>
 
 
             <div class="flex-grow-1">
                 @Html.EditorFor(model => model.Country, new { htmlAttributes = new { @class = "form-control", placeholder = "Country" } })
-                @Html.ValidationMessageFor(model => model.Country, "", new { @class = "text-danger" })
             </div>
+
+            <input id="input-lat" type="text" hidden/>
+            <input id="input-lng" type="text" hidden />
+
+        </div>
+
+        <div class="w-100 d-flex flex-column">
+            <button onclick="openMap()" type="button" class="btn btn-secondary w-100"><i class="fa-solid fa-map-location"></i> Select location using maps</button>
+            <span class="fs-6 stext-dark"><i class="fa-solid fa-circle-info"></i> Use this feature to accurately place your clinic on map and let pet owners see your clinic nearby.</span>
         </div>
 
         <div id="validationNotes" class="w-100">
             <ul id="notes-container"></ul>
         </div>
 
-        <div class="w-100">
+        <div class="w-100 d-flex flex-column ">
             <button type="submit" value="Save Profile" class="w-100 btn btn-outline-light sbg-darker">Save Profile</button>
+            <span class="fs-6 stext-dark"><i class="fa-solid fa-circle-info"></i> By continuing, you are letting us use the information to deliver our services to every users.</span>
         </div>
     </div>
+
+    <div id="map-modal" class="modal position-absolute w-100 h-100 d-none bg-dark bg-opacity-75">
+        <div class="position-absolute top-50 start-50 translate-middle w-50 h-75 sbg-lighter p-4 d-flex flex-column justify-content-evenly align-items-start shadow rounded-2">
+            <div onclick="closeMap()" class="stext-darker fs-4 position-absolute top-0 end-0 p-4" role="button"><i class="fa-solid fa-circle-xmark"></i></div>
+            <h5>Select location on map below.</h5>
+            <span id="map-result" class="fs-6"></span>
+            <div id="map-canvas" style="height:50%; width:100%;">
+
+            </div>
+            <input id="map-address" type="text" class="form-control" />
+            <button onclick="saveLatLng()" type="button" class="btn btn-primary w-100">Select</button>
+        </div>
+    </div>
+
 }
 
 <script>
+    let map;
+    
+    function loadAddress() {
+        const line = $('#Line').val();
+        const barangay = $('#Barangay').val() && ", "+$('#Barangay').val();
+        const city = $('#City').val() && ", "+$('#City').val();
+        const country = $('#Country').val() && ", "+$('#Country').val();
+
+        const addressString = `${line}${barangay}${city}${country}`;
+        $('#map-address').val(addressString);
+    }
+
+    function openMap() {
+        $("#map-modal").attr("style", "display: flex !important;");
+        loadAddress();
+        const addressString = $("#map-address").val();
+        if (addressString == "") {
+
+            MapManager.getBrowserLocation((res) => {
+                let location = {
+                    lat: res.coords.latitude,
+                    lng: res.coords.longitude
+                };
+                map.setPosition(location);
+                map.getGeocodePosition({ latLng: map.getPosition() }, (res) => {
+                    $("#map-result").text(res[0].formatted_address);
+                })
+            });
+        }
+        else {
+            map.getGeocodePosition({ address: addressString }, (res) => {
+                const lat = res[0].geometry.location.lat();
+                const lng = res[0].geometry.location.lng();
+                const latlng = new google.maps.LatLng(lat, lng);
+                $("#map-result").text(res[0].formatted_address);
+                map.setPosition(latlng)
+            }, () =>console.log("error: location unavailable"))
+        }
+    }
+
+    function closeMap() {
+        $("#map-modal").attr("style", "display: none !important;");
+    }
+
+    function saveLatLng() {
+        const pos = map.getMarker().getPosition();
+        $("#input-lat").val(pos.lat());
+        $("#input-lng").val(pos.lng());
+        closeMap();
+    }
+
+    $('#map-address').on("input", $.debounce(300, e => {
+        const addr = {
+            address: e.target.value
+        }
+        map.getGeocodePosition(addr, (res) => {
+            const lat = res[0].geometry.location.lat();
+            const lng = res[0].geometry.location.lng();
+            const latlng = new google.maps.LatLng(lat, lng);
+            map.setPosition(latlng)
+            $("#map-result").text(res[0].formatted_address);
+        }, ()=>console.log("error: location unavailable"))
+    }))
+
+
+    function initMap() {
+        
+        let location;
+
+        const mapOptions = {
+            center: location,
+            zoom: 50,
+            mapTypeId: "roadmap"
+        }
+        map = new MapManager(document.getElementById("map-canvas"), mapOptions);
+
+    }
 
     const validator = new Validator("#notes-container");
     const url = '/user/clinic';
@@ -102,6 +193,8 @@
         const barangay = $('#Barangay').val();
         const city = $('#City').val();
         const country = $('#Country').val();
+        const lat = $("#input-lat").val();
+        const lng = $("#input-lng").val();
 
         const data = {
             clinicName,
@@ -112,7 +205,9 @@
             line,
             barangay,
             city,
-            country
+            country,
+            latitude: Number(lat).toFixed(6),
+            longitude: Number(lng).toFixed(6)
         };
 
         fetch(url, {
@@ -135,6 +230,7 @@
                 })
                 validator.updateParent();
             }
+            window.location.replace("/");
         })
         .catch(e=> {
             console.log(e);

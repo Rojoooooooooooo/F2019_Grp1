@@ -19,6 +19,8 @@ namespace PetParadise.Models
         public string City { get; set; }
         public string Barangay { get; set; }
         public string Line { get; set; }
+        public Nullable<decimal> Latitude { get; set; }
+        public Nullable<decimal> Longitude { get; set; }
     
         public virtual clinic_profile clinic_profile { get; set; }
     }

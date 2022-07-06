@@ -76,6 +76,8 @@
     <EntitySetMapping Name="clinic_address">
       <EntityTypeMapping TypeName="MainDBModel.clinic_address">
         <MappingFragment StoreEntitySet="clinic_address">
+          <ScalarProperty Name="Longitude" ColumnName="Longitude" />
+          <ScalarProperty Name="Latitude" ColumnName="Latitude" />
           <ScalarProperty Name="Line" ColumnName="Line" />
           <ScalarProperty Name="Barangay" ColumnName="Barangay" />
           <ScalarProperty Name="City" ColumnName="City" />
@@ -187,6 +189,8 @@
     <EntitySetMapping Name="ClinicProfiles">
       <EntityTypeMapping TypeName="MainDBModel.ClinicProfile">
         <MappingFragment StoreEntitySet="ClinicProfile">
+          <ScalarProperty Name="Longitude" ColumnName="Longitude" />
+          <ScalarProperty Name="Latitude" ColumnName="Latitude" />
           <ScalarProperty Name="Rating" ColumnName="Rating" />
           <ScalarProperty Name="Followers" ColumnName="Followers" />
           <ScalarProperty Name="Contact" ColumnName="Contact" />
@@ -224,5 +228,27 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
+    <FunctionImportMapping FunctionImportName="Haversine" FunctionName="MainDBModel.Store.Haversine">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="MainDBModel.Haversine_Result">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="ClinicName" ColumnName="ClinicName" />
+          <ScalarProperty Name="VetFirstName" ColumnName="VetFirstName" />
+          <ScalarProperty Name="VetMiddleName" ColumnName="VetMiddleName" />
+          <ScalarProperty Name="VetLastName" ColumnName="VetLastName" />
+          <ScalarProperty Name="Line" ColumnName="Line" />
+          <ScalarProperty Name="Barangay" ColumnName="Barangay" />
+          <ScalarProperty Name="City" ColumnName="City" />
+          <ScalarProperty Name="Country" ColumnName="Country" />
+          <ScalarProperty Name="contactId" ColumnName="contactId" />
+          <ScalarProperty Name="Contact" ColumnName="Contact" />
+          <ScalarProperty Name="Followers" ColumnName="Followers" />
+          <ScalarProperty Name="Rating" ColumnName="Rating" />
+          <ScalarProperty Name="Latitude" ColumnName="Latitude" />
+          <ScalarProperty Name="Longitude" ColumnName="Longitude" />
+          <ScalarProperty Name="Distance" ColumnName="Distance" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
   </EntityContainerMapping>
 </Mapping>

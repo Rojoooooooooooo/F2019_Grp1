@@ -12,6 +12,8 @@ namespace PetParadise.Models
     using System;
     using System.Data.Entity;
     using System.Data.Entity.Infrastructure;
+    using System.Data.Entity.Core.Objects;
+    using System.Linq;
     
     public partial class MainDBEntities : DbContext
     {
@@ -44,5 +46,18 @@ namespace PetParadise.Models
         public virtual DbSet<clinic_review> clinic_review { get; set; }
         public virtual DbSet<ClinicProfile> ClinicProfiles { get; set; }
         public virtual DbSet<PetProfile> PetProfiles { get; set; }
+    
+        public virtual ObjectResult<Haversine_Result> Haversine(Nullable<decimal> custLat, Nullable<decimal> custLng)
+        {
+            var custLatParameter = custLat.HasValue ?
+                new ObjectParameter("custLat", custLat) :
+                new ObjectParameter("custLat", typeof(decimal));
+    
+            var custLngParameter = custLng.HasValue ?
+                new ObjectParameter("custLng", custLng) :
+                new ObjectParameter("custLng", typeof(decimal));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Haversine_Result>("Haversine", custLatParameter, custLngParameter);
+        }
     }
 }

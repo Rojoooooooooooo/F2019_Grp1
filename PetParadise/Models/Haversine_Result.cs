@@ -10,9 +10,8 @@
 namespace PetParadise.Models
 {
     using System;
-    using System.Collections.Generic;
     
-    public partial class ClinicProfile
+    public partial class Haversine_Result
     {
         public string Id { get; set; }
         public string ClinicName { get; set; }
@@ -29,5 +28,6 @@ namespace PetParadise.Models
         public Nullable<double> Rating { get; set; }
         public Nullable<decimal> Latitude { get; set; }
         public Nullable<decimal> Longitude { get; set; }
+        public Nullable<double> Distance { get; set; }
     }
 }

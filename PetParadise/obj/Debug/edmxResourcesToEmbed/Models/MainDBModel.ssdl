@@ -20,6 +20,8 @@
     <Property Name="City" Type="nvarchar" MaxLength="35" Nullable="false" />
     <Property Name="Barangay" Type="nvarchar" MaxLength="35" Nullable="false" />
     <Property Name="Line" Type="nvarchar" MaxLength="64" Nullable="false" />
+    <Property Name="Latitude" Type="decimal" Precision="8" Scale="6" />
+    <Property Name="Longitude" Type="decimal" Precision="9" Scale="6" />
   </EntityType>
   <EntityType Name="clinic_contact">
     <Key>
@@ -178,6 +180,8 @@ warning 6002: The table/view 'PetBook.dbo.ClinicProfile' does not have a primary
     <Property Name="Contact" Type="nvarchar" MaxLength="15" />
     <Property Name="Followers" Type="int" />
     <Property Name="Rating" Type="float" />
+    <Property Name="Latitude" Type="decimal" Precision="8" Scale="6" />
+    <Property Name="Longitude" Type="decimal" Precision="9" Scale="6" />
   </EntityType>
   <!--Errors Found During Generation:
 warning 6002: The table/view 'PetBook.dbo.OwnerProfile' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
@@ -419,6 +423,10 @@ warning 6002: The table/view 'PetBook.dbo.PetProfile' does not have a primary ke
       </Dependent>
     </ReferentialConstraint>
   </Association>
+  <Function Name="Haversine" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="custLat" Type="decimal" Mode="In" />
+    <Parameter Name="custLng" Type="decimal" Mode="In" />
+  </Function>
   <EntityContainer Name="MainDBModelStoreContainer">
     <EntitySet Name="account_credential" EntityType="Self.account_credential" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="clinic_address" EntityType="Self.clinic_address" Schema="dbo" store:Type="Tables" />
@@ -450,7 +458,9 @@ warning 6002: The table/view 'PetBook.dbo.PetProfile' does not have a primary ke
     [ClinicProfile].[contactId] AS [contactId], 
     [ClinicProfile].[Contact] AS [Contact], 
     [ClinicProfile].[Followers] AS [Followers], 
-    [ClinicProfile].[Rating] AS [Rating]
+    [ClinicProfile].[Rating] AS [Rating], 
+    [ClinicProfile].[Latitude] AS [Latitude], 
+    [ClinicProfile].[Longitude] AS [Longitude]
     FROM [dbo].[ClinicProfile] AS [ClinicProfile]</DefiningQuery>
     </EntitySet>
     <EntitySet Name="OwnerProfile" EntityType="Self.OwnerProfile" store:Type="Views" store:Schema="dbo">

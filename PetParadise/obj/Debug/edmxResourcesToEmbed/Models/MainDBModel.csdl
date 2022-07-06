@@ -187,6 +187,10 @@
     </AssociationSet>
     <EntitySet Name="ClinicProfiles" EntityType="MainDBModel.ClinicProfile" />
     <EntitySet Name="PetProfiles" EntityType="MainDBModel.PetProfile" />
+    <FunctionImport Name="Haversine" ReturnType="Collection(MainDBModel.Haversine_Result)">
+      <Parameter Name="custLat" Mode="In" Type="Decimal" />
+      <Parameter Name="custLng" Mode="In" Type="Decimal" />
+    </FunctionImport>
   </EntityContainer>
   <EntityType Name="owner_address">
     <Key>
@@ -221,6 +225,8 @@
     <Property Name="Barangay" Type="String" Nullable="false" MaxLength="35" FixedLength="false" Unicode="true" />
     <Property Name="Line" Type="String" Nullable="false" MaxLength="64" FixedLength="false" Unicode="true" />
     <NavigationProperty Name="clinic_profile" Relationship="MainDBModel.FK_clinic_address_clinic_profile" FromRole="clinic_address" ToRole="clinic_profile" />
+    <Property Name="Latitude" Type="Decimal" Precision="8" Scale="6" />
+    <Property Name="Longitude" Type="Decimal" Precision="9" Scale="6" />
   </EntityType>
   <Association Name="FK_clinic_address_clinic_profile">
     <End Type="MainDBModel.clinic_profile" Role="clinic_profile" Multiplicity="1">
@@ -510,6 +516,8 @@
     <Property Name="Contact" Type="String" MaxLength="15" FixedLength="false" Unicode="true" />
     <Property Name="Followers" Type="Int32" />
     <Property Name="Rating" Type="Double" />
+    <Property Name="Latitude" Type="Decimal" Precision="8" Scale="6" />
+    <Property Name="Longitude" Type="Decimal" Precision="9" Scale="6" />
   </EntityType>
   <EntityType Name="PetProfile">
     <Key>
@@ -536,4 +544,22 @@
     <Property Name="Contact" Type="String" Nullable="false" MaxLength="15" FixedLength="false" Unicode="true" />
     <Property Name="ContactId" Type="String" Nullable="false" MaxLength="8" FixedLength="false" Unicode="true" />
   </EntityType>
+  <ComplexType Name="Haversine_Result">
+    <Property Type="String" Name="Id" Nullable="false" MaxLength="8" />
+    <Property Type="String" Name="ClinicName" Nullable="false" MaxLength="50" />
+    <Property Type="String" Name="VetFirstName" Nullable="false" MaxLength="35" />
+    <Property Type="String" Name="VetMiddleName" Nullable="true" MaxLength="35" />
+    <Property Type="String" Name="VetLastName" Nullable="false" MaxLength="35" />
+    <Property Type="String" Name="Line" Nullable="false" MaxLength="64" />
+    <Property Type="String" Name="Barangay" Nullable="false" MaxLength="35" />
+    <Property Type="String" Name="City" Nullable="false" MaxLength="35" />
+    <Property Type="String" Name="Country" Nullable="false" MaxLength="35" />
+    <Property Type="String" Name="contactId" Nullable="false" MaxLength="8" />
+    <Property Type="String" Name="Contact" Nullable="true" MaxLength="15" />
+    <Property Type="Int32" Name="Followers" Nullable="true" />
+    <Property Type="Double" Name="Rating" Nullable="true" />
+    <Property Type="Decimal" Name="Latitude" Nullable="true" Precision="8" Scale="6" />
+    <Property Type="Decimal" Name="Longitude" Nullable="true" Precision="9" Scale="6" />
+    <Property Type="Double" Name="Distance" Nullable="true" />
+  </ComplexType>
 </Schema>

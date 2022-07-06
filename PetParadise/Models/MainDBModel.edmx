@@ -25,6 +25,8 @@
           <Property Name="City" Type="nvarchar" MaxLength="35" Nullable="false" />
           <Property Name="Barangay" Type="nvarchar" MaxLength="35" Nullable="false" />
           <Property Name="Line" Type="nvarchar" MaxLength="64" Nullable="false" />
+          <Property Name="Latitude" Type="decimal" Precision="8" Scale="6" />
+          <Property Name="Longitude" Type="decimal" Precision="9" Scale="6" />
         </EntityType>
         <EntityType Name="clinic_contact">
           <Key>
@@ -183,6 +185,8 @@ warning 6002: The table/view 'PetBook.dbo.ClinicProfile' does not have a primary
           <Property Name="Contact" Type="nvarchar" MaxLength="15" />
           <Property Name="Followers" Type="int" />
           <Property Name="Rating" Type="float" />
+          <Property Name="Latitude" Type="decimal" Precision="8" Scale="6" />
+          <Property Name="Longitude" Type="decimal" Precision="9" Scale="6" />
         </EntityType>
         <!--Errors Found During Generation:
 warning 6002: The table/view 'PetBook.dbo.OwnerProfile' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
@@ -424,6 +428,10 @@ warning 6002: The table/view 'PetBook.dbo.PetProfile' does not have a primary ke
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Function Name="Haversine" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="custLat" Type="decimal" Mode="In" />
+          <Parameter Name="custLng" Type="decimal" Mode="In" />
+        </Function>
         <EntityContainer Name="MainDBModelStoreContainer">
           <EntitySet Name="account_credential" EntityType="Self.account_credential" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="clinic_address" EntityType="Self.clinic_address" Schema="dbo" store:Type="Tables" />
@@ -455,7 +463,9 @@ warning 6002: The table/view 'PetBook.dbo.PetProfile' does not have a primary ke
     [ClinicProfile].[contactId] AS [contactId], 
     [ClinicProfile].[Contact] AS [Contact], 
     [ClinicProfile].[Followers] AS [Followers], 
-    [ClinicProfile].[Rating] AS [Rating]
+    [ClinicProfile].[Rating] AS [Rating], 
+    [ClinicProfile].[Latitude] AS [Latitude], 
+    [ClinicProfile].[Longitude] AS [Longitude]
     FROM [dbo].[ClinicProfile] AS [ClinicProfile]</DefiningQuery>
           </EntitySet>
           <EntitySet Name="OwnerProfile" EntityType="Self.OwnerProfile" store:Type="Views" store:Schema="dbo">
@@ -739,6 +749,10 @@ warning 6002: The table/view 'PetBook.dbo.PetProfile' does not have a primary ke
           </AssociationSet>
           <EntitySet Name="ClinicProfiles" EntityType="MainDBModel.ClinicProfile" />
           <EntitySet Name="PetProfiles" EntityType="MainDBModel.PetProfile" />
+          <FunctionImport Name="Haversine" ReturnType="Collection(MainDBModel.Haversine_Result)">
+            <Parameter Name="custLat" Mode="In" Type="Decimal" />
+            <Parameter Name="custLng" Mode="In" Type="Decimal" />
+          </FunctionImport>
           </EntityContainer>
         <EntityType Name="owner_address">
           <Key>
@@ -773,6 +787,8 @@ warning 6002: The table/view 'PetBook.dbo.PetProfile' does not have a primary ke
           <Property Name="Barangay" Type="String" Nullable="false" MaxLength="35" FixedLength="false" Unicode="true" />
           <Property Name="Line" Type="String" Nullable="false" MaxLength="64" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="clinic_profile" Relationship="MainDBModel.FK_clinic_address_clinic_profile" FromRole="clinic_address" ToRole="clinic_profile" />
+          <Property Name="Latitude" Type="Decimal" Precision="8" Scale="6" />
+          <Property Name="Longitude" Type="Decimal" Precision="9" Scale="6" />
         </EntityType>
         <Association Name="FK_clinic_address_clinic_profile">
           <End Type="MainDBModel.clinic_profile" Role="clinic_profile" Multiplicity="1">
@@ -1062,6 +1078,8 @@ warning 6002: The table/view 'PetBook.dbo.PetProfile' does not have a primary ke
           <Property Name="Contact" Type="String" MaxLength="15" FixedLength="false" Unicode="true" />
           <Property Name="Followers" Type="Int32" />
           <Property Name="Rating" Type="Double" />
+          <Property Name="Latitude" Type="Decimal" Precision="8" Scale="6" />
+          <Property Name="Longitude" Type="Decimal" Precision="9" Scale="6" />
         </EntityType>
         <EntityType Name="PetProfile">
           <Key>
@@ -1088,6 +1106,24 @@ warning 6002: The table/view 'PetBook.dbo.PetProfile' does not have a primary ke
           <Property Name="Contact" Type="String" Nullable="false" MaxLength="15" FixedLength="false" Unicode="true" />
           <Property Name="ContactId" Type="String" Nullable="false" MaxLength="8" FixedLength="false" Unicode="true" />
         </EntityType>
+        <ComplexType Name="Haversine_Result">
+          <Property Type="String" Name="Id" Nullable="false" MaxLength="8" />
+          <Property Type="String" Name="ClinicName" Nullable="false" MaxLength="50" />
+          <Property Type="String" Name="VetFirstName" Nullable="false" MaxLength="35" />
+          <Property Type="String" Name="VetMiddleName" Nullable="true" MaxLength="35" />
+          <Property Type="String" Name="VetLastName" Nullable="false" MaxLength="35" />
+          <Property Type="String" Name="Line" Nullable="false" MaxLength="64" />
+          <Property Type="String" Name="Barangay" Nullable="false" MaxLength="35" />
+          <Property Type="String" Name="City" Nullable="false" MaxLength="35" />
+          <Property Type="String" Name="Country" Nullable="false" MaxLength="35" />
+          <Property Type="String" Name="contactId" Nullable="false" MaxLength="8" />
+          <Property Type="String" Name="Contact" Nullable="true" MaxLength="15" />
+          <Property Type="Int32" Name="Followers" Nullable="true" />
+          <Property Type="Double" Name="Rating" Nullable="true" />
+          <Property Type="Decimal" Name="Latitude" Nullable="true" Precision="8" Scale="6" />
+          <Property Type="Decimal" Name="Longitude" Nullable="true" Precision="9" Scale="6" />
+          <Property Type="Double" Name="Distance" Nullable="true" />
+        </ComplexType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -1169,6 +1205,8 @@ warning 6002: The table/view 'PetBook.dbo.PetProfile' does not have a primary ke
           <EntitySetMapping Name="clinic_address">
             <EntityTypeMapping TypeName="MainDBModel.clinic_address">
               <MappingFragment StoreEntitySet="clinic_address">
+                <ScalarProperty Name="Longitude" ColumnName="Longitude" />
+                <ScalarProperty Name="Latitude" ColumnName="Latitude" />
                 <ScalarProperty Name="Line" ColumnName="Line" />
                 <ScalarProperty Name="Barangay" ColumnName="Barangay" />
                 <ScalarProperty Name="City" ColumnName="City" />
@@ -1280,6 +1318,8 @@ warning 6002: The table/view 'PetBook.dbo.PetProfile' does not have a primary ke
           <EntitySetMapping Name="ClinicProfiles">
             <EntityTypeMapping TypeName="MainDBModel.ClinicProfile">
               <MappingFragment StoreEntitySet="ClinicProfile">
+                <ScalarProperty Name="Longitude" ColumnName="Longitude" />
+                <ScalarProperty Name="Latitude" ColumnName="Latitude" />
                 <ScalarProperty Name="Rating" ColumnName="Rating" />
                 <ScalarProperty Name="Followers" ColumnName="Followers" />
                 <ScalarProperty Name="Contact" ColumnName="Contact" />
@@ -1317,6 +1357,29 @@ warning 6002: The table/view 'PetBook.dbo.PetProfile' does not have a primary ke
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="Haversine" FunctionName="MainDBModel.Store.Haversine">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="MainDBModel.Haversine_Result">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="ClinicName" ColumnName="ClinicName" />
+                <ScalarProperty Name="VetFirstName" ColumnName="VetFirstName" />
+                <ScalarProperty Name="VetMiddleName" ColumnName="VetMiddleName" />
+                <ScalarProperty Name="VetLastName" ColumnName="VetLastName" />
+                <ScalarProperty Name="Line" ColumnName="Line" />
+                <ScalarProperty Name="Barangay" ColumnName="Barangay" />
+                <ScalarProperty Name="City" ColumnName="City" />
+                <ScalarProperty Name="Country" ColumnName="Country" />
+                <ScalarProperty Name="contactId" ColumnName="contactId" />
+                <ScalarProperty Name="Contact" ColumnName="Contact" />
+                <ScalarProperty Name="Followers" ColumnName="Followers" />
+                <ScalarProperty Name="Rating" ColumnName="Rating" />
+                <ScalarProperty Name="Latitude" ColumnName="Latitude" />
+                <ScalarProperty Name="Longitude" ColumnName="Longitude" />
+                <ScalarProperty Name="Distance" ColumnName="Distance" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+         
           </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

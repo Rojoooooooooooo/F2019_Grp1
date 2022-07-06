@@ -9,7 +9,7 @@
         <EntityTypeShape EntityType="MainDBModel.clinic_contact" Width="1.5" PointX="7.5" PointY="1.375" IsExpanded="true" />
         <EntityTypeShape EntityType="MainDBModel.clinic_profile" Width="1.5" PointX="5.25" PointY="1.125" IsExpanded="true" />
         <EntityTypeShape EntityType="MainDBModel.login_sessions" Width="1.5" PointX="8" PointY="5.125" IsExpanded="true" />
-        <EntityTypeShape EntityType="MainDBModel.owner_contact" Width="1.5" PointX="3" PointY="4.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="MainDBModel.owner_contact" Width="1.5" PointX="2.875" PointY="4.75" IsExpanded="true" />
         <EntityTypeShape EntityType="MainDBModel.owner_profile" Width="1.5" PointX="0.75" PointY="2.375" IsExpanded="true" />
         <AssociationConnector Association="MainDBModel.FK_login_sessions_account_credential" ManuallyRouted="false" />
         <AssociationConnector Association="MainDBModel.FK_clinic_contact_clinic_profile" ManuallyRouted="false" />

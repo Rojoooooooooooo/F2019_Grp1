@@ -30,29 +30,35 @@
                 <h6 class="fw-bold">Rating</h6>
                 <div class="d-flex flex-row stext-darker gap-2">
                     @* overall rating *@
-                    <p class="fw-bold"><span id="overall-rating">@clinic.Rating</span>/5</p>
-                    @* star container *@
-                    <div id="overall-star-container" class="mb-3">
-                        @{
-                            double blankStar = 5 - (clinic.Rating??1.0);
-                            for (int i = 1; i <= clinic.Rating; i++)
-                            {
-                                <i class="fa-solid fa-star"></i>
-                            }
-
-                            if (clinic.Rating % 1 != 0)
-                            {
-                                <i class="fa-regular fa-star-half-stroke"></i>
-                            }
-                            if (blankStar >= 1)
-                            {
-                                for (int i = 1; i <= blankStar; i++)
+                    @if (@clinic.Rating == null)
+                    {
+                        <p class="fw-bold"><span id="overall-rating">No ratings yet.</p>
+                    }
+                    else
+                    {
+                        <p class="fw-bold"><span id="overall-rating">@clinic.Rating</span>/5</p>
+                        //star container 
+                        <div id="overall-star-container" class="mb-3">
+                                double blankStar = 5 - (clinic.Rating ?? 1.0);
+                                for (int i = 1; i <= clinic.Rating; i++)
                                 {
-                                    <i class="fa-regular fa-star"></i>
+                                    <i class="fa-solid fa-star"></i>
                                 }
-                            }
+
+                                if (clinic.Rating % 1 != 0)
+                                {
+                                    <i class="fa-regular fa-star-half-stroke"></i>
+                                }
+                                if (blankStar >= 1)
+                                {
+                                    for (int i = 1; i <= blankStar; i++)
+                                    {
+                                        <i class="fa-regular fa-star"></i>
+                                    }
+                                }
+                            
+                        </div>
                         }
-                    </div>
                 </div>
             </div>
             @*  clinic head*@
