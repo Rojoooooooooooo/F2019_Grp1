@@ -48,7 +48,7 @@
         e.preventDefault();
         const query = $("#search-input").val();
         if (query == "") return;
-        window.location.href = "/search/" + query;
+        window.location.href = "/search/" + window.btoa(query);
 
     });
 

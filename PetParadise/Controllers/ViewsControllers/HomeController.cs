@@ -9,6 +9,7 @@ using System.Configuration;
 using System.Data.Entity;
 using System.Diagnostics;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
@@ -282,10 +283,14 @@ namespace PetParadise.Controllers.ViewsControllers
         {
             try
             {
+                // decode query from base64
+                byte[] queryData = Convert.FromBase64String(query);
+                string decodedQuery = Encoding.UTF8.GetString(queryData);
+
                 ViewBag.EnableSearchMenu = true;
                 ViewBag.EnableUserMenu = false;
-                ViewBag.Query = query;
-                ViewBag.Title = "Search results for: " + query;
+                ViewBag.Query = decodedQuery;
+                ViewBag.Title = "Search results for: " + decodedQuery;
                 using (MainDBEntities db = new MainDBEntities()) {
                     string userPetId = Request.Cookies["pet_id"] != null ? Request.Cookies["pet_id"].Value : "";
                     var pets = db.pet_profile.Select(i => new SearchModel() {
@@ -293,14 +298,14 @@ namespace PetParadise.Controllers.ViewsControllers
                         Name = i.Name,
                         Type = 1
                     })
-                    .Where(i => i.Name.StartsWith(query)).ToArray();
+                    .Where(i => i.Name.StartsWith(decodedQuery)).ToArray();
 
                     var clinic = db.clinic_profile.Select(i => new SearchModel() {
                         Id = i.Id,
                         Name = i.Name,
                         Type = 2
                     })
-                    .Where(i => i.Name.StartsWith(query)).ToArray();
+                    .Where(i => i.Name.StartsWith(decodedQuery)).ToArray();
 
                     SearchModel[] result = pets.Concat(clinic).ToArray();
 

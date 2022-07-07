@@ -11,13 +11,17 @@ namespace PetParadise.Models
 {
     using System;
     using System.Collections.Generic;
-    
+    using System.ComponentModel.DataAnnotations;
+
     public partial class clinic_contact
     {
         public string Id { get; set; }
         public string ClinicId { get; set; }
+
+        [Required]
+        [RegularExpression(@"^(09|\+639|639|9)\d{9}$", ErrorMessage = "Please use a valid phone number.")]
         public string Contact { get; set; }
-    
+
         public virtual clinic_profile clinic_profile { get; set; }
     }
 }
