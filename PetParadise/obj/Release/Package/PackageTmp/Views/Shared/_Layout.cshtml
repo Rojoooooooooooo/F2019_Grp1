@@ -1,0 +1,46 @@
+﻿@using System.Web.Optimization
+<!DOCTYPE html>
+<html lang="en-ph">
+    <head>
+        <title>
+            @ViewBag.Title
+        </title>
+        @Styles.Render("~/Content/css")
+        
+        @Scripts.Render("~/bundles/modernizr")
+        @Scripts.Render("~/bundles/jquery")
+        @Scripts.Render("~/bundles/jquerydebounce")
+        @Scripts.Render("~/bundles/jqueryui")
+        @Scripts.Render("~/bundles/helpers")
+
+        <script src="https://kit.fontawesome.com/025a8d6676.js" crossorigin="anonymous"></script>
+        <script async
+                src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBp_PzuZaBL1hABMev2tkRBSekBdBsSgEs&callback=initMap">
+        </script>
+    </head>
+    <body class="d-flex flex-column justify-content-start align-items-center">
+        <div class="w-100 sbg-dark" style="height:9vh;">
+            @RenderPage("_Header.cshtml")
+        </div>
+
+        <div class="w-100 h-auto p-2 overflow-auto">
+            @RenderBody()
+            @RenderSection("PPViews", required: false)
+        </div>
+
+        
+        <div id="loader" class="above-all h-100 w-100 position-fixed top-50 start-50 translate-middle bg-dark bg-opacity-50">
+            <div id="loader-overlay" class="h-100 w-100 position-fixed top-50 start-50 translate-middle "> </div>
+            <div id="loader-box" class="p-5 bg-light rounded-circle position-fixed top-50 start-50 translate-middle shadow-lg">
+                @Html.Raw(File.ReadAllText(Server.MapPath("~/Images/loader.svg")))
+            </div>
+        </div>
+        
+        <script>
+            $('#loader').hide();
+        </script>
+
+    @RenderSection("Scripts", required: false)
+    </body>
+    
+</html>

@@ -26,9 +26,9 @@ namespace PetParadise.Models
         public string MiddleName { get; set; }
         public string LastName { get; set; }
     
+        public virtual owner_address owner_address { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<owner_contact> owner_contact { get; set; }
-        public virtual owner_address owner_address { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<pet_profile> pet_profile { get; set; }
     }

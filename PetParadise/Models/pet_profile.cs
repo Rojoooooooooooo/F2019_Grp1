@@ -17,9 +17,9 @@ namespace PetParadise.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public pet_profile()
         {
-            this.profile_post = new HashSet<profile_post>();
-            this.profile_post_comment = new HashSet<profile_post_comment>();
             this.clinic_review = new HashSet<clinic_review>();
+            this.profile_post_comment = new HashSet<profile_post_comment>();
+            this.profile_post = new HashSet<profile_post>();
         }
     
         public string Id { get; set; }
@@ -30,14 +30,14 @@ namespace PetParadise.Models
         public Nullable<int> BreedId { get; set; }
         public string Color { get; set; }
     
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<clinic_review> clinic_review { get; set; }
         public virtual owner_profile owner_profile { get; set; }
         public virtual pet_breeds pet_breeds { get; set; }
         public virtual pet_category pet_category { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<profile_post> profile_post { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<profile_post_comment> profile_post_comment { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<clinic_review> clinic_review { get; set; }
+        public virtual ICollection<profile_post> profile_post { get; set; }
     }
 }

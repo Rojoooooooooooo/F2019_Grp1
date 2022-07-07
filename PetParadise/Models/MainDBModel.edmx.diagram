@@ -4,42 +4,44 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="4dbecffc2d78464d91a733377025b07b" Name="Diagram1" ZoomLevel="88">
-        <EntityTypeShape EntityType="MainDBModel.account_credential" Width="1.5" PointX="5.75" PointY="5" IsExpanded="true" />
-        <EntityTypeShape EntityType="MainDBModel.clinic_contact" Width="1.5" PointX="7.5" PointY="1.375" IsExpanded="true" />
-        <EntityTypeShape EntityType="MainDBModel.clinic_profile" Width="1.5" PointX="5.25" PointY="1.125" IsExpanded="true" />
-        <EntityTypeShape EntityType="MainDBModel.login_sessions" Width="1.5" PointX="8" PointY="5.125" IsExpanded="true" />
-        <EntityTypeShape EntityType="MainDBModel.owner_contact" Width="1.5" PointX="2.875" PointY="4.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="MainDBModel.owner_profile" Width="1.5" PointX="0.75" PointY="2.375" IsExpanded="true" />
-        <AssociationConnector Association="MainDBModel.FK_login_sessions_account_credential" ManuallyRouted="false" />
-        <AssociationConnector Association="MainDBModel.FK_clinic_contact_clinic_profile" ManuallyRouted="false" />
-        <AssociationConnector Association="MainDBModel.FK_owner_contact_owner_profile" ManuallyRouted="false" />
-        <EntityTypeShape EntityType="MainDBModel.owner_address" Width="1.5" PointX="3" PointY="10.375" />
-        <AssociationConnector Association="MainDBModel.FK_owner_address_owner_profile" />
-        <EntityTypeShape EntityType="MainDBModel.clinic_address" Width="1.5" PointX="7.5" PointY="8.25" />
-        <AssociationConnector Association="MainDBModel.FK_clinic_address_clinic_profile" />
-        <EntityTypeShape EntityType="MainDBModel.pet_profile" Width="1.5" PointX="3" PointY="0.75" />
-        <AssociationConnector Association="MainDBModel.FK_pet_profile_owner_profile" />
-        <EntityTypeShape EntityType="MainDBModel.pet_breeds" Width="1.5" PointX="12.625" PointY="0.875" />
-        <EntityTypeShape EntityType="MainDBModel.pet_category" Width="1.5" PointX="10.375" PointY="1" />
-        <AssociationConnector Association="MainDBModel.FK_pet_breeds_pet_category" />
-        <AssociationConnector Association="MainDBModel.FK_pet_profile_pet_breeds" />
-        <AssociationConnector Association="MainDBModel.FK_pet_profile_pet_category" />
-        <EntityTypeShape EntityType="MainDBModel.profile_post" Width="1.5" PointX="5.25" PointY="12.75" />
-        <EntityTypeShape EntityType="MainDBModel.profile_post_comment" Width="1.5" PointX="7.5" PointY="14.375" />
-        <EntityTypeShape EntityType="MainDBModel.profile_post_like" Width="1.5" PointX="7.5" PointY="11.875" />
-        <AssociationConnector Association="MainDBModel.FK_profile_post_pet_profile" />
-        <AssociationConnector Association="MainDBModel.FK_profile_post_comment_profile_post" />
-        <AssociationConnector Association="MainDBModel.FK_profile_post_like_profile_post" />
-        <AssociationConnector Association="MainDBModel.FK_profile_post_comment_pet_profile" />
-        <EntityTypeShape EntityType="MainDBModel.OwnerProfile" Width="1.5" PointX="10.375" PointY="7.75" />
-        <EntityTypeShape EntityType="MainDBModel.following" Width="1.5" PointX="0.75" PointY="6.75" />
-        <EntityTypeShape EntityType="MainDBModel.clinic_review" Width="1.5" PointX="7.5" PointY="0.75" />
-        <AssociationConnector Association="MainDBModel.FK_clinic_review_clinic_profile" />
-        <AssociationConnector Association="MainDBModel.FK_clinic_review_pet_profile" />
-        <EntityTypeShape EntityType="MainDBModel.ClinicProfile" Width="1.5" PointX="12.375" PointY="3.75" />
-        <EntityTypeShape EntityType="MainDBModel.PetProfile" Width="1.5" PointX="10.375" PointY="11.75" />
-        </Diagram>
+      <Diagram DiagramId="cc5230137d5b4ef58d3874bcca589c2c" Name="Diagram1" ZoomLevel="77">
+        <EntityTypeShape EntityType="PetBookModel.account_credential" Width="1.5" PointX="8" PointY="10" IsExpanded="true" />
+        <EntityTypeShape EntityType="PetBookModel.account_type" Width="1.5" PointX="5.75" PointY="10.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="PetBookModel.clinic_address" Width="1.5" PointX="8.25" PointY="14.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="PetBookModel.clinic_contact" Width="1.5" PointX="8.25" PointY="17.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="PetBookModel.clinic_profile" Width="1.5" PointX="6" PointY="1.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="PetBookModel.clinic_review" Width="1.5" PointX="8.25" PointY="5.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="PetBookModel.following" Width="1.5" PointX="0.75" PointY="10.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="PetBookModel.login_sessions" Width="1.5" PointX="10.25" PointY="10.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="PetBookModel.owner_address" Width="1.5" PointX="3" PointY="4.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="PetBookModel.owner_contact" Width="1.5" PointX="3" PointY="7.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="PetBookModel.owner_profile" Width="1.5" PointX="0.75" PointY="5.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="PetBookModel.pet_breeds" Width="1.5" PointX="3.75" PointY="1" IsExpanded="true" />
+        <EntityTypeShape EntityType="PetBookModel.pet_category" Width="1.5" PointX="1.5" PointY="1" IsExpanded="true" />
+        <EntityTypeShape EntityType="PetBookModel.pet_profile" Width="1.5" PointX="6" PointY="5.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="PetBookModel.profile_post" Width="1.5" PointX="9" PointY="1.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="PetBookModel.profile_post_comment" Width="1.5" PointX="11.25" PointY="5.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="PetBookModel.profile_post_like" Width="1.5" PointX="11.25" PointY="2" IsExpanded="true" />
+        <AssociationConnector Association="PetBookModel.FK_account_credential_account_type" ManuallyRouted="false" />
+        <AssociationConnector Association="PetBookModel.FK_login_sessions_account_credential" ManuallyRouted="false" />
+        <AssociationConnector Association="PetBookModel.FK_clinic_address_clinic_profile" ManuallyRouted="false" />
+        <AssociationConnector Association="PetBookModel.FK_clinic_contact_clinic_profile" ManuallyRouted="false" />
+        <AssociationConnector Association="PetBookModel.FK_clinic_review_clinic_profile" ManuallyRouted="false" />
+        <AssociationConnector Association="PetBookModel.FK_clinic_review_pet_profile" ManuallyRouted="false" />
+        <AssociationConnector Association="PetBookModel.FK_owner_address_owner_profile" ManuallyRouted="false" />
+        <AssociationConnector Association="PetBookModel.FK_owner_contact_owner_profile" ManuallyRouted="false" />
+        <AssociationConnector Association="PetBookModel.FK_pet_profile_owner_profile" ManuallyRouted="false" />
+        <AssociationConnector Association="PetBookModel.FK_pet_breeds_pet_category" ManuallyRouted="false" />
+        <AssociationConnector Association="PetBookModel.FK_pet_profile_pet_breeds" ManuallyRouted="false" />
+        <AssociationConnector Association="PetBookModel.FK_pet_profile_pet_category" ManuallyRouted="false" />
+        <AssociationConnector Association="PetBookModel.FK_profile_post_comment_pet_profile" ManuallyRouted="false" />
+        <AssociationConnector Association="PetBookModel.FK_profile_post_comment_profile_post" ManuallyRouted="false" />
+        <AssociationConnector Association="PetBookModel.FK_profile_post_like_profile_post" ManuallyRouted="false" />
+        <EntityTypeShape EntityType="PetBookModel.ClinicProfile" Width="1.5" PointX="3.375" PointY="12.75" />
+        <EntityTypeShape EntityType="PetBookModel.OwnerProfile" Width="1.5" PointX="12.375" PointY="9.75" />
+        <EntityTypeShape EntityType="PetBookModel.PetProfile" Width="1.5" PointX="13.375" PointY="0.75" />
+        <AssociationConnector Association="PetBookModel.FK_profile_post_pet_profile" />
+      </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>
 </edmx:Edmx>

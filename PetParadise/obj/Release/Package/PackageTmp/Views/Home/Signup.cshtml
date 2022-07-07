@@ -1,0 +1,165 @@
+﻿@model PetParadise.Models.account_credential
+
+@using (Html.BeginForm("Signup", "Home", FormMethod.Post, new { @class = "d-flex flex-column justify-content-center align-items-center gap-2" }))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="w-25 d-flex flex-column justify-content-center align-items-center gap-2">
+        <h2 class="fw-bold">Create an Account</h2>
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+        <div class="btn-group" role="group">
+            <input type="radio" class="btn-check" name="accountType" id="ownerBtn" value="1" autocomplete="off" checked>
+            <label class="btn btn-outline-dark sbg-lighter" for="ownerBtn">Owner</label>
+
+            <input type="radio" class="btn-check" name="accountType" id="clinicBtn" value="2" autocomplete="off">
+            <label class="btn btn-outline-dark" for="clinicBtn">Clinic</label>
+        </div>
+
+        <div class="w-100">
+            @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control", placeholder = "Email" } })
+            @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
+        </div>
+       
+        <div class="w-100">
+            @Html.EditorFor(model => model.Username, new { htmlAttributes = new { @class = "form-control", placeholder = "Username" } })
+            @Html.ValidationMessageFor(model => model.Username, "", new { @class = "text-danger" })
+        </div>
+
+
+        <div class="w-100">
+            @Html.PasswordFor(model => model.Password, new { @class = "form-control", placeholder = "Password" })
+            @Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-danger" })
+        </div>
+
+        <div class="w-100">
+            @Html.PasswordFor(model => model.Password, new { @class = "form-control", id = "confirmPassword", placeholder = "Confirm Password" })
+            <span id="validateConfirmPassword" class="field-validation-valid text-danger" data-valmsg-for="confirmPassword" data-valmsg-replace="true"></span>
+        </div>
+
+        <div id="validationNotes" class="w-100">
+            <ul id="notes-container"></ul>
+        </div>
+
+        <div class="w-100">
+            <button type="submit" value="Create" class="w-100 btn btn-outline-light sbg-darker">Create Account</button>
+        </div>
+
+        <div class="form-group">
+            <p>Already have an account? @Html.ActionLink("Login", "Index", null, new { @class = "link-secondary" })</p>
+        </div>
+
+    </div>
+}
+
+<script>
+    const validator = new Validator("#notes-container");
+    $('form').submit((e) => {
+        // start loading
+        
+        e.preventDefault();
+        validator.removeErrors();
+
+        const accountType = $('input[name="accountType"]:checked').val();
+        const email = $('#Email').val();
+        const username = $('#Username').val();
+        const password = $('#Password').val();
+        const confirmPassword = $('#confirmPassword').val();
+
+        const validationConfirmPassword = $('validateConfirmPassword');
+
+        if (confirmPassword !== password)
+            return validateConfirmPassword.innerText = "Passwords didn't match!";
+        else
+            validateConfirmPassword.innerText = "";
+
+        if(!email || !username || !password){
+            validator.addError(new InvalidObject("All", "Please fill out all required fields."));
+            validator.updateParent();
+            return $('#loader').hide();
+        }
+
+
+        const data = {
+            email,
+            username,
+            password,
+            accountTypeId: parseInt(accountType, 10)
+        };
+
+        const url = '/auth/signup';
+
+        $('#loader').show(300);
+
+        fetch(url, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(data)
+        })
+        .then(res=>res.json())
+        .then(data=>{
+            if (data.error) {
+                const error = new InvalidObject("Username/Email", data.error.message);
+                validator.addError(error);
+                validator.updateParent();
+            }
+            else if (data.stack) {
+                const stack = data.stack;
+                stack.forEach(s=> {
+                    const e = s._validationErrors[0];
+                    const error = new InvalidObject(e._propertyName, e._errorMessage);
+                    validator.addError(error);
+                })
+                validator.updateParent();
+            }
+            else {
+                const session = data.session;
+                const userId = data.userId;
+                const accountTypeId = data.accountTypeId;
+
+                localStorage.setItem("accountType", accountTypeId);
+                setSessionToken(session);
+
+                window.location.replace("/Account/CreateProfile?accountType=" + accountTypeId);
+            }
+        })
+        .catch(e=> {
+            console.log(e);
+        })
+        .finally(_=> {
+            $('#loader').hide();
+        })
+
+    });
+
+</script>
+<script>
+    const accountTypeId = localStorage.accountType;
+    console.log(accountTypeId)
+    const url = "/auth/verify";
+    const sesh = getSessionToken();
+    fetch(url, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "Session-Token": sesh
+        }
+    })
+    .then(res=> {
+        console.log(res);
+        if (res.ok) {
+            console.log("logging you in, "+accountTypeId);
+            if (accountTypeId == 1) {
+                window.location.replace('/account/petdashboard');
+            }
+            else if (accountTypeId == 2) {
+                console.log('clinic you are, soon!');
+            }
+        }
+        else {
+            console.log("hey please log in!");
+        }
+    })
+</script>

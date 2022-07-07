@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-    <Schema Namespace="MainDBModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="PetBookModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="account_credential">
           <Key>
             <PropertyRef Name="Id" />
@@ -15,6 +15,13 @@
           <Property Name="Password" Type="nvarchar" MaxLength="60" Nullable="false" />
           <Property Name="AccountTypeId" Type="int" Nullable="false" />
           <Property Name="IsArchived" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="account_type">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" />
+          <Property Name="Value" Type="nvarchar" MaxLength="10" Nullable="false" />
         </EntityType>
         <EntityType Name="clinic_address">
           <Key>
@@ -240,6 +247,18 @@ warning 6002: The table/view 'PetBook.dbo.PetProfile' does not have a primary ke
           <Property Name="Contact" Type="nvarchar" MaxLength="15" Nullable="false" />
           <Property Name="ContactId" Type="nvarchar" MaxLength="8" Nullable="false" />
         </EntityType>
+        <Association Name="FK_account_credential_account_type">
+          <End Role="account_type" Type="Self.account_type" Multiplicity="1" />
+          <End Role="account_credential" Type="Self.account_credential" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="account_type">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="account_credential">
+              <PropertyRef Name="AccountTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_clinic_address_clinic_profile">
           <End Role="clinic_profile" Type="Self.clinic_profile" Multiplicity="1">
             <OnDelete Action="Cascade" />
@@ -283,7 +302,9 @@ warning 6002: The table/view 'PetBook.dbo.PetProfile' does not have a primary ke
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_clinic_review_pet_profile">
-          <End Role="pet_profile" Type="Self.pet_profile" Multiplicity="1" />
+          <End Role="pet_profile" Type="Self.pet_profile" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
           <End Role="clinic_review" Type="Self.clinic_review" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="pet_profile">
@@ -388,20 +409,6 @@ warning 6002: The table/view 'PetBook.dbo.PetProfile' does not have a primary ke
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_profile_post_comment_pet_profile">
-          <End Role="pet_profile" Type="Self.pet_profile" Multiplicity="1">
-            <OnDelete Action="Cascade" />
-          </End>
-          <End Role="profile_post_comment" Type="Self.profile_post_comment" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="pet_profile">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="profile_post_comment">
-              <PropertyRef Name="ProfileId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_profile_post_comment_profile_post">
           <End Role="profile_post" Type="Self.profile_post" Multiplicity="1">
             <OnDelete Action="Cascade" />
@@ -417,7 +424,9 @@ warning 6002: The table/view 'PetBook.dbo.PetProfile' does not have a primary ke
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_profile_post_like_profile_post">
-          <End Role="profile_post" Type="Self.profile_post" Multiplicity="1" />
+          <End Role="profile_post" Type="Self.profile_post" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
           <End Role="profile_post_like" Type="Self.profile_post_like" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="profile_post">
@@ -428,12 +437,27 @@ warning 6002: The table/view 'PetBook.dbo.PetProfile' does not have a primary ke
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_profile_post_pet_profile">
+          <End Role="pet_profile" Type="Self.pet_profile" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="profile_post" Type="Self.profile_post" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="pet_profile">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="profile_post">
+              <PropertyRef Name="ProfileId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Function Name="Haversine" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="custLat" Type="decimal" Mode="In" />
           <Parameter Name="custLng" Type="decimal" Mode="In" />
         </Function>
-        <EntityContainer Name="MainDBModelStoreContainer">
+        <EntityContainer Name="PetBookModelStoreContainer">
           <EntitySet Name="account_credential" EntityType="Self.account_credential" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="account_type" EntityType="Self.account_type" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="clinic_address" EntityType="Self.clinic_address" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="clinic_contact" EntityType="Self.clinic_contact" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="clinic_profile" EntityType="Self.clinic_profile" Schema="dbo" store:Type="Tables" />
@@ -501,6 +525,10 @@ warning 6002: The table/view 'PetBook.dbo.PetProfile' does not have a primary ke
     [PetProfile].[ContactId] AS [ContactId]
     FROM [dbo].[PetProfile] AS [PetProfile]</DefiningQuery>
           </EntitySet>
+          <AssociationSet Name="FK_account_credential_account_type" Association="Self.FK_account_credential_account_type">
+            <End Role="account_type" EntitySet="account_type" />
+            <End Role="account_credential" EntitySet="account_credential" />
+          </AssociationSet>
           <AssociationSet Name="FK_clinic_address_clinic_profile" Association="Self.FK_clinic_address_clinic_profile">
             <End Role="clinic_profile" EntitySet="clinic_profile" />
             <End Role="clinic_address" EntitySet="clinic_address" />
@@ -545,10 +573,6 @@ warning 6002: The table/view 'PetBook.dbo.PetProfile' does not have a primary ke
             <End Role="pet_category" EntitySet="pet_category" />
             <End Role="pet_profile" EntitySet="pet_profile" />
           </AssociationSet>
-          <AssociationSet Name="FK_profile_post_comment_pet_profile" Association="Self.FK_profile_post_comment_pet_profile">
-            <End Role="pet_profile" EntitySet="pet_profile" />
-            <End Role="profile_post_comment" EntitySet="profile_post_comment" />
-          </AssociationSet>
           <AssociationSet Name="FK_profile_post_comment_profile_post" Association="Self.FK_profile_post_comment_profile_post">
             <End Role="profile_post" EntitySet="profile_post" />
             <End Role="profile_post_comment" EntitySet="profile_post_comment" />
@@ -557,11 +581,15 @@ warning 6002: The table/view 'PetBook.dbo.PetProfile' does not have a primary ke
             <End Role="profile_post" EntitySet="profile_post" />
             <End Role="profile_post_like" EntitySet="profile_post_like" />
           </AssociationSet>
+          <AssociationSet Name="FK_profile_post_pet_profile" Association="Self.FK_profile_post_pet_profile">
+            <End Role="pet_profile" EntitySet="pet_profile" />
+            <End Role="profile_post" EntitySet="profile_post" />
+          </AssociationSet>
         </EntityContainer>
       </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
-      <Schema Namespace="MainDBModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+      <Schema Namespace="PetBookModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
         <EntityType Name="account_credential">
           <Key>
             <PropertyRef Name="Id" />
@@ -572,7 +600,29 @@ warning 6002: The table/view 'PetBook.dbo.PetProfile' does not have a primary ke
           <Property Name="Password" Type="String" MaxLength="60" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="AccountTypeId" Type="Int32" Nullable="false" />
           <Property Name="IsArchived" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="account_type" Relationship="Self.FK_account_credential_account_type" FromRole="account_credential" ToRole="account_type" />
           <NavigationProperty Name="login_sessions" Relationship="Self.FK_login_sessions_account_credential" FromRole="account_credential" ToRole="login_sessions" />
+        </EntityType>
+        <EntityType Name="account_type">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" />
+          <Property Name="Value" Type="String" MaxLength="10" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="account_credential" Relationship="Self.FK_account_credential_account_type" FromRole="account_type" ToRole="account_credential" />
+        </EntityType>
+        <EntityType Name="clinic_address">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="String" MaxLength="8" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Country" Type="String" MaxLength="35" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="City" Type="String" MaxLength="35" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Barangay" Type="String" MaxLength="35" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Line" Type="String" MaxLength="64" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Latitude" Type="Decimal" Precision="8" Scale="6" />
+          <Property Name="Longitude" Type="Decimal" Precision="9" Scale="6" />
+          <NavigationProperty Name="clinic_profile" Relationship="Self.FK_clinic_address_clinic_profile" FromRole="clinic_address" ToRole="clinic_profile" />
         </EntityType>
         <EntityType Name="clinic_contact">
           <Key>
@@ -592,9 +642,31 @@ warning 6002: The table/view 'PetBook.dbo.PetProfile' does not have a primary ke
           <Property Name="VetFirstName" Type="String" MaxLength="35" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="VetMiddleName" Type="String" MaxLength="35" FixedLength="false" Unicode="true" />
           <Property Name="VetLastName" Type="String" MaxLength="35" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="clinic_address" Relationship="Self.FK_clinic_address_clinic_profile" FromRole="clinic_profile" ToRole="clinic_address" />
           <NavigationProperty Name="clinic_contact" Relationship="Self.FK_clinic_contact_clinic_profile" FromRole="clinic_profile" ToRole="clinic_contact" />
-          <NavigationProperty Name="clinic_address" Relationship="MainDBModel.FK_clinic_address_clinic_profile" FromRole="clinic_profile" ToRole="clinic_address" />
-          <NavigationProperty Name="clinic_review" Relationship="MainDBModel.FK_clinic_review_clinic_profile" FromRole="clinic_profile" ToRole="clinic_review" />
+          <NavigationProperty Name="clinic_review" Relationship="Self.FK_clinic_review_clinic_profile" FromRole="clinic_profile" ToRole="clinic_review" />
+        </EntityType>
+        <EntityType Name="clinic_review">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="String" MaxLength="16" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="ClinicId" Type="String" MaxLength="8" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Rating" Type="Double" />
+          <Property Name="ReviewerId" Type="String" MaxLength="8" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="ReviewContent" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="ReviewCreationDate" Type="DateTime" Nullable="false" Precision="0" />
+          <NavigationProperty Name="clinic_profile" Relationship="Self.FK_clinic_review_clinic_profile" FromRole="clinic_review" ToRole="clinic_profile" />
+          <NavigationProperty Name="pet_profile" Relationship="Self.FK_clinic_review_pet_profile" FromRole="clinic_review" ToRole="pet_profile" />
+        </EntityType>
+        <EntityType Name="following">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="String" MaxLength="8" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="FollowingId" Type="String" MaxLength="8" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="FollowerId" Type="String" MaxLength="8" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Type" Type="String" MaxLength="6" FixedLength="false" Unicode="true" Nullable="false" />
         </EntityType>
         <EntityType Name="login_sessions">
           <Key>
@@ -605,6 +677,17 @@ warning 6002: The table/view 'PetBook.dbo.PetProfile' does not have a primary ke
           <Property Name="ExpiresAt" Type="DateTime" Nullable="false" Precision="7" />
           <Property Name="Id" Type="String" MaxLength="8" FixedLength="false" Unicode="true" Nullable="false" />
           <NavigationProperty Name="account_credential" Relationship="Self.FK_login_sessions_account_credential" FromRole="login_sessions" ToRole="account_credential" />
+        </EntityType>
+        <EntityType Name="owner_address">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="String" MaxLength="8" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Country" Type="String" MaxLength="35" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="City" Type="String" MaxLength="35" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Barangay" Type="String" MaxLength="35" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Line" Type="String" MaxLength="35" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="owner_profile" Relationship="Self.FK_owner_address_owner_profile" FromRole="owner_address" ToRole="owner_profile" />
         </EntityType>
         <EntityType Name="owner_contact">
           <Key>
@@ -623,10 +706,94 @@ warning 6002: The table/view 'PetBook.dbo.PetProfile' does not have a primary ke
           <Property Name="FirstName" Type="String" MaxLength="35" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="MiddleName" Type="String" MaxLength="35" FixedLength="false" Unicode="true" />
           <Property Name="LastName" Type="String" MaxLength="35" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="owner_address" Relationship="Self.FK_owner_address_owner_profile" FromRole="owner_profile" ToRole="owner_address" />
           <NavigationProperty Name="owner_contact" Relationship="Self.FK_owner_contact_owner_profile" FromRole="owner_profile" ToRole="owner_contact" />
-          <NavigationProperty Name="owner_address" Relationship="MainDBModel.FK_owner_address_owner_profile" FromRole="owner_profile" ToRole="owner_address" />
-          <NavigationProperty Name="pet_profile" Relationship="MainDBModel.FK_pet_profile_owner_profile" FromRole="owner_profile" ToRole="pet_profile" />
+          <NavigationProperty Name="pet_profile" Relationship="Self.FK_pet_profile_owner_profile" FromRole="owner_profile" ToRole="pet_profile" />
         </EntityType>
+        <EntityType Name="pet_breeds">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CategoryId" Type="Int32" Nullable="false" />
+          <Property Name="Breed" Type="String" MaxLength="25" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="pet_category" Relationship="Self.FK_pet_breeds_pet_category" FromRole="pet_breeds" ToRole="pet_category" />
+          <NavigationProperty Name="pet_profile" Relationship="Self.FK_pet_profile_pet_breeds" FromRole="pet_breeds" ToRole="pet_profile" />
+        </EntityType>
+        <EntityType Name="pet_category">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Category" Type="String" MaxLength="25" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="pet_breeds" Relationship="Self.FK_pet_breeds_pet_category" FromRole="pet_category" ToRole="pet_breeds" />
+          <NavigationProperty Name="pet_profile" Relationship="Self.FK_pet_profile_pet_category" FromRole="pet_category" ToRole="pet_profile" />
+        </EntityType>
+        <EntityType Name="pet_profile">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="String" MaxLength="8" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="OwnerId" Type="String" MaxLength="8" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Name" Type="String" MaxLength="35" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Birthdate" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="CategoryId" Type="Int32" Nullable="false" />
+          <Property Name="BreedId" Type="Int32" />
+          <Property Name="Color" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="clinic_review" Relationship="Self.FK_clinic_review_pet_profile" FromRole="pet_profile" ToRole="clinic_review" />
+          <NavigationProperty Name="owner_profile" Relationship="Self.FK_pet_profile_owner_profile" FromRole="pet_profile" ToRole="owner_profile" />
+          <NavigationProperty Name="pet_breeds" Relationship="Self.FK_pet_profile_pet_breeds" FromRole="pet_profile" ToRole="pet_breeds" />
+          <NavigationProperty Name="pet_category" Relationship="Self.FK_pet_profile_pet_category" FromRole="pet_profile" ToRole="pet_category" />
+          <NavigationProperty Name="profile_post_comment" Relationship="Self.FK_profile_post_comment_pet_profile" FromRole="pet_profile" ToRole="profile_post_comment" />
+          <NavigationProperty Name="profile_post" Relationship="PetBookModel.FK_profile_post_pet_profile" FromRole="pet_profile" ToRole="profile_post" />
+        </EntityType>
+        <EntityType Name="profile_post">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="String" MaxLength="8" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="ProfileId" Type="String" MaxLength="8" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="PostCreationDate" Type="DateTime" Nullable="false" Precision="7" />
+          <Property Name="PostContent" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="MediaContent" Type="String" MaxLength="8" FixedLength="false" Unicode="true" />
+          <Property Name="post_points" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="profile_post_comment" Relationship="Self.FK_profile_post_comment_profile_post" FromRole="profile_post" ToRole="profile_post_comment" />
+          <NavigationProperty Name="profile_post_like" Relationship="Self.FK_profile_post_like_profile_post" FromRole="profile_post" ToRole="profile_post_like" />
+          <NavigationProperty Name="pet_profile" Relationship="PetBookModel.FK_profile_post_pet_profile" FromRole="profile_post" ToRole="pet_profile" />
+        </EntityType>
+        <EntityType Name="profile_post_comment">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="String" MaxLength="16" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="PostId" Type="String" MaxLength="8" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="ProfileId" Type="String" MaxLength="8" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="CommentContent" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="CommentCreationDate" Type="DateTime" Nullable="false" Precision="0" />
+          <NavigationProperty Name="pet_profile" Relationship="Self.FK_profile_post_comment_pet_profile" FromRole="profile_post_comment" ToRole="pet_profile" />
+          <NavigationProperty Name="profile_post" Relationship="Self.FK_profile_post_comment_profile_post" FromRole="profile_post_comment" ToRole="profile_post" />
+        </EntityType>
+        <EntityType Name="profile_post_like">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="String" MaxLength="8" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="PostId" Type="String" MaxLength="8" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="ProfileId" Type="String" MaxLength="8" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="profile_post" Relationship="Self.FK_profile_post_like_profile_post" FromRole="profile_post_like" ToRole="profile_post" />
+        </EntityType>
+        <Association Name="FK_account_credential_account_type">
+          <End Role="account_type" Type="Self.account_type" Multiplicity="1" />
+          <End Role="account_credential" Type="Self.account_credential" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="account_type">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="account_credential">
+              <PropertyRef Name="AccountTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_login_sessions_account_credential">
           <End Role="account_credential" Type="Self.account_credential" Multiplicity="1">
             <OnDelete Action="Cascade" />
@@ -638,6 +805,20 @@ warning 6002: The table/view 'PetBook.dbo.PetProfile' does not have a primary ke
             </Principal>
             <Dependent Role="login_sessions">
               <PropertyRef Name="AccountId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_clinic_address_clinic_profile">
+          <End Role="clinic_profile" Type="Self.clinic_profile" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="clinic_address" Type="Self.clinic_address" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="clinic_profile">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="clinic_address">
+              <PropertyRef Name="Id" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -655,6 +836,48 @@ warning 6002: The table/view 'PetBook.dbo.PetProfile' does not have a primary ke
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_clinic_review_clinic_profile">
+          <End Role="clinic_profile" Type="Self.clinic_profile" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="clinic_review" Type="Self.clinic_review" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="clinic_profile">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="clinic_review">
+              <PropertyRef Name="ClinicId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_clinic_review_pet_profile">
+          <End Role="pet_profile" Type="Self.pet_profile" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="clinic_review" Type="Self.clinic_review" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="pet_profile">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="clinic_review">
+              <PropertyRef Name="ReviewerId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_owner_address_owner_profile">
+          <End Role="owner_profile" Type="Self.owner_profile" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="owner_address" Type="Self.owner_address" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="owner_profile">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="owner_address">
+              <PropertyRef Name="Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_owner_contact_owner_profile">
           <End Role="owner_profile" Type="Self.owner_profile" Multiplicity="1">
             <OnDelete Action="Cascade" />
@@ -669,164 +892,11 @@ warning 6002: The table/view 'PetBook.dbo.PetProfile' does not have a primary ke
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EntityContainer Name="MainDBEntities" annotation:LazyLoadingEnabled="true">
-          <EntitySet Name="account_credential" EntityType="Self.account_credential" />
-          <EntitySet Name="clinic_contact" EntityType="Self.clinic_contact" />
-          <EntitySet Name="clinic_profile" EntityType="Self.clinic_profile" />
-          <EntitySet Name="login_sessions" EntityType="Self.login_sessions" />
-          <EntitySet Name="owner_contact" EntityType="Self.owner_contact" />
-          <EntitySet Name="owner_profile" EntityType="Self.owner_profile" />
-          <AssociationSet Name="FK_login_sessions_account_credential" Association="Self.FK_login_sessions_account_credential">
-            <End Role="account_credential" EntitySet="account_credential" />
-            <End Role="login_sessions" EntitySet="login_sessions" />
-          </AssociationSet>
-          <AssociationSet Name="FK_clinic_contact_clinic_profile" Association="Self.FK_clinic_contact_clinic_profile">
-            <End Role="clinic_profile" EntitySet="clinic_profile" />
-            <End Role="clinic_contact" EntitySet="clinic_contact" />
-          </AssociationSet>
-          <AssociationSet Name="FK_owner_contact_owner_profile" Association="Self.FK_owner_contact_owner_profile">
-            <End Role="owner_profile" EntitySet="owner_profile" />
-            <End Role="owner_contact" EntitySet="owner_contact" />
-          </AssociationSet>
-          <EntitySet Name="owner_address" EntityType="MainDBModel.owner_address" />
-          <AssociationSet Name="FK_owner_address_owner_profile" Association="MainDBModel.FK_owner_address_owner_profile">
-            <End Role="owner_profile" EntitySet="owner_profile" />
-            <End Role="owner_address" EntitySet="owner_address" />
-          </AssociationSet>
-          <EntitySet Name="clinic_address" EntityType="MainDBModel.clinic_address" />
-          <AssociationSet Name="FK_clinic_address_clinic_profile" Association="MainDBModel.FK_clinic_address_clinic_profile">
-            <End Role="clinic_profile" EntitySet="clinic_profile" />
-            <End Role="clinic_address" EntitySet="clinic_address" />
-          </AssociationSet>
-          <EntitySet Name="pet_profile" EntityType="MainDBModel.pet_profile" />
-          <AssociationSet Name="FK_pet_profile_owner_profile" Association="MainDBModel.FK_pet_profile_owner_profile">
-            <End Role="owner_profile" EntitySet="owner_profile" />
-            <End Role="pet_profile" EntitySet="pet_profile" />
-          </AssociationSet>
-          <EntitySet Name="pet_breeds" EntityType="MainDBModel.pet_breeds" />
-          <EntitySet Name="pet_category" EntityType="MainDBModel.pet_category" />
-          <AssociationSet Name="FK_pet_breeds_pet_category" Association="MainDBModel.FK_pet_breeds_pet_category">
-            <End Role="pet_category" EntitySet="pet_category" />
-            <End Role="pet_breeds" EntitySet="pet_breeds" />
-          </AssociationSet>
-          <AssociationSet Name="FK_pet_profile_pet_breeds" Association="MainDBModel.FK_pet_profile_pet_breeds">
-            <End Role="pet_breeds" EntitySet="pet_breeds" />
-            <End Role="pet_profile" EntitySet="pet_profile" />
-          </AssociationSet>
-          <AssociationSet Name="FK_pet_profile_pet_category" Association="MainDBModel.FK_pet_profile_pet_category">
-            <End Role="pet_category" EntitySet="pet_category" />
-            <End Role="pet_profile" EntitySet="pet_profile" />
-          </AssociationSet>
-          <EntitySet Name="profile_post" EntityType="MainDBModel.profile_post" />
-          <EntitySet Name="profile_post_comment" EntityType="MainDBModel.profile_post_comment" />
-          <EntitySet Name="profile_post_like" EntityType="MainDBModel.profile_post_like" />
-          <AssociationSet Name="FK_profile_post_pet_profile" Association="MainDBModel.FK_profile_post_pet_profile">
-            <End Role="pet_profile" EntitySet="pet_profile" />
-            <End Role="profile_post" EntitySet="profile_post" />
-          </AssociationSet>
-          <AssociationSet Name="FK_profile_post_comment_profile_post" Association="MainDBModel.FK_profile_post_comment_profile_post">
-            <End Role="profile_post" EntitySet="profile_post" />
-            <End Role="profile_post_comment" EntitySet="profile_post_comment" />
-          </AssociationSet>
-          <AssociationSet Name="FK_profile_post_like_profile_post" Association="MainDBModel.FK_profile_post_like_profile_post">
-            <End Role="profile_post" EntitySet="profile_post" />
-            <End Role="profile_post_like" EntitySet="profile_post_like" />
-          </AssociationSet>
-          <AssociationSet Name="FK_profile_post_comment_pet_profile" Association="MainDBModel.FK_profile_post_comment_pet_profile">
-            <End Role="pet_profile" EntitySet="pet_profile" />
-            <End Role="profile_post_comment" EntitySet="profile_post_comment" />
-          </AssociationSet>
-          <EntitySet Name="OwnerProfiles" EntityType="MainDBModel.OwnerProfile" />
-          <EntitySet Name="followings" EntityType="MainDBModel.following" />
-          <EntitySet Name="clinic_review" EntityType="MainDBModel.clinic_review" />
-          <AssociationSet Name="FK_clinic_review_clinic_profile" Association="MainDBModel.FK_clinic_review_clinic_profile">
-            <End Role="clinic_profile" EntitySet="clinic_profile" />
-            <End Role="clinic_review" EntitySet="clinic_review" />
-          </AssociationSet>
-          <AssociationSet Name="FK_clinic_review_pet_profile" Association="MainDBModel.FK_clinic_review_pet_profile">
-            <End Role="pet_profile" EntitySet="pet_profile" />
-            <End Role="clinic_review" EntitySet="clinic_review" />
-          </AssociationSet>
-          <EntitySet Name="ClinicProfiles" EntityType="MainDBModel.ClinicProfile" />
-          <EntitySet Name="PetProfiles" EntityType="MainDBModel.PetProfile" />
-          <FunctionImport Name="Haversine" ReturnType="Collection(MainDBModel.Haversine_Result)">
-            <Parameter Name="custLat" Mode="In" Type="Decimal" />
-            <Parameter Name="custLng" Mode="In" Type="Decimal" />
-          </FunctionImport>
-          </EntityContainer>
-        <EntityType Name="owner_address">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="String" Nullable="false" MaxLength="8" FixedLength="false" Unicode="true" />
-          <Property Name="Country" Type="String" Nullable="false" MaxLength="35" FixedLength="false" Unicode="true" />
-          <Property Name="City" Type="String" Nullable="false" MaxLength="35" FixedLength="false" Unicode="true" />
-          <Property Name="Barangay" Type="String" Nullable="false" MaxLength="35" FixedLength="false" Unicode="true" />
-          <Property Name="Line" Type="String" Nullable="false" MaxLength="35" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="owner_profile" Relationship="MainDBModel.FK_owner_address_owner_profile" FromRole="owner_address" ToRole="owner_profile" />
-        </EntityType>
-        <Association Name="FK_owner_address_owner_profile">
-          <End Type="MainDBModel.owner_profile" Role="owner_profile" Multiplicity="1" />
-          <End Type="MainDBModel.owner_address" Role="owner_address" Multiplicity="0..1" />
-          <ReferentialConstraint>
-            <Principal Role="owner_profile">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="owner_address">
-              <PropertyRef Name="Id" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <EntityType Name="clinic_address">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="String" Nullable="false" MaxLength="8" FixedLength="false" Unicode="true" />
-          <Property Name="Country" Type="String" Nullable="false" MaxLength="35" FixedLength="false" Unicode="true" />
-          <Property Name="City" Type="String" Nullable="false" MaxLength="35" FixedLength="false" Unicode="true" />
-          <Property Name="Barangay" Type="String" Nullable="false" MaxLength="35" FixedLength="false" Unicode="true" />
-          <Property Name="Line" Type="String" Nullable="false" MaxLength="64" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="clinic_profile" Relationship="MainDBModel.FK_clinic_address_clinic_profile" FromRole="clinic_address" ToRole="clinic_profile" />
-          <Property Name="Latitude" Type="Decimal" Precision="8" Scale="6" />
-          <Property Name="Longitude" Type="Decimal" Precision="9" Scale="6" />
-        </EntityType>
-        <Association Name="FK_clinic_address_clinic_profile">
-          <End Type="MainDBModel.clinic_profile" Role="clinic_profile" Multiplicity="1">
-            <OnDelete Action="Cascade" />
-          </End>
-          <End Type="MainDBModel.clinic_address" Role="clinic_address" Multiplicity="0..1" />
-          <ReferentialConstraint>
-            <Principal Role="clinic_profile">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="clinic_address">
-              <PropertyRef Name="Id" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <EntityType Name="pet_profile">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="String" Nullable="false" MaxLength="8" FixedLength="false" Unicode="true" />
-          <Property Name="OwnerId" Type="String" Nullable="false" MaxLength="8" FixedLength="false" Unicode="true" />
-          <Property Name="Name" Type="String" Nullable="false" MaxLength="35" FixedLength="false" Unicode="true" />
-          <Property Name="Birthdate" Type="DateTime" Nullable="false" Precision="0" />
-          <Property Name="CategoryId" Type="Int32" Nullable="false" />
-          <Property Name="BreedId" Type="Int32" />
-          <Property Name="Color" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="owner_profile" Relationship="MainDBModel.FK_pet_profile_owner_profile" FromRole="pet_profile" ToRole="owner_profile" />
-          <NavigationProperty Name="pet_breeds" Relationship="MainDBModel.FK_pet_profile_pet_breeds" FromRole="pet_profile" ToRole="pet_breeds" />
-          <NavigationProperty Name="pet_category" Relationship="MainDBModel.FK_pet_profile_pet_category" FromRole="pet_profile" ToRole="pet_category" />
-          <NavigationProperty Name="profile_post" Relationship="MainDBModel.FK_profile_post_pet_profile" FromRole="pet_profile" ToRole="profile_post" />
-          <NavigationProperty Name="profile_post_comment" Relationship="MainDBModel.FK_profile_post_comment_pet_profile" FromRole="pet_profile" ToRole="profile_post_comment" />
-          <NavigationProperty Name="clinic_review" Relationship="MainDBModel.FK_clinic_review_pet_profile" FromRole="pet_profile" ToRole="clinic_review" />
-        </EntityType>
         <Association Name="FK_pet_profile_owner_profile">
-          <End Type="MainDBModel.owner_profile" Role="owner_profile" Multiplicity="1">
+          <End Role="owner_profile" Type="Self.owner_profile" Multiplicity="1">
             <OnDelete Action="Cascade" />
           </End>
-          <End Type="MainDBModel.pet_profile" Role="pet_profile" Multiplicity="*" />
+          <End Role="pet_profile" Type="Self.pet_profile" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="owner_profile">
               <PropertyRef Name="Id" />
@@ -836,30 +906,11 @@ warning 6002: The table/view 'PetBook.dbo.PetProfile' does not have a primary ke
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EntityType Name="pet_breeds">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="CategoryId" Type="Int32" Nullable="false" />
-          <Property Name="Breed" Type="String" Nullable="false" MaxLength="25" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="pet_category" Relationship="MainDBModel.FK_pet_breeds_pet_category" FromRole="pet_breeds" ToRole="pet_category" />
-          <NavigationProperty Name="pet_profile" Relationship="MainDBModel.FK_pet_profile_pet_breeds" FromRole="pet_breeds" ToRole="pet_profile" />
-        </EntityType>
-        <EntityType Name="pet_category">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Category" Type="String" Nullable="false" MaxLength="25" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="pet_breeds" Relationship="MainDBModel.FK_pet_breeds_pet_category" FromRole="pet_category" ToRole="pet_breeds" />
-          <NavigationProperty Name="pet_profile" Relationship="MainDBModel.FK_pet_profile_pet_category" FromRole="pet_category" ToRole="pet_profile" />
-        </EntityType>
         <Association Name="FK_pet_breeds_pet_category">
-          <End Type="MainDBModel.pet_category" Role="pet_category" Multiplicity="1">
+          <End Role="pet_category" Type="Self.pet_category" Multiplicity="1">
             <OnDelete Action="Cascade" />
           </End>
-          <End Type="MainDBModel.pet_breeds" Role="pet_breeds" Multiplicity="*" />
+          <End Role="pet_breeds" Type="Self.pet_breeds" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="pet_category">
               <PropertyRef Name="Id" />
@@ -870,8 +921,8 @@ warning 6002: The table/view 'PetBook.dbo.PetProfile' does not have a primary ke
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_pet_profile_pet_breeds">
-          <End Type="MainDBModel.pet_breeds" Role="pet_breeds" Multiplicity="0..1" />
-          <End Type="MainDBModel.pet_profile" Role="pet_profile" Multiplicity="*" />
+          <End Role="pet_breeds" Type="Self.pet_breeds" Multiplicity="0..1" />
+          <End Role="pet_profile" Type="Self.pet_profile" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="pet_breeds">
               <PropertyRef Name="Id" />
@@ -882,8 +933,8 @@ warning 6002: The table/view 'PetBook.dbo.PetProfile' does not have a primary ke
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_pet_profile_pet_category">
-          <End Type="MainDBModel.pet_category" Role="pet_category" Multiplicity="1" />
-          <End Type="MainDBModel.pet_profile" Role="pet_profile" Multiplicity="*" />
+          <End Role="pet_category" Type="Self.pet_category" Multiplicity="1" />
+          <End Role="pet_profile" Type="Self.pet_profile" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="pet_category">
               <PropertyRef Name="Id" />
@@ -893,60 +944,25 @@ warning 6002: The table/view 'PetBook.dbo.PetProfile' does not have a primary ke
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EntityType Name="profile_post">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="String" Nullable="false" MaxLength="8" FixedLength="false" Unicode="true" />
-          <Property Name="ProfileId" Type="String" Nullable="false" MaxLength="8" FixedLength="false" Unicode="true" />
-          <Property Name="PostCreationDate" Type="DateTime" Nullable="false" Precision="7" />
-          <Property Name="PostContent" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="MediaContent" Type="String" MaxLength="8" FixedLength="false" Unicode="true" />
-          <Property Name="post_points" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="pet_profile" Relationship="MainDBModel.FK_profile_post_pet_profile" FromRole="profile_post" ToRole="pet_profile" />
-          <NavigationProperty Name="profile_post_comment" Relationship="MainDBModel.FK_profile_post_comment_profile_post" FromRole="profile_post" ToRole="profile_post_comment" />
-          <NavigationProperty Name="profile_post_like" Relationship="MainDBModel.FK_profile_post_like_profile_post" FromRole="profile_post" ToRole="profile_post_like" />
-        </EntityType>
-        <EntityType Name="profile_post_comment">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="String" Nullable="false" MaxLength="16" FixedLength="false" Unicode="true" />
-          <Property Name="PostId" Type="String" Nullable="false" MaxLength="8" FixedLength="false" Unicode="true" />
-          <Property Name="ProfileId" Type="String" Nullable="false" MaxLength="8" FixedLength="false" Unicode="true" />
-          <Property Name="CommentContent" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="CommentCreationDate" Type="DateTime" Nullable="false" Precision="0" />
-          <NavigationProperty Name="profile_post" Relationship="MainDBModel.FK_profile_post_comment_profile_post" FromRole="profile_post_comment" ToRole="profile_post" />
-          <NavigationProperty Name="pet_profile" Relationship="MainDBModel.FK_profile_post_comment_pet_profile" FromRole="profile_post_comment" ToRole="pet_profile" />
-        </EntityType>
-        <EntityType Name="profile_post_like">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="String" Nullable="false" MaxLength="8" FixedLength="false" Unicode="true" />
-          <Property Name="PostId" Type="String" Nullable="false" MaxLength="8" FixedLength="false" Unicode="true" />
-          <Property Name="ProfileId" Type="String" Nullable="false" MaxLength="8" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="profile_post" Relationship="MainDBModel.FK_profile_post_like_profile_post" FromRole="profile_post_like" ToRole="profile_post" />
-        </EntityType>
-        <Association Name="FK_profile_post_pet_profile">
-          <End Type="MainDBModel.pet_profile" Role="pet_profile" Multiplicity="1">
+        <Association Name="FK_profile_post_comment_pet_profile">
+          <End Role="pet_profile" Type="Self.pet_profile" Multiplicity="1">
             <OnDelete Action="Cascade" />
           </End>
-          <End Type="MainDBModel.profile_post" Role="profile_post" Multiplicity="*" />
+          <End Role="profile_post_comment" Type="Self.profile_post_comment" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="pet_profile">
               <PropertyRef Name="Id" />
             </Principal>
-            <Dependent Role="profile_post">
+            <Dependent Role="profile_post_comment">
               <PropertyRef Name="ProfileId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_profile_post_comment_profile_post">
-          <End Type="MainDBModel.profile_post" Role="profile_post" Multiplicity="1">
+          <End Role="profile_post" Type="Self.profile_post" Multiplicity="1">
             <OnDelete Action="Cascade" />
           </End>
-          <End Type="MainDBModel.profile_post_comment" Role="profile_post_comment" Multiplicity="*" />
+          <End Role="profile_post_comment" Type="Self.profile_post_comment" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="profile_post">
               <PropertyRef Name="Id" />
@@ -957,8 +973,8 @@ warning 6002: The table/view 'PetBook.dbo.PetProfile' does not have a primary ke
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_profile_post_like_profile_post">
-          <End Type="MainDBModel.profile_post" Role="profile_post" Multiplicity="1" />
-          <End Type="MainDBModel.profile_post_like" Role="profile_post_like" Multiplicity="*" />
+          <End Role="profile_post" Type="Self.profile_post" Multiplicity="1" />
+          <End Role="profile_post_like" Type="Self.profile_post_like" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="profile_post">
               <PropertyRef Name="Id" />
@@ -968,91 +984,96 @@ warning 6002: The table/view 'PetBook.dbo.PetProfile' does not have a primary ke
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_profile_post_comment_pet_profile">
-          <End Type="MainDBModel.pet_profile" Role="pet_profile" Multiplicity="1">
-            <OnDelete Action="Cascade" />
-          </End>
-          <End Type="MainDBModel.profile_post_comment" Role="profile_post_comment" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="pet_profile">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="profile_post_comment">
-              <PropertyRef Name="ProfileId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <EntityType Name="OwnerProfile">
-          <Key>
-            <PropertyRef Name="Id" />
-            <PropertyRef Name="FirstName" />
-            <PropertyRef Name="LastName" />
-            <PropertyRef Name="Line" />
-            <PropertyRef Name="Barangay" />
-            <PropertyRef Name="City" />
-            <PropertyRef Name="Country" />
-            <PropertyRef Name="contactId" />
-            <PropertyRef Name="Contact" />
-          </Key>
-          <Property Name="Id" Type="String" Nullable="false" MaxLength="8" FixedLength="false" Unicode="true" />
-          <Property Name="FirstName" Type="String" Nullable="false" MaxLength="35" FixedLength="false" Unicode="true" />
-          <Property Name="MiddleName" Type="String" MaxLength="35" FixedLength="false" Unicode="true" />
-          <Property Name="LastName" Type="String" Nullable="false" MaxLength="35" FixedLength="false" Unicode="true" />
-          <Property Name="Line" Type="String" Nullable="false" MaxLength="35" FixedLength="false" Unicode="true" />
-          <Property Name="Barangay" Type="String" Nullable="false" MaxLength="35" FixedLength="false" Unicode="true" />
-          <Property Name="City" Type="String" Nullable="false" MaxLength="35" FixedLength="false" Unicode="true" />
-          <Property Name="Country" Type="String" Nullable="false" MaxLength="35" FixedLength="false" Unicode="true" />
-          <Property Name="contactId" Type="String" Nullable="false" MaxLength="8" FixedLength="false" Unicode="true" />
-          <Property Name="Contact" Type="String" Nullable="false" MaxLength="15" FixedLength="false" Unicode="true" />
-        </EntityType>
-        <EntityType Name="following">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="String" Nullable="false" MaxLength="8" FixedLength="false" Unicode="true" />
-          <Property Name="FollowingId" Type="String" Nullable="false" MaxLength="8" FixedLength="false" Unicode="true" />
-          <Property Name="FollowerId" Type="String" Nullable="false" MaxLength="8" FixedLength="false" Unicode="true" />
-          <Property Name="Type" Type="String" Nullable="false" MaxLength="6" FixedLength="false" Unicode="true" />
-        </EntityType>
-        <EntityType Name="clinic_review">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="String" Nullable="false" MaxLength="16" FixedLength="false" Unicode="true" />
-          <Property Name="ClinicId" Type="String" Nullable="false" MaxLength="8" FixedLength="false" Unicode="true" />
-          <Property Name="Rating" Type="Double" />
-          <Property Name="ReviewerId" Type="String" Nullable="false" MaxLength="8" FixedLength="false" Unicode="true" />
-          <Property Name="ReviewContent" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
-          <Property Name="ReviewCreationDate" Type="DateTime" Nullable="false" Precision="0" />
-          <NavigationProperty Name="clinic_profile" Relationship="MainDBModel.FK_clinic_review_clinic_profile" FromRole="clinic_review" ToRole="clinic_profile" />
-          <NavigationProperty Name="pet_profile" Relationship="MainDBModel.FK_clinic_review_pet_profile" FromRole="clinic_review" ToRole="pet_profile" />
-        </EntityType>
-        <Association Name="FK_clinic_review_clinic_profile">
-          <End Type="MainDBModel.clinic_profile" Role="clinic_profile" Multiplicity="1">
-            <OnDelete Action="Cascade" />
-          </End>
-          <End Type="MainDBModel.clinic_review" Role="clinic_review" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="clinic_profile">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="clinic_review">
-              <PropertyRef Name="ClinicId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_clinic_review_pet_profile">
-          <End Type="MainDBModel.pet_profile" Role="pet_profile" Multiplicity="1" />
-          <End Type="MainDBModel.clinic_review" Role="clinic_review" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="pet_profile">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="clinic_review">
-              <PropertyRef Name="ReviewerId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
+        <EntityContainer Name="MainDBEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="account_credential" EntityType="Self.account_credential" />
+          <EntitySet Name="account_type" EntityType="Self.account_type" />
+          <EntitySet Name="clinic_address" EntityType="Self.clinic_address" />
+          <EntitySet Name="clinic_contact" EntityType="Self.clinic_contact" />
+          <EntitySet Name="clinic_profile" EntityType="Self.clinic_profile" />
+          <EntitySet Name="clinic_review" EntityType="Self.clinic_review" />
+          <EntitySet Name="followings" EntityType="Self.following" />
+          <EntitySet Name="login_sessions" EntityType="Self.login_sessions" />
+          <EntitySet Name="owner_address" EntityType="Self.owner_address" />
+          <EntitySet Name="owner_contact" EntityType="Self.owner_contact" />
+          <EntitySet Name="owner_profile" EntityType="Self.owner_profile" />
+          <EntitySet Name="pet_breeds" EntityType="Self.pet_breeds" />
+          <EntitySet Name="pet_category" EntityType="Self.pet_category" />
+          <EntitySet Name="pet_profile" EntityType="Self.pet_profile" />
+          <EntitySet Name="profile_post" EntityType="Self.profile_post" />
+          <EntitySet Name="profile_post_comment" EntityType="Self.profile_post_comment" />
+          <EntitySet Name="profile_post_like" EntityType="Self.profile_post_like" />
+          <AssociationSet Name="FK_account_credential_account_type" Association="Self.FK_account_credential_account_type">
+            <End Role="account_type" EntitySet="account_type" />
+            <End Role="account_credential" EntitySet="account_credential" />
+          </AssociationSet>
+          <AssociationSet Name="FK_login_sessions_account_credential" Association="Self.FK_login_sessions_account_credential">
+            <End Role="account_credential" EntitySet="account_credential" />
+            <End Role="login_sessions" EntitySet="login_sessions" />
+          </AssociationSet>
+          <AssociationSet Name="FK_clinic_address_clinic_profile" Association="Self.FK_clinic_address_clinic_profile">
+            <End Role="clinic_profile" EntitySet="clinic_profile" />
+            <End Role="clinic_address" EntitySet="clinic_address" />
+          </AssociationSet>
+          <AssociationSet Name="FK_clinic_contact_clinic_profile" Association="Self.FK_clinic_contact_clinic_profile">
+            <End Role="clinic_profile" EntitySet="clinic_profile" />
+            <End Role="clinic_contact" EntitySet="clinic_contact" />
+          </AssociationSet>
+          <AssociationSet Name="FK_clinic_review_clinic_profile" Association="Self.FK_clinic_review_clinic_profile">
+            <End Role="clinic_profile" EntitySet="clinic_profile" />
+            <End Role="clinic_review" EntitySet="clinic_review" />
+          </AssociationSet>
+          <AssociationSet Name="FK_clinic_review_pet_profile" Association="Self.FK_clinic_review_pet_profile">
+            <End Role="pet_profile" EntitySet="pet_profile" />
+            <End Role="clinic_review" EntitySet="clinic_review" />
+          </AssociationSet>
+          <AssociationSet Name="FK_owner_address_owner_profile" Association="Self.FK_owner_address_owner_profile">
+            <End Role="owner_profile" EntitySet="owner_profile" />
+            <End Role="owner_address" EntitySet="owner_address" />
+          </AssociationSet>
+          <AssociationSet Name="FK_owner_contact_owner_profile" Association="Self.FK_owner_contact_owner_profile">
+            <End Role="owner_profile" EntitySet="owner_profile" />
+            <End Role="owner_contact" EntitySet="owner_contact" />
+          </AssociationSet>
+          <AssociationSet Name="FK_pet_profile_owner_profile" Association="Self.FK_pet_profile_owner_profile">
+            <End Role="owner_profile" EntitySet="owner_profile" />
+            <End Role="pet_profile" EntitySet="pet_profile" />
+          </AssociationSet>
+          <AssociationSet Name="FK_pet_breeds_pet_category" Association="Self.FK_pet_breeds_pet_category">
+            <End Role="pet_category" EntitySet="pet_category" />
+            <End Role="pet_breeds" EntitySet="pet_breeds" />
+          </AssociationSet>
+          <AssociationSet Name="FK_pet_profile_pet_breeds" Association="Self.FK_pet_profile_pet_breeds">
+            <End Role="pet_breeds" EntitySet="pet_breeds" />
+            <End Role="pet_profile" EntitySet="pet_profile" />
+          </AssociationSet>
+          <AssociationSet Name="FK_pet_profile_pet_category" Association="Self.FK_pet_profile_pet_category">
+            <End Role="pet_category" EntitySet="pet_category" />
+            <End Role="pet_profile" EntitySet="pet_profile" />
+          </AssociationSet>
+          <AssociationSet Name="FK_profile_post_comment_pet_profile" Association="Self.FK_profile_post_comment_pet_profile">
+            <End Role="pet_profile" EntitySet="pet_profile" />
+            <End Role="profile_post_comment" EntitySet="profile_post_comment" />
+          </AssociationSet>
+          <AssociationSet Name="FK_profile_post_comment_profile_post" Association="Self.FK_profile_post_comment_profile_post">
+            <End Role="profile_post" EntitySet="profile_post" />
+            <End Role="profile_post_comment" EntitySet="profile_post_comment" />
+          </AssociationSet>
+          <AssociationSet Name="FK_profile_post_like_profile_post" Association="Self.FK_profile_post_like_profile_post">
+            <End Role="profile_post" EntitySet="profile_post" />
+            <End Role="profile_post_like" EntitySet="profile_post_like" />
+          </AssociationSet>
+          <EntitySet Name="ClinicProfiles" EntityType="PetBookModel.ClinicProfile" />
+          <EntitySet Name="OwnerProfiles" EntityType="PetBookModel.OwnerProfile" />
+          <EntitySet Name="PetProfiles" EntityType="PetBookModel.PetProfile" />
+          <FunctionImport Name="Haversine" ReturnType="Collection(PetBookModel.Haversine_Result)">
+            <Parameter Name="custLat" Mode="In" Type="Decimal" />
+            <Parameter Name="custLng" Mode="In" Type="Decimal" />
+          </FunctionImport>
+          <AssociationSet Name="FK_profile_post_pet_profile" Association="PetBookModel.FK_profile_post_pet_profile">
+            <End Role="pet_profile" EntitySet="pet_profile" />
+            <End Role="profile_post" EntitySet="profile_post" />
+          </AssociationSet>
+        </EntityContainer>
         <EntityType Name="ClinicProfile">
           <Key>
             <PropertyRef Name="Id" />
@@ -1080,6 +1101,29 @@ warning 6002: The table/view 'PetBook.dbo.PetProfile' does not have a primary ke
           <Property Name="Rating" Type="Double" />
           <Property Name="Latitude" Type="Decimal" Precision="8" Scale="6" />
           <Property Name="Longitude" Type="Decimal" Precision="9" Scale="6" />
+        </EntityType>
+        <EntityType Name="OwnerProfile">
+          <Key>
+            <PropertyRef Name="Id" />
+            <PropertyRef Name="FirstName" />
+            <PropertyRef Name="LastName" />
+            <PropertyRef Name="Line" />
+            <PropertyRef Name="Barangay" />
+            <PropertyRef Name="City" />
+            <PropertyRef Name="Country" />
+            <PropertyRef Name="contactId" />
+            <PropertyRef Name="Contact" />
+          </Key>
+          <Property Name="Id" Type="String" Nullable="false" MaxLength="8" FixedLength="false" Unicode="true" />
+          <Property Name="FirstName" Type="String" Nullable="false" MaxLength="35" FixedLength="false" Unicode="true" />
+          <Property Name="MiddleName" Type="String" MaxLength="35" FixedLength="false" Unicode="true" />
+          <Property Name="LastName" Type="String" Nullable="false" MaxLength="35" FixedLength="false" Unicode="true" />
+          <Property Name="Line" Type="String" Nullable="false" MaxLength="35" FixedLength="false" Unicode="true" />
+          <Property Name="Barangay" Type="String" Nullable="false" MaxLength="35" FixedLength="false" Unicode="true" />
+          <Property Name="City" Type="String" Nullable="false" MaxLength="35" FixedLength="false" Unicode="true" />
+          <Property Name="Country" Type="String" Nullable="false" MaxLength="35" FixedLength="false" Unicode="true" />
+          <Property Name="contactId" Type="String" Nullable="false" MaxLength="8" FixedLength="false" Unicode="true" />
+          <Property Name="Contact" Type="String" Nullable="false" MaxLength="15" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="PetProfile">
           <Key>
@@ -1124,14 +1168,28 @@ warning 6002: The table/view 'PetBook.dbo.PetProfile' does not have a primary ke
           <Property Type="Decimal" Name="Longitude" Nullable="true" Precision="9" Scale="6" />
           <Property Type="Double" Name="Distance" Nullable="true" />
         </ComplexType>
-        </Schema>
+        <Association Name="FK_profile_post_pet_profile">
+          <End Type="PetBookModel.pet_profile" Role="pet_profile" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="PetBookModel.profile_post" Role="profile_post" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="pet_profile">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="profile_post">
+              <PropertyRef Name="ProfileId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+      </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
     <edmx:Mappings>
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
-        <EntityContainerMapping StorageEntityContainer="MainDBModelStoreContainer" CdmEntityContainer="MainDBEntities">
+        <EntityContainerMapping StorageEntityContainer="PetBookModelStoreContainer" CdmEntityContainer="MainDBEntities">
           <EntitySetMapping Name="account_credential">
-            <EntityTypeMapping TypeName="MainDBModel.account_credential">
+            <EntityTypeMapping TypeName="PetBookModel.account_credential">
               <MappingFragment StoreEntitySet="account_credential">
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="Email" ColumnName="Email" />
@@ -1142,8 +1200,29 @@ warning 6002: The table/view 'PetBook.dbo.PetProfile' does not have a primary ke
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="account_type">
+            <EntityTypeMapping TypeName="PetBookModel.account_type">
+              <MappingFragment StoreEntitySet="account_type">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Value" ColumnName="Value" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="clinic_address">
+            <EntityTypeMapping TypeName="PetBookModel.clinic_address">
+              <MappingFragment StoreEntitySet="clinic_address">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Country" ColumnName="Country" />
+                <ScalarProperty Name="City" ColumnName="City" />
+                <ScalarProperty Name="Barangay" ColumnName="Barangay" />
+                <ScalarProperty Name="Line" ColumnName="Line" />
+                <ScalarProperty Name="Latitude" ColumnName="Latitude" />
+                <ScalarProperty Name="Longitude" ColumnName="Longitude" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           <EntitySetMapping Name="clinic_contact">
-            <EntityTypeMapping TypeName="MainDBModel.clinic_contact">
+            <EntityTypeMapping TypeName="PetBookModel.clinic_contact">
               <MappingFragment StoreEntitySet="clinic_contact">
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="ClinicId" ColumnName="ClinicId" />
@@ -1152,7 +1231,7 @@ warning 6002: The table/view 'PetBook.dbo.PetProfile' does not have a primary ke
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="clinic_profile">
-            <EntityTypeMapping TypeName="MainDBModel.clinic_profile">
+            <EntityTypeMapping TypeName="PetBookModel.clinic_profile">
               <MappingFragment StoreEntitySet="clinic_profile">
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
@@ -1162,8 +1241,30 @@ warning 6002: The table/view 'PetBook.dbo.PetProfile' does not have a primary ke
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="clinic_review">
+            <EntityTypeMapping TypeName="PetBookModel.clinic_review">
+              <MappingFragment StoreEntitySet="clinic_review">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="ClinicId" ColumnName="ClinicId" />
+                <ScalarProperty Name="Rating" ColumnName="Rating" />
+                <ScalarProperty Name="ReviewerId" ColumnName="ReviewerId" />
+                <ScalarProperty Name="ReviewContent" ColumnName="ReviewContent" />
+                <ScalarProperty Name="ReviewCreationDate" ColumnName="ReviewCreationDate" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="followings">
+            <EntityTypeMapping TypeName="PetBookModel.following">
+              <MappingFragment StoreEntitySet="following">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="FollowingId" ColumnName="FollowingId" />
+                <ScalarProperty Name="FollowerId" ColumnName="FollowerId" />
+                <ScalarProperty Name="Type" ColumnName="Type" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           <EntitySetMapping Name="login_sessions">
-            <EntityTypeMapping TypeName="MainDBModel.login_sessions">
+            <EntityTypeMapping TypeName="PetBookModel.login_sessions">
               <MappingFragment StoreEntitySet="login_sessions">
                 <ScalarProperty Name="AccountId" ColumnName="AccountId" />
                 <ScalarProperty Name="Token" ColumnName="Token" />
@@ -1172,8 +1273,19 @@ warning 6002: The table/view 'PetBook.dbo.PetProfile' does not have a primary ke
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="owner_address">
+            <EntityTypeMapping TypeName="PetBookModel.owner_address">
+              <MappingFragment StoreEntitySet="owner_address">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Country" ColumnName="Country" />
+                <ScalarProperty Name="City" ColumnName="City" />
+                <ScalarProperty Name="Barangay" ColumnName="Barangay" />
+                <ScalarProperty Name="Line" ColumnName="Line" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           <EntitySetMapping Name="owner_contact">
-            <EntityTypeMapping TypeName="MainDBModel.owner_contact">
+            <EntityTypeMapping TypeName="PetBookModel.owner_contact">
               <MappingFragment StoreEntitySet="owner_contact">
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="UserId" ColumnName="UserId" />
@@ -1182,7 +1294,7 @@ warning 6002: The table/view 'PetBook.dbo.PetProfile' does not have a primary ke
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="owner_profile">
-            <EntityTypeMapping TypeName="MainDBModel.owner_profile">
+            <EntityTypeMapping TypeName="PetBookModel.owner_profile">
               <MappingFragment StoreEntitySet="owner_profile">
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="FirstName" ColumnName="FirstName" />
@@ -1191,132 +1303,70 @@ warning 6002: The table/view 'PetBook.dbo.PetProfile' does not have a primary ke
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="owner_address">
-            <EntityTypeMapping TypeName="MainDBModel.owner_address">
-              <MappingFragment StoreEntitySet="owner_address">
-                <ScalarProperty Name="Line" ColumnName="Line" />
-                <ScalarProperty Name="Barangay" ColumnName="Barangay" />
-                <ScalarProperty Name="City" ColumnName="City" />
-                <ScalarProperty Name="Country" ColumnName="Country" />
-                <ScalarProperty Name="Id" ColumnName="Id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="clinic_address">
-            <EntityTypeMapping TypeName="MainDBModel.clinic_address">
-              <MappingFragment StoreEntitySet="clinic_address">
-                <ScalarProperty Name="Longitude" ColumnName="Longitude" />
-                <ScalarProperty Name="Latitude" ColumnName="Latitude" />
-                <ScalarProperty Name="Line" ColumnName="Line" />
-                <ScalarProperty Name="Barangay" ColumnName="Barangay" />
-                <ScalarProperty Name="City" ColumnName="City" />
-                <ScalarProperty Name="Country" ColumnName="Country" />
-                <ScalarProperty Name="Id" ColumnName="Id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="pet_profile">
-            <EntityTypeMapping TypeName="MainDBModel.pet_profile">
-              <MappingFragment StoreEntitySet="pet_profile">
-                <ScalarProperty Name="Color" ColumnName="Color" />
-                <ScalarProperty Name="BreedId" ColumnName="BreedId" />
-                <ScalarProperty Name="CategoryId" ColumnName="CategoryId" />
-                <ScalarProperty Name="Birthdate" ColumnName="Birthdate" />
-                <ScalarProperty Name="Name" ColumnName="Name" />
-                <ScalarProperty Name="OwnerId" ColumnName="OwnerId" />
-                <ScalarProperty Name="Id" ColumnName="Id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="pet_breeds">
-            <EntityTypeMapping TypeName="MainDBModel.pet_breeds">
+            <EntityTypeMapping TypeName="PetBookModel.pet_breeds">
               <MappingFragment StoreEntitySet="pet_breeds">
-                <ScalarProperty Name="Breed" ColumnName="Breed" />
-                <ScalarProperty Name="CategoryId" ColumnName="CategoryId" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="CategoryId" ColumnName="CategoryId" />
+                <ScalarProperty Name="Breed" ColumnName="Breed" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="pet_category">
-            <EntityTypeMapping TypeName="MainDBModel.pet_category">
+            <EntityTypeMapping TypeName="PetBookModel.pet_category">
               <MappingFragment StoreEntitySet="pet_category">
-                <ScalarProperty Name="Category" ColumnName="Category" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Category" ColumnName="Category" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="pet_profile">
+            <EntityTypeMapping TypeName="PetBookModel.pet_profile">
+              <MappingFragment StoreEntitySet="pet_profile">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="OwnerId" ColumnName="OwnerId" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Birthdate" ColumnName="Birthdate" />
+                <ScalarProperty Name="CategoryId" ColumnName="CategoryId" />
+                <ScalarProperty Name="BreedId" ColumnName="BreedId" />
+                <ScalarProperty Name="Color" ColumnName="Color" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="profile_post">
-            <EntityTypeMapping TypeName="MainDBModel.profile_post">
+            <EntityTypeMapping TypeName="PetBookModel.profile_post">
               <MappingFragment StoreEntitySet="profile_post">
-                <ScalarProperty Name="post_points" ColumnName="post_points" />
-                <ScalarProperty Name="MediaContent" ColumnName="MediaContent" />
-                <ScalarProperty Name="PostContent" ColumnName="PostContent" />
-                <ScalarProperty Name="PostCreationDate" ColumnName="PostCreationDate" />
-                <ScalarProperty Name="ProfileId" ColumnName="ProfileId" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="ProfileId" ColumnName="ProfileId" />
+                <ScalarProperty Name="PostCreationDate" ColumnName="PostCreationDate" />
+                <ScalarProperty Name="PostContent" ColumnName="PostContent" />
+                <ScalarProperty Name="MediaContent" ColumnName="MediaContent" />
+                <ScalarProperty Name="post_points" ColumnName="post_points" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="profile_post_comment">
-            <EntityTypeMapping TypeName="MainDBModel.profile_post_comment">
+            <EntityTypeMapping TypeName="PetBookModel.profile_post_comment">
               <MappingFragment StoreEntitySet="profile_post_comment">
-                <ScalarProperty Name="CommentCreationDate" ColumnName="CommentCreationDate" />
-                <ScalarProperty Name="CommentContent" ColumnName="CommentContent" />
-                <ScalarProperty Name="ProfileId" ColumnName="ProfileId" />
-                <ScalarProperty Name="PostId" ColumnName="PostId" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="PostId" ColumnName="PostId" />
+                <ScalarProperty Name="ProfileId" ColumnName="ProfileId" />
+                <ScalarProperty Name="CommentContent" ColumnName="CommentContent" />
+                <ScalarProperty Name="CommentCreationDate" ColumnName="CommentCreationDate" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="profile_post_like">
-            <EntityTypeMapping TypeName="MainDBModel.profile_post_like">
+            <EntityTypeMapping TypeName="PetBookModel.profile_post_like">
               <MappingFragment StoreEntitySet="profile_post_like">
-                <ScalarProperty Name="ProfileId" ColumnName="ProfileId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="PostId" ColumnName="PostId" />
-                <ScalarProperty Name="Id" ColumnName="Id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="OwnerProfiles">
-            <EntityTypeMapping TypeName="MainDBModel.OwnerProfile">
-              <MappingFragment StoreEntitySet="OwnerProfile">
-                <ScalarProperty Name="Contact" ColumnName="Contact" />
-                <ScalarProperty Name="contactId" ColumnName="contactId" />
-                <ScalarProperty Name="Country" ColumnName="Country" />
-                <ScalarProperty Name="City" ColumnName="City" />
-                <ScalarProperty Name="Barangay" ColumnName="Barangay" />
-                <ScalarProperty Name="Line" ColumnName="Line" />
-                <ScalarProperty Name="LastName" ColumnName="LastName" />
-                <ScalarProperty Name="MiddleName" ColumnName="MiddleName" />
-                <ScalarProperty Name="FirstName" ColumnName="FirstName" />
-                <ScalarProperty Name="Id" ColumnName="Id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="followings">
-            <EntityTypeMapping TypeName="MainDBModel.following">
-              <MappingFragment StoreEntitySet="following">
-                <ScalarProperty Name="Type" ColumnName="Type" />
-                <ScalarProperty Name="FollowerId" ColumnName="FollowerId" />
-                <ScalarProperty Name="FollowingId" ColumnName="FollowingId" />
-                <ScalarProperty Name="Id" ColumnName="Id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="clinic_review">
-            <EntityTypeMapping TypeName="MainDBModel.clinic_review">
-              <MappingFragment StoreEntitySet="clinic_review">
-                <ScalarProperty Name="ReviewCreationDate" ColumnName="ReviewCreationDate" />
-                <ScalarProperty Name="ReviewContent" ColumnName="ReviewContent" />
-                <ScalarProperty Name="ReviewerId" ColumnName="ReviewerId" />
-                <ScalarProperty Name="Rating" ColumnName="Rating" />
-                <ScalarProperty Name="ClinicId" ColumnName="ClinicId" />
-                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="ProfileId" ColumnName="ProfileId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="ClinicProfiles">
-            <EntityTypeMapping TypeName="MainDBModel.ClinicProfile">
+            <EntityTypeMapping TypeName="PetBookModel.ClinicProfile">
               <MappingFragment StoreEntitySet="ClinicProfile">
                 <ScalarProperty Name="Longitude" ColumnName="Longitude" />
                 <ScalarProperty Name="Latitude" ColumnName="Latitude" />
@@ -1336,8 +1386,24 @@ warning 6002: The table/view 'PetBook.dbo.PetProfile' does not have a primary ke
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="OwnerProfiles">
+            <EntityTypeMapping TypeName="PetBookModel.OwnerProfile">
+              <MappingFragment StoreEntitySet="OwnerProfile">
+                <ScalarProperty Name="Contact" ColumnName="Contact" />
+                <ScalarProperty Name="contactId" ColumnName="contactId" />
+                <ScalarProperty Name="Country" ColumnName="Country" />
+                <ScalarProperty Name="City" ColumnName="City" />
+                <ScalarProperty Name="Barangay" ColumnName="Barangay" />
+                <ScalarProperty Name="Line" ColumnName="Line" />
+                <ScalarProperty Name="LastName" ColumnName="LastName" />
+                <ScalarProperty Name="MiddleName" ColumnName="MiddleName" />
+                <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           <EntitySetMapping Name="PetProfiles">
-            <EntityTypeMapping TypeName="MainDBModel.PetProfile">
+            <EntityTypeMapping TypeName="PetBookModel.PetProfile">
               <MappingFragment StoreEntitySet="PetProfile">
                 <ScalarProperty Name="ContactId" ColumnName="ContactId" />
                 <ScalarProperty Name="Contact" ColumnName="Contact" />
@@ -1357,9 +1423,9 @@ warning 6002: The table/view 'PetBook.dbo.PetProfile' does not have a primary ke
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <FunctionImportMapping FunctionImportName="Haversine" FunctionName="MainDBModel.Store.Haversine">
+          <FunctionImportMapping FunctionImportName="Haversine" FunctionName="PetBookModel.Store.Haversine">
             <ResultMapping>
-              <ComplexTypeMapping TypeName="MainDBModel.Haversine_Result">
+              <ComplexTypeMapping TypeName="PetBookModel.Haversine_Result">
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="ClinicName" ColumnName="ClinicName" />
                 <ScalarProperty Name="VetFirstName" ColumnName="VetFirstName" />
@@ -1379,8 +1445,7 @@ warning 6002: The table/view 'PetBook.dbo.PetProfile' does not have a primary ke
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
-         
-          </EntityContainerMapping>
+        </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>
   </edmx:Runtime>

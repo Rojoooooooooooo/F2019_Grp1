@@ -111,8 +111,15 @@
         $("#range").on("change", e => {
             $("#range-placeholder").text(e.target.value);
         })
-        $("#search-nearby").submit(e=>{
+
+        let requestCounter = 0;
+
+        $("#search-nearby").on("submit", (e) => {
             e.preventDefault();
+            if(requestCounter > 0) return;
+            
+            requestCounter++;
+
             
             $("#result-container").html("");
 
@@ -126,6 +133,8 @@
             
             const latlng = `${pos.lat},${pos.lng}`;
 
+            
+
             fetch(`/findnearby?latlng=${latlng}&range=${range}&limit=${limit}`,
                 {
                     method:"GET",
@@ -136,7 +145,8 @@
                 })
                 .then(res=>res.json())
                 .then(data=>{
-                    console.log(data);
+                    requestCounter = 0; // reset counter
+
                     $("#result-container").append(`<h4>Nearby clinics found: <span id="nearby-count">${data.length}</span></h4>`)
                     
                     if(data.length > 0 ){
@@ -153,42 +163,24 @@
                                 direction.calcRoute(new google.maps.LatLng(pos.lat, pos.lng), new google.maps.LatLng(c.Latitude, c.Longitude))
                                 map.getGeocodePosition({latLng: new google.maps.LatLng(pos.lat, pos.lng)}, (res)=>{
                                     $("#my-location-holder").text(res[0].formatted_address);
-                                }, ()=>{})
+                                }, 
+                                ()=>{})
                             })
                         })
 
                         $("#reset-direction").on("click",e=>{
                             direction.clear();
                         })
-                    }
-                })
-        });
-    })
 
+                    }
+                }); // end of fetch
+        }); // end of search onclick
+
+    }); // end of ready
+    
 
     function resultTemplate(id, clinicName, lat, lng){
         return `<div id="result-${id}" data-lat="${lat}" data-lng="${lng}" class="w-100 d-flex flex-row justify-content-start align-items-center shadow-sm p-2 border-start border-5 border-success gap-2" role="button"><img id="profile-photo" class="rounded-circle" alt="user" data-lat="${lat}" data-lng="${lng}" src="https://ui-avatars.com/api/?background=random&bold=true&name=${clinicName}" style="height:36px;width:36px"><div><h5 class="fw-bold">${clinicName}</h5><a class="link-dark stext-darker" href="/clinic/${id}">View profile</a></div></div>`;
     }
 </script>
 
-
-@*<div id="result-${id}"
-     data-lat="${lat}"
-     data-lng="${lng}"
-     class="w-100 d-flex flex-row justify-content-start align-items-center shadow-sm p-2 border-start border-5 border-success gap-2"
-     role="button">
-
-    <img id="profile-photo"
-         class="rounded-circle"
-         alt="user"
-         data-lat="${lat}"
-         data-lng="${lng}"
-         src="https://ui-avatars.com/api/?background=random&bold=true&name=${clinicName}"
-         style="height:36px;width:36px" />
-
-    <div>
-        <h5 class="fw-bold">${clinicName}</h5>
-        <a class="link-dark stext-darker" href="/clinic/${id}">View profile</a>
-    </div>
-    
-</div>*@

@@ -1,0 +1,225 @@
+﻿@using PetParadise.Models
+@{ 
+    ClinicProfile clinic = ViewData["profile"] as ClinicProfile;
+
+}
+<div class="w-100 d-flex flex-column justify-content-start align-items-start px-4 gap-5">
+    
+    <div class="w-100 d-flex flex-column justify-content-end align-items-start shadow p-4 rounded-3">
+        <div class="d-flex flex-row justify-content-center align-items-center gap-2">
+            <img id="profile-photo" class="rounded-circle" alt="user" src="https://ui-avatars.com/api/?background=random&bold=true&name=@clinic.ClinicName" />
+            <div class="d-flex flex-column justify-content-start align-items-start lh-1">
+                @* clinic name *@
+                <h3 id="clinic-name" class="fw-bold">@clinic.ClinicName</h3>
+                @* followers count *@
+                <p id="followers-holder" class="fw-bold">@clinic.Followers Followers</p>
+
+                @if (!ViewBag.IsUser)
+                {
+                    if (ViewBag.Following == "both")
+                    {
+                        <button id="follow-btn" class="btn btn-success">You follow each other <i class="fa-solid fa-check-double"></i></button>
+                    }
+                    else if (ViewBag.Following == "user")
+                    {
+                        <button id="follow-btn" class="btn btn-success">Following <i class="fa-solid fa-check"></i></button>
+                    }
+                    else
+                    {
+                        <button id="follow-btn" class="btn btn-secondary">Follow <i class="fa-solid fa-plus"></i></button>
+                    }
+                }
+
+                @if (ViewBag.IsUser) {
+                    <a class="stext-darker" href="#">Edit Profile</a>
+                }
+
+            </div>
+        </div>
+    </div>
+
+    <div class="w-100 d-flex flex-row justify-content-center align-items-start gap-5">
+
+        <div class="w-25 d-flex flex-column justify-content-center align-items-center p-4 shadow">
+            @*clinic rating *@
+            <div class="w-100 p-2">
+                <h6 class="fw-bold">Rating</h6>
+                <div class="d-flex flex-row stext-darker gap-2">
+                    @* overall rating *@
+                    @if (@clinic.Rating == null)
+                    {
+                        <p class="fw-bold"><span id="overall-rating">No ratings yet.</span></p>
+                    }
+                    else
+                    {
+                        <p class="fw-bold"><span id="overall-rating">@clinic.Rating</span>/5</p>
+                        //star container 
+                        <div id="overall-star-container" class="mb-3">
+                            @{
+                                double blankStar = 5 - (clinic.Rating ?? 1.0);
+                                for (int i = 1; i <= clinic.Rating; i++)
+                                {
+                                    <i class="fa-solid fa-star"></i>
+                                }
+
+                                if (clinic.Rating % 1 != 0)
+                                {
+                                    <i class="fa-regular fa-star-half-stroke"></i>
+                                }
+                                if (blankStar >= 1)
+                                {
+                                    for (int i = 1; i <= blankStar; i++)
+                                    {
+                                        <i class="fa-regular fa-star"></i>
+                                    }
+                                }
+
+                            }
+                        </div>
+                     }
+                </div>
+            </div>
+            @*  clinic head*@
+            <div class="w-100 p-2">
+                <h6 class="fw-bold">Head Veterinarian</h6>
+                <p id="clinic-head">@clinic.VetFirstName @clinic.VetMiddleName @clinic.VetLastName</p>
+            </div>
+
+            @*  clinic address  *@
+            <div class="w-100 p-2">
+                <h6 class="fw-bold">Address</h6>
+                <p id="clinic-address">@clinic.Line, @clinic.Barangay, @clinic.City, @clinic.Country</p>
+            </div>
+        </div>
+
+        <div class="w-100 d-flex flex-column justify-content-start align-items-start rounded-3 gap-4">
+            <div class="p-2">
+                <h3 class="fw-bold">Feedback</h3>
+            </div>
+            @if (!ViewBag.IsUser)
+            {
+
+                @* add feedback *@
+
+                <div class="w-75 shadow p-4 d-flex flex-row align-items-center gap-2">
+                    <img id="profile-photo" class="rounded-circle" alt="user" src="https://ui-avatars.com/api/?background=random&bold=true&name=@ViewBag.PetName" style="height:48px;width:48px;" />
+                    <div class="d-flex flex-column justify-content-start align-items-center" role="button">
+                        <div onclick="PostBox.openPostBox()" class="rounded-pill border border-dark px-4 py-2 user-select-none">Bark, meow, or hiss your thoughts!</div>
+                    </div>
+                </div>
+                <div class="p-2">
+                    <h3 class="fw-bold">Other Feedbacks</h3>
+                </div>
+            }
+            <div id="post-container" class="w-100 d-flex flex-column justify-content-start align-items-start">
+                @* auto generate posts *@
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="newPostBox" class="d-none position-absolute h-100 w-100 bg-dark bg-opacity-50 start-50 top-50 translate-middle">
+    <div class="w-50 position-absolute d-flex flex-column justify-content-center align-items-center start-50 top-50 translate-middle sbg-light shadow p-4 stext-darker">
+        <div class="w-100 d-flex flex-column justify-content-center align-items-center">
+            <h5 class="fw-bold">Create Feedback</h5>
+
+            <div onclick="PostBox.closePostBox()" class="position-absolute top-0 end-0 p-2 fs-4" role="button">
+                <i class="fa-solid fa-circle-xmark"></i>
+            </div>
+
+            <form id="postForm" class="w-100 d-flex flex-column justify-content-center align-items-start gap-2">
+                <div class="d-flex flex-row align-items-center gap-2">
+                    <img id="profile-photo" class="rounded-circle" alt="user" src="https://ui-avatars.com/api/?background=random&bold=true&name=@ViewBag.PetName" style="height:48px;width:48px;" />
+                    <h5 class="fw-bold">@ViewBag.PetName</h5>
+                </div>
+                <div class="w-100">
+                    <textarea id="postContent" rows="5" cols="10" class="w-100 sbg-lighter p-4 border-1 border-dark fs-5" placeholder="Bark, meow or hiss your thoughts, @ViewBag.PetName!"></textarea>
+                </div>
+                <div class="w-100">
+                    <span class="fw-bold">Rate @clinic.ClinicName: </span>
+                    <select class="star-rating" required>
+                        <option value="">Select a rating</option>
+                        <option value="5">Excellent</option>
+                        <option value="4">Very Good</option>
+                        <option value="3">Average</option>
+                        <option value="2">Poor</option>
+                        <option value="1">Terrible</option>
+                    </select>
+                </div>
+                <div class="w-100 d-flex flex-column">
+                    <button type="submit" class="flex-grow-1 btn btn-outline-light border-0 sbg-darker">Post</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    const starRatingControl = new StarRating(".star-rating", {
+        maxStars: 5,
+        clearable: false,
+        tooltip: false
+    });
+
+    function addFeedback(data) {
+        const post = PostBox.createFeedbackBoxTemplate("@ViewBag.PetName", data.rating, data.content, data.createdAt.toLocaleString("en-PH"));
+        $("#post-container").prepend(post);
+        PostBox.closePostBox();
+    }
+
+    $(document).ready(() => {
+
+        $("#follow-btn").click(toggleFollow);
+
+        $("#postForm").submit(e=> {
+            PostBox.addFeedback(e, addFeedback);
+        })
+
+        const clinicId = window.location.pathname.split("/")[2]
+        const url = `/clinic/${clinicId}/feedbacks`
+
+        fetch(url)
+        .then(res => res.json())
+        .then(data => {
+            data.forEach(feedback=> {
+                PostBox.addFeedbackBox(feedback.PetName, feedback.Rating, feedback.ReviewContent, feedback.ReviewCreationDate);
+            });
+        });
+    })
+
+    function toggleFollowButton() {
+        const btn = $("#follow-btn");
+        let follower = $("#followers-holder").text().split(" ")[0];
+        // if followed
+        if (btn.attr("class").split(/\s+/).includes("btn-success")) {
+            btn.addClass("btn-secondary").removeClass("btn-success");
+            btn.html(`Follow <i class="fa-solid fa-plus"></i>`);
+            $("#followers-holder").html(--follower + " Followers")
+        }
+        else {
+            btn.addClass("btn-success").removeClass("btn-secondary");
+            btn.html(`Following <i class="fa-solid fa-check"></i>`);
+            $("#followers-holder").html(++follower + " Followers")
+
+        }
+    }
+
+    function toggleFollow(e) {
+        const url = `/follow?followingId=@clinic.Id&followerId=@ViewBag.PetId&type=clinic`;
+
+        fetch(url, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": "Bearer " + getSessionToken()
+            }
+        })
+        .then(res=> {
+            console.log(res)
+            if (res.status == 200) {
+                toggleFollowButton();
+
+            }
+        })
+    }
+</script>

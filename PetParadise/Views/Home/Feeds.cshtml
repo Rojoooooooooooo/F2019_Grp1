@@ -45,7 +45,7 @@
         <div class="p-2">
             <h3 class="fw-bold">Feeds</h3>
         </div>
-
+        <h5 class="">Showing posts based on: <span id="post-basis"></span></h5>
         <div id="post-container" class="w-100 d-flex flex-column justify-content-start align-items-start">
             @* auto generate posts *@
         </div>
@@ -122,13 +122,13 @@
 
     function loadPosts(filter) {
         const petId = window.location.pathname.split("/")[2];
-        $("#post-container").html("");
+        $("#post-basisr").text("")
         switch (filter) {
 
             case "following": {
                 const url = `/posts?filter=following&petid=` + petId;
 
-                $("#post-container").append("<h5>Showing posts based on your Followings</h5>")
+                $("#post-basis").text("Followings")
 
                 fetch(url, {
                     method: "GET",
@@ -153,7 +153,7 @@
             case "country": {
                 const url = `/posts?filter=country&petid=` + petId;
 
-                $("#post-container").append("<h5>Showing posts based on your Country</h5>")
+                $("#post-basis").text("Country")
 
                 fetch(url, {
                     method: "GET",
@@ -178,7 +178,7 @@
 
             case "city": {
                 const url = `/posts?filter=city&petid=` + petId;
-                $("#post-container").append("<h5>Showing posts based on your City</h5>")
+                $("#post-basis").text("City")
 
                 fetch(url, {
                     method: "GET",
@@ -203,7 +203,7 @@
 
             case "barangay": {
                 const url = `/posts?filter=barangay&petid=` + petId;
-                $("#post-container").append("<h5>Showing posts based on your Barangay</h5>")
+                $("#post-basis").text("Barangay")
                 fetch(url, {
                     method: "GET",
                     headers: {
@@ -227,7 +227,7 @@
 
             default: {
                 const url = `/posts?filter=default&petid=` + petId;
-                $("#post-container").append("<h5>Showing posts based on your Followings and Country</h5>")
+                $("#post-basis").text("Followings and Country")
                 fetch(url, {
                     method: "GET",
                     headers: {

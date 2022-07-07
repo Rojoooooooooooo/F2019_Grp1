@@ -20,7 +20,7 @@ namespace PetParadise.Models
         public string CommentContent { get; set; }
         public System.DateTime CommentCreationDate { get; set; }
     
-        public virtual profile_post profile_post { get; set; }
         public virtual pet_profile pet_profile { get; set; }
+        public virtual profile_post profile_post { get; set; }
     }
 }

@@ -157,7 +157,7 @@
     }
 
     function addPost(data) {
-        const post = PostBox.postBoxTemplate(data.Id, "@pet.Name", data.PostContent, prettyDate(data.PostCreationDate), 0, 0, false);
+        const post = PostBox.postBoxTemplate(data.ProfileId, data.Id, "@pet.Name", data.PostContent, prettyDate(data.PostCreationDate), 0, 0, false);
         $("#post-container").prepend(post);
         $("#like-" + data.Id).click(giveTreat);
         PostBox.closePostBox();
@@ -165,7 +165,7 @@
 
     function seeFullPost(e) {
         const postId = e.target.getAttribute("data-postid");
-        window.location.href = `/post/${postId}?petid=@pet.Id`;
+        window.location.href = `/post/${postId}?petid=@ViewBag.PetId`;
     }
 
     $(document).ready(() => {
@@ -207,7 +207,7 @@
             btn.addClass("btn-success").removeClass("btn-secondary");
             btn.html(`Following <i class="fa-solid fa-check"></i>`);
             $("#followers-holder").html( ++follower + " Followers")
-            
+
         }
     }
 

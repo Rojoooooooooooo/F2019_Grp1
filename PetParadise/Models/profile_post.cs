@@ -28,10 +28,10 @@ namespace PetParadise.Models
         public string MediaContent { get; set; }
         public int post_points { get; set; }
     
-        public virtual pet_profile pet_profile { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<profile_post_comment> profile_post_comment { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<profile_post_like> profile_post_like { get; set; }
+        public virtual pet_profile pet_profile { get; set; }
     }
 }

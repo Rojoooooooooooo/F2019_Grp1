@@ -28,23 +28,24 @@ namespace PetParadise.Models
         }
     
         public virtual DbSet<account_credential> account_credential { get; set; }
+        public virtual DbSet<account_type> account_type { get; set; }
+        public virtual DbSet<clinic_address> clinic_address { get; set; }
         public virtual DbSet<clinic_contact> clinic_contact { get; set; }
         public virtual DbSet<clinic_profile> clinic_profile { get; set; }
+        public virtual DbSet<clinic_review> clinic_review { get; set; }
+        public virtual DbSet<following> followings { get; set; }
         public virtual DbSet<login_sessions> login_sessions { get; set; }
+        public virtual DbSet<owner_address> owner_address { get; set; }
         public virtual DbSet<owner_contact> owner_contact { get; set; }
         public virtual DbSet<owner_profile> owner_profile { get; set; }
-        public virtual DbSet<owner_address> owner_address { get; set; }
-        public virtual DbSet<clinic_address> clinic_address { get; set; }
-        public virtual DbSet<pet_profile> pet_profile { get; set; }
         public virtual DbSet<pet_breeds> pet_breeds { get; set; }
         public virtual DbSet<pet_category> pet_category { get; set; }
+        public virtual DbSet<pet_profile> pet_profile { get; set; }
         public virtual DbSet<profile_post> profile_post { get; set; }
         public virtual DbSet<profile_post_comment> profile_post_comment { get; set; }
         public virtual DbSet<profile_post_like> profile_post_like { get; set; }
-        public virtual DbSet<OwnerProfile> OwnerProfiles { get; set; }
-        public virtual DbSet<following> followings { get; set; }
-        public virtual DbSet<clinic_review> clinic_review { get; set; }
         public virtual DbSet<ClinicProfile> ClinicProfiles { get; set; }
+        public virtual DbSet<OwnerProfile> OwnerProfiles { get; set; }
         public virtual DbSet<PetProfile> PetProfiles { get; set; }
     
         public virtual ObjectResult<Haversine_Result> Haversine(Nullable<decimal> custLat, Nullable<decimal> custLng)

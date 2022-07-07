@@ -27,6 +27,7 @@ namespace PetParadise.Models
         public int AccountTypeId { get; set; }
         public bool IsArchived { get; set; }
     
+        public virtual account_type account_type { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<login_sessions> login_sessions { get; set; }
     }

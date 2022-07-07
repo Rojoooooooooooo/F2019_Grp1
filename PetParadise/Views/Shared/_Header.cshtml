@@ -47,6 +47,7 @@
     form.submit(e=> {
         e.preventDefault();
         const query = $("#search-input").val();
+        if (query == "") return;
         window.location.href = "/search/" + query;
 
     });

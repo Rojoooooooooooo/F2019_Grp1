@@ -90,6 +90,3 @@ D:\Dev\c-sharp\api-tut\PetParadise\PetParadise\bin\Antlr3.Runtime.pdb
 D:\Dev\c-sharp\api-tut\PetParadise\PetParadise\bin\System.Web.Optimization.xml
 D:\Dev\c-sharp\api-tut\PetParadise\PetParadise\bin\Swashbuckle.Core.dll
 D:\Dev\c-sharp\api-tut\PetParadise\PetParadise\bin\WebActivatorEx.dll
-D:\Dev\c-sharp\api-tut\PetParadise\PetParadise\bin\System.Memory.dll
-D:\Dev\c-sharp\api-tut\PetParadise\PetParadise\bin\System.Buffers.dll
-D:\Dev\c-sharp\api-tut\PetParadise\PetParadise\bin\System.Numerics.Vectors.dll

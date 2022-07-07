@@ -1,0 +1,238 @@
+﻿@model PetParadise.Models.Body.PetInformationModel
+<div class="w-100 d-flex flex-column justify-content-center align-items-center">
+    <h3 class="fw-bold">My Pets</h3>
+   
+    <div class="w-75 d-flex flex-column justify-content-center align-items-center">
+        <div id="petContainer" class="w-50 p-4 d-flex flex-wrap flex-row justify-content-center align-items-center gap-5 cursor-pointer">
+            @*auto generate pet profiles *@
+
+            @* add button *@
+            <div class="d-flex p-4 flex-row justify-content-center align-items-center gap-2">
+                <button id="addPetBtn" class="btn border-0">
+                    <i class="fa-solid fa-circle-plus fa-2xl"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="addPetCard" class="card w-25 p-4 position-absolute top-50 start-50 translate-middle">
+    @using (Html.BeginForm())
+    {
+        <div class="w-100 d-flex flex-column justify-content-center align-items-start flex-wrap gap-2">
+            <h2>Add your Pet</h2>
+
+            <label class="align-items-start">Pet Name</label>
+            <div class="w-100 d-flex flex-row gap-2 justify-content-start align-items-start">
+                <div class="flex-grow-1">
+                    @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control", placeholder = "Pet Name" } })
+                    @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="w-100 d-flex flex-row gap-2">
+                <div class="flex-grow-1">
+                    @Html.EditorFor(model => model.Birthdate, new { htmlAttributes = new { @class = "form-control bg-transparent", placeholder = "Birthdate", @readonly = "readonly" } })
+                    @Html.ValidationMessageFor(model => model.Birthdate, "", new { @class = "text-danger" })
+                </div>
+                <div class="flex-grow-1">
+                    @Html.EditorFor(model => model.Color, new { htmlAttributes = new { @class = "form-control", placeholder = "Color" } })
+                    @Html.ValidationMessageFor(model => model.Color, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="w-100 d-flex flex-row gap-2 justify-content-start align-items-start">
+                <div class="flex-grow-1">
+                    <select id="categories" class="form-control">
+                        <option value="" selected disabled>Select Category</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="w-100 d-flex flex-row gap-2 justify-content-start align-items-start">
+                <div class="flex-grow-1">
+                    <select id="breeds" class="form-control">
+                        <option value="" selected disabled>Select Breed</option>
+                        
+                    </select>
+                </div>
+            </div>
+
+            <div id="validationNotes" class="w-100">
+                <ul id="notes-container"></ul>
+            </div>
+
+            <div class="w-100">
+                <button type="submit" value="Add Pet" class="w-100 btn btn-outline-light sbg-darker">Save Profile</button>
+                <button id="cancelBtn" type="reset" class="w-100 btn btn-outline-light border-0 sbg-lighter stext-darker">Cancel</button>
+            </div>
+        </div>
+    }
+</div>
+
+<script>
+    const fadeSpeed = 300;
+    const addPetCard = $("#addPetCard");
+    addPetCard.hide();
+    const validator = new Validator("#notes-container");
+    $(document).ready(()=>{
+        
+        loadPets();
+
+        $('#addPetBtn').click(()=>addPetCard.fadeIn(fadeSpeed));
+        $('form').ready(_ => {
+            
+            const cancel = $('#cancelBtn');
+            const petBtn = $('#addPetBtn');
+            const petNameInput = $('#Name');
+            const birthdateInput = $('#Birthdate');
+            const colorInput = $('#Color');
+            const breedsSelect = $('#breeds');
+            const categoriesSelect = $('#categories');
+            const birthdateField = $('#Birthdate');
+
+            birthdateField.datepicker({
+                dateFormat: "dd/mm/yy",
+                changeMonth: true,
+                changeYear: true,
+                minDate: new Date(1960, 1 - 1, 1),
+                yearRange: "1960:"+new Date().getFullYear(),
+                maxDate: "+0d"
+            });
+
+
+            loadCategories()
+                    .then(res=> {
+                        res.forEach(cat=> {
+                            categoriesSelect.append(`<option value=${cat.Id}>${cat.Category}</option>`);
+                        });
+                    });
+
+            categoriesSelect.change((e) => {
+                loadBreeds(e.target.value)
+                .then(breeds => {
+                    breeds.forEach(b=>{
+                        breedsSelect.append(`<option value=${b.Id}>${b.Breed}</option>`);
+                    })
+                })
+            })
+            $('form').submit((e) => {
+                e.preventDefault();
+                const petName = petNameInput.val();
+                const birthdate = birthdateInput.val();
+                const color = colorInput.val();
+                validator.removeErrors();
+
+                const breedValue = $(breedsSelect).val();
+                const categoryValue = $(categoriesSelect).val();
+
+                const data = {
+                    Name: petName,
+                    birthdate,
+                    color,
+                    BreedId: breedValue,
+                    CategoryId: categoryValue
+                };
+
+                const url = '/owner/pet/';
+                const getAvatarUrl = 'https://ui-avatars.com/api/?background=random&bold=true&name=' + petName;
+                fetch(url, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": "Bearer " + getSessionToken()
+                    },
+                    body: JSON.stringify(data)
+                })
+                    .then(res=>res.json())
+                    .then(data=> {
+                        if (data.error) {
+                            const error = new InvalidObject("", data.error.message);
+                            validator.addError(error);
+                            validator.updateParent();
+                        }
+                        else if (data.stack) {
+                            const stack = data.stack;
+                            stack.forEach(s=> {
+                                const e = s._validationErrors[0];
+                                const error = new InvalidObject(e._propertyName, e._errorMessage);
+                                validator.addError(error);
+                            })
+                            validator.updateParent();
+                        }
+                        else {
+                            insertPet(data.petId, petName);
+                            addPetCard.fadeOut(fadeSpeed)
+                        }
+                        
+                    })
+            })
+            cancel.click(()=>addPetCard.fadeOut(fadeSpeed));
+        });
+
+        function loadCategories() {
+            return fetch('/pet/categories', {
+                method: "GET"
+            })
+            .then(res=>res.json())
+        }
+
+        function loadBreeds(category) {
+            return fetch(`/pet/${category}/breed`, {
+                method: "GET"
+            })
+            .then(res=>res.json())
+        }
+
+        function loadPets() {
+            fetch('/owner/pets', {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": "Bearer " + getSessionToken()
+                }
+            })
+            .then(res=>res.json())
+            .then(pets=> {
+                pets.forEach(pet=> {
+                    insertPet(pet.Id, pet.Name);
+                })
+            })
+        }
+
+        function selectPet(e) {
+            const encId = e.target.getAttribute("data-petid");
+            const petId = window.atob(encId); // decode
+            localStorage.setItem("current_pet", encId);
+            setCookie("pet_id", petId, 30); // 30 days
+            window.location.replace("/pet/" + petId);
+        }
+
+        function insertPet(petId, petname) {
+            const cardContainer = document.createElement('div');
+            const image = document.createElement('img');
+            const nameContainer = document.createElement('h6');
+
+            image.classList.add("rounded-circle");
+            image.alt = petname;
+            image.src = 'https://ui-avatars.com/api/?background=random&bold=true&name=' + petname;
+            image.setAttribute("data-petId", window.btoa(petId));
+            image.setAttribute("data-petName", petname);
+
+            nameContainer.innerHTML = petname;
+            nameContainer.classList.add("h6","stext-dark", "text-center");
+            nameContainer.setAttribute("data-petId", window.btoa(petId));
+            nameContainer.setAttribute("data-petName", petname);
+
+            cardContainer.appendChild(image);
+            cardContainer.appendChild(nameContainer);
+            cardContainer.setAttribute("data-petId", window.btoa(petId));
+            cardContainer.setAttribute("data-petName", petname);
+            cardContainer.setAttribute("role", "button");
+            cardContainer.addEventListener('click', selectPet);
+
+            cardContainer.classList.add("d-flex", "flex-column", "justify-content-center", "align-items-center");
+            $('#petContainer').prepend(cardContainer);
+        }
+    })
+</script>

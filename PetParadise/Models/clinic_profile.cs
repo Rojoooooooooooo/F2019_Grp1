@@ -27,9 +27,9 @@ namespace PetParadise.Models
         public string VetMiddleName { get; set; }
         public string VetLastName { get; set; }
     
+        public virtual clinic_address clinic_address { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<clinic_contact> clinic_contact { get; set; }
-        public virtual clinic_address clinic_address { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<clinic_review> clinic_review { get; set; }
     }

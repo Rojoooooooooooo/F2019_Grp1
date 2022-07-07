@@ -1,0 +1,72 @@
+﻿/* Add css variables*/
+:root {
+    /*Color scheme*/
+    --scheme-darker: #664229;
+    --scheme-dark: #987554;
+    --scheme-base: #b99976;
+    --scheme-light: #d2b48c;
+    --scheme-lighter: #e5d3b3;
+
+    /*override star*/
+    --gl-star-empty: url(./images/star-empty.svg);
+    --gl-star-full: url(./images/star-full.svg);
+}
+
+/* Reset elements attributes*/
+*{
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+body, html{
+    width: 100%;
+    height: 100vh;
+    font-size: 16px;    
+    background-color: var(--scheme-lighter);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: var(--scheme-darker);
+
+}
+
+/* Pre-defined background colors */
+.sbg-lighter{
+    background-color: var(--scheme-lighter);
+}
+.sbg-light{
+    background-color: var(--scheme-light);
+}
+.sbg-base{
+    background-color: var(--scheme-base);
+}
+.sbg-dark{
+    background-color: var(--scheme-dark);
+}
+.sbg-darker{
+    background-color: var(--scheme-darker);
+}
+
+
+/* Pre-defined darker colors (text)*/
+.stext-lighter{
+    color: var(--scheme-lighter);
+}
+.stext-light{
+    color: var(--scheme-light);
+}
+.stext-base{
+    color: var(--scheme-base);
+}
+.stext-dark{
+    color: var(--scheme-dark);
+}
+.stext-darker{
+    color: var(--scheme-darker);
+}
+
+above-all {
+    z-index: 9999;
+}

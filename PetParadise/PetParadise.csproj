@@ -267,13 +267,6 @@
     <Content Include="Scripts\access.js" />
     <Content Include="Scripts\ai.0.22.9-build00167.js" />
     <Content Include="Scripts\ai.0.22.9-build00167.min.js" />
-    <EntityDeploy Include="Models\MainDBModel.edmx">
-      <Generator>EntityModelCodeGenerator</Generator>
-      <LastGenOutput>MainDBModel.Designer.cs</LastGenOutput>
-    </EntityDeploy>
-    <Content Include="Models\MainDBModel.edmx.diagram">
-      <DependentUpon>MainDBModel.edmx</DependentUpon>
-    </Content>
     <Content Include="Content\bootstrap.rtl.min.css.map" />
     <Content Include="Content\bootstrap.rtl.css.map" />
     <Content Include="Content\bootstrap.min.css.map" />
@@ -293,6 +286,14 @@
     <None Include=".bin\node.cmd" />
     <Content Include="Content\jquery-ui.theme.css" />
     <Content Include="ClassDiagram1.cd" />
+    <EntityDeploy Include="Models\MainDBModel.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>MainDBModel.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <Content Include="Models\MainDBModel.edmx.diagram">
+      <DependentUpon>MainDBModel.edmx</DependentUpon>
+    </Content>
+    <None Include="Properties\PublishProfiles\PetParadise.pubxml" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -350,6 +351,9 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\account_credential.cs">
+      <DependentUpon>MainDBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\account_type.cs">
       <DependentUpon>MainDBModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Body\ClinicInformationModel.cs" />

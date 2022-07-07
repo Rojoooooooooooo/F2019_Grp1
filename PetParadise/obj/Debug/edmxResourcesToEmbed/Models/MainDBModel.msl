@@ -1,8 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
-  <EntityContainerMapping StorageEntityContainer="MainDBModelStoreContainer" CdmEntityContainer="MainDBEntities">
+  <EntityContainerMapping StorageEntityContainer="PetBookModelStoreContainer" CdmEntityContainer="MainDBEntities">
     <EntitySetMapping Name="account_credential">
-      <EntityTypeMapping TypeName="MainDBModel.account_credential">
+      <EntityTypeMapping TypeName="PetBookModel.account_credential">
         <MappingFragment StoreEntitySet="account_credential">
           <ScalarProperty Name="Id" ColumnName="Id" />
           <ScalarProperty Name="Email" ColumnName="Email" />
@@ -13,8 +13,29 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
+    <EntitySetMapping Name="account_type">
+      <EntityTypeMapping TypeName="PetBookModel.account_type">
+        <MappingFragment StoreEntitySet="account_type">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Value" ColumnName="Value" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="clinic_address">
+      <EntityTypeMapping TypeName="PetBookModel.clinic_address">
+        <MappingFragment StoreEntitySet="clinic_address">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Country" ColumnName="Country" />
+          <ScalarProperty Name="City" ColumnName="City" />
+          <ScalarProperty Name="Barangay" ColumnName="Barangay" />
+          <ScalarProperty Name="Line" ColumnName="Line" />
+          <ScalarProperty Name="Latitude" ColumnName="Latitude" />
+          <ScalarProperty Name="Longitude" ColumnName="Longitude" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
     <EntitySetMapping Name="clinic_contact">
-      <EntityTypeMapping TypeName="MainDBModel.clinic_contact">
+      <EntityTypeMapping TypeName="PetBookModel.clinic_contact">
         <MappingFragment StoreEntitySet="clinic_contact">
           <ScalarProperty Name="Id" ColumnName="Id" />
           <ScalarProperty Name="ClinicId" ColumnName="ClinicId" />
@@ -23,7 +44,7 @@
       </EntityTypeMapping>
     </EntitySetMapping>
     <EntitySetMapping Name="clinic_profile">
-      <EntityTypeMapping TypeName="MainDBModel.clinic_profile">
+      <EntityTypeMapping TypeName="PetBookModel.clinic_profile">
         <MappingFragment StoreEntitySet="clinic_profile">
           <ScalarProperty Name="Id" ColumnName="Id" />
           <ScalarProperty Name="Name" ColumnName="Name" />
@@ -33,8 +54,30 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
+    <EntitySetMapping Name="clinic_review">
+      <EntityTypeMapping TypeName="PetBookModel.clinic_review">
+        <MappingFragment StoreEntitySet="clinic_review">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="ClinicId" ColumnName="ClinicId" />
+          <ScalarProperty Name="Rating" ColumnName="Rating" />
+          <ScalarProperty Name="ReviewerId" ColumnName="ReviewerId" />
+          <ScalarProperty Name="ReviewContent" ColumnName="ReviewContent" />
+          <ScalarProperty Name="ReviewCreationDate" ColumnName="ReviewCreationDate" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="followings">
+      <EntityTypeMapping TypeName="PetBookModel.following">
+        <MappingFragment StoreEntitySet="following">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="FollowingId" ColumnName="FollowingId" />
+          <ScalarProperty Name="FollowerId" ColumnName="FollowerId" />
+          <ScalarProperty Name="Type" ColumnName="Type" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
     <EntitySetMapping Name="login_sessions">
-      <EntityTypeMapping TypeName="MainDBModel.login_sessions">
+      <EntityTypeMapping TypeName="PetBookModel.login_sessions">
         <MappingFragment StoreEntitySet="login_sessions">
           <ScalarProperty Name="AccountId" ColumnName="AccountId" />
           <ScalarProperty Name="Token" ColumnName="Token" />
@@ -43,8 +86,19 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
+    <EntitySetMapping Name="owner_address">
+      <EntityTypeMapping TypeName="PetBookModel.owner_address">
+        <MappingFragment StoreEntitySet="owner_address">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Country" ColumnName="Country" />
+          <ScalarProperty Name="City" ColumnName="City" />
+          <ScalarProperty Name="Barangay" ColumnName="Barangay" />
+          <ScalarProperty Name="Line" ColumnName="Line" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
     <EntitySetMapping Name="owner_contact">
-      <EntityTypeMapping TypeName="MainDBModel.owner_contact">
+      <EntityTypeMapping TypeName="PetBookModel.owner_contact">
         <MappingFragment StoreEntitySet="owner_contact">
           <ScalarProperty Name="Id" ColumnName="Id" />
           <ScalarProperty Name="UserId" ColumnName="UserId" />
@@ -53,7 +107,7 @@
       </EntityTypeMapping>
     </EntitySetMapping>
     <EntitySetMapping Name="owner_profile">
-      <EntityTypeMapping TypeName="MainDBModel.owner_profile">
+      <EntityTypeMapping TypeName="PetBookModel.owner_profile">
         <MappingFragment StoreEntitySet="owner_profile">
           <ScalarProperty Name="Id" ColumnName="Id" />
           <ScalarProperty Name="FirstName" ColumnName="FirstName" />
@@ -62,132 +116,70 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
-    <EntitySetMapping Name="owner_address">
-      <EntityTypeMapping TypeName="MainDBModel.owner_address">
-        <MappingFragment StoreEntitySet="owner_address">
-          <ScalarProperty Name="Line" ColumnName="Line" />
-          <ScalarProperty Name="Barangay" ColumnName="Barangay" />
-          <ScalarProperty Name="City" ColumnName="City" />
-          <ScalarProperty Name="Country" ColumnName="Country" />
-          <ScalarProperty Name="Id" ColumnName="Id" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
-    <EntitySetMapping Name="clinic_address">
-      <EntityTypeMapping TypeName="MainDBModel.clinic_address">
-        <MappingFragment StoreEntitySet="clinic_address">
-          <ScalarProperty Name="Longitude" ColumnName="Longitude" />
-          <ScalarProperty Name="Latitude" ColumnName="Latitude" />
-          <ScalarProperty Name="Line" ColumnName="Line" />
-          <ScalarProperty Name="Barangay" ColumnName="Barangay" />
-          <ScalarProperty Name="City" ColumnName="City" />
-          <ScalarProperty Name="Country" ColumnName="Country" />
-          <ScalarProperty Name="Id" ColumnName="Id" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
-    <EntitySetMapping Name="pet_profile">
-      <EntityTypeMapping TypeName="MainDBModel.pet_profile">
-        <MappingFragment StoreEntitySet="pet_profile">
-          <ScalarProperty Name="Color" ColumnName="Color" />
-          <ScalarProperty Name="BreedId" ColumnName="BreedId" />
-          <ScalarProperty Name="CategoryId" ColumnName="CategoryId" />
-          <ScalarProperty Name="Birthdate" ColumnName="Birthdate" />
-          <ScalarProperty Name="Name" ColumnName="Name" />
-          <ScalarProperty Name="OwnerId" ColumnName="OwnerId" />
-          <ScalarProperty Name="Id" ColumnName="Id" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
     <EntitySetMapping Name="pet_breeds">
-      <EntityTypeMapping TypeName="MainDBModel.pet_breeds">
+      <EntityTypeMapping TypeName="PetBookModel.pet_breeds">
         <MappingFragment StoreEntitySet="pet_breeds">
-          <ScalarProperty Name="Breed" ColumnName="Breed" />
-          <ScalarProperty Name="CategoryId" ColumnName="CategoryId" />
           <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="CategoryId" ColumnName="CategoryId" />
+          <ScalarProperty Name="Breed" ColumnName="Breed" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
     <EntitySetMapping Name="pet_category">
-      <EntityTypeMapping TypeName="MainDBModel.pet_category">
+      <EntityTypeMapping TypeName="PetBookModel.pet_category">
         <MappingFragment StoreEntitySet="pet_category">
-          <ScalarProperty Name="Category" ColumnName="Category" />
           <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="Category" ColumnName="Category" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="pet_profile">
+      <EntityTypeMapping TypeName="PetBookModel.pet_profile">
+        <MappingFragment StoreEntitySet="pet_profile">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="OwnerId" ColumnName="OwnerId" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="Birthdate" ColumnName="Birthdate" />
+          <ScalarProperty Name="CategoryId" ColumnName="CategoryId" />
+          <ScalarProperty Name="BreedId" ColumnName="BreedId" />
+          <ScalarProperty Name="Color" ColumnName="Color" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
     <EntitySetMapping Name="profile_post">
-      <EntityTypeMapping TypeName="MainDBModel.profile_post">
+      <EntityTypeMapping TypeName="PetBookModel.profile_post">
         <MappingFragment StoreEntitySet="profile_post">
-          <ScalarProperty Name="post_points" ColumnName="post_points" />
-          <ScalarProperty Name="MediaContent" ColumnName="MediaContent" />
-          <ScalarProperty Name="PostContent" ColumnName="PostContent" />
-          <ScalarProperty Name="PostCreationDate" ColumnName="PostCreationDate" />
-          <ScalarProperty Name="ProfileId" ColumnName="ProfileId" />
           <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="ProfileId" ColumnName="ProfileId" />
+          <ScalarProperty Name="PostCreationDate" ColumnName="PostCreationDate" />
+          <ScalarProperty Name="PostContent" ColumnName="PostContent" />
+          <ScalarProperty Name="MediaContent" ColumnName="MediaContent" />
+          <ScalarProperty Name="post_points" ColumnName="post_points" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
     <EntitySetMapping Name="profile_post_comment">
-      <EntityTypeMapping TypeName="MainDBModel.profile_post_comment">
+      <EntityTypeMapping TypeName="PetBookModel.profile_post_comment">
         <MappingFragment StoreEntitySet="profile_post_comment">
-          <ScalarProperty Name="CommentCreationDate" ColumnName="CommentCreationDate" />
-          <ScalarProperty Name="CommentContent" ColumnName="CommentContent" />
-          <ScalarProperty Name="ProfileId" ColumnName="ProfileId" />
-          <ScalarProperty Name="PostId" ColumnName="PostId" />
           <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="PostId" ColumnName="PostId" />
+          <ScalarProperty Name="ProfileId" ColumnName="ProfileId" />
+          <ScalarProperty Name="CommentContent" ColumnName="CommentContent" />
+          <ScalarProperty Name="CommentCreationDate" ColumnName="CommentCreationDate" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
     <EntitySetMapping Name="profile_post_like">
-      <EntityTypeMapping TypeName="MainDBModel.profile_post_like">
+      <EntityTypeMapping TypeName="PetBookModel.profile_post_like">
         <MappingFragment StoreEntitySet="profile_post_like">
-          <ScalarProperty Name="ProfileId" ColumnName="ProfileId" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
           <ScalarProperty Name="PostId" ColumnName="PostId" />
-          <ScalarProperty Name="Id" ColumnName="Id" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
-    <EntitySetMapping Name="OwnerProfiles">
-      <EntityTypeMapping TypeName="MainDBModel.OwnerProfile">
-        <MappingFragment StoreEntitySet="OwnerProfile">
-          <ScalarProperty Name="Contact" ColumnName="Contact" />
-          <ScalarProperty Name="contactId" ColumnName="contactId" />
-          <ScalarProperty Name="Country" ColumnName="Country" />
-          <ScalarProperty Name="City" ColumnName="City" />
-          <ScalarProperty Name="Barangay" ColumnName="Barangay" />
-          <ScalarProperty Name="Line" ColumnName="Line" />
-          <ScalarProperty Name="LastName" ColumnName="LastName" />
-          <ScalarProperty Name="MiddleName" ColumnName="MiddleName" />
-          <ScalarProperty Name="FirstName" ColumnName="FirstName" />
-          <ScalarProperty Name="Id" ColumnName="Id" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
-    <EntitySetMapping Name="followings">
-      <EntityTypeMapping TypeName="MainDBModel.following">
-        <MappingFragment StoreEntitySet="following">
-          <ScalarProperty Name="Type" ColumnName="Type" />
-          <ScalarProperty Name="FollowerId" ColumnName="FollowerId" />
-          <ScalarProperty Name="FollowingId" ColumnName="FollowingId" />
-          <ScalarProperty Name="Id" ColumnName="Id" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
-    <EntitySetMapping Name="clinic_review">
-      <EntityTypeMapping TypeName="MainDBModel.clinic_review">
-        <MappingFragment StoreEntitySet="clinic_review">
-          <ScalarProperty Name="ReviewCreationDate" ColumnName="ReviewCreationDate" />
-          <ScalarProperty Name="ReviewContent" ColumnName="ReviewContent" />
-          <ScalarProperty Name="ReviewerId" ColumnName="ReviewerId" />
-          <ScalarProperty Name="Rating" ColumnName="Rating" />
-          <ScalarProperty Name="ClinicId" ColumnName="ClinicId" />
-          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="ProfileId" ColumnName="ProfileId" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
     <EntitySetMapping Name="ClinicProfiles">
-      <EntityTypeMapping TypeName="MainDBModel.ClinicProfile">
+      <EntityTypeMapping TypeName="PetBookModel.ClinicProfile">
         <MappingFragment StoreEntitySet="ClinicProfile">
           <ScalarProperty Name="Longitude" ColumnName="Longitude" />
           <ScalarProperty Name="Latitude" ColumnName="Latitude" />
@@ -207,8 +199,24 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
+    <EntitySetMapping Name="OwnerProfiles">
+      <EntityTypeMapping TypeName="PetBookModel.OwnerProfile">
+        <MappingFragment StoreEntitySet="OwnerProfile">
+          <ScalarProperty Name="Contact" ColumnName="Contact" />
+          <ScalarProperty Name="contactId" ColumnName="contactId" />
+          <ScalarProperty Name="Country" ColumnName="Country" />
+          <ScalarProperty Name="City" ColumnName="City" />
+          <ScalarProperty Name="Barangay" ColumnName="Barangay" />
+          <ScalarProperty Name="Line" ColumnName="Line" />
+          <ScalarProperty Name="LastName" ColumnName="LastName" />
+          <ScalarProperty Name="MiddleName" ColumnName="MiddleName" />
+          <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
     <EntitySetMapping Name="PetProfiles">
-      <EntityTypeMapping TypeName="MainDBModel.PetProfile">
+      <EntityTypeMapping TypeName="PetBookModel.PetProfile">
         <MappingFragment StoreEntitySet="PetProfile">
           <ScalarProperty Name="ContactId" ColumnName="ContactId" />
           <ScalarProperty Name="Contact" ColumnName="Contact" />
@@ -228,9 +236,9 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
-    <FunctionImportMapping FunctionImportName="Haversine" FunctionName="MainDBModel.Store.Haversine">
+    <FunctionImportMapping FunctionImportName="Haversine" FunctionName="PetBookModel.Store.Haversine">
       <ResultMapping>
-        <ComplexTypeMapping TypeName="MainDBModel.Haversine_Result">
+        <ComplexTypeMapping TypeName="PetBookModel.Haversine_Result">
           <ScalarProperty Name="Id" ColumnName="Id" />
           <ScalarProperty Name="ClinicName" ColumnName="ClinicName" />
           <ScalarProperty Name="VetFirstName" ColumnName="VetFirstName" />

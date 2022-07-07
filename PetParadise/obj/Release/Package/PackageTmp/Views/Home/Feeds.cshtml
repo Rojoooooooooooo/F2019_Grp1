@@ -1,0 +1,260 @@
+﻿@using PetParadise.Models
+@{
+    PetProfile pet = ViewData["profile"] as PetProfile;
+}
+<div class="w-100 d-flex flex-row gap-3">
+    @* Left panel where small information can be seen *@
+    <div class="w-25 d-flex flex-column gap-3 stext-darker p-2 shadow">
+        <div onclick="return window.location.href = '/profile/'+window.atob(localStorage['current_pet'])" class="w-100 d-flex flex-row px-2 py-2 justify-content-start align-items-center gap-2" role="button">
+            <img id="profile-photo" class="rounded-circle" alt="user" src="https://ui-avatars.com/api/?background=random&bold=true&name=@pet.Name" style="height:36px;width:36px" />
+            <h5 class="fw-bold">@pet.Name</h5>
+        </div>
+
+        <h5 class="fw-bold"><i class="fa-solid fa-filter"></i> Post Filters</h5>
+
+        <div onclick="loadPosts('following')" class="w-100 d-flex flex-row px-2 py-2 justify-content-start align-items-center gap-2" role="button">
+            <i class="fa-solid fa-heart"></i>
+            <h6>Followings</h6>
+        </div>
+        <div onclick="loadPosts('barangay')" class="w-100 d-flex flex-row px-2 py-2 justify-content-start align-items-center gap-2" role="button">
+            <i class="fa-solid fa-location-pin"></i>
+            <h6>Barangay</h6>
+        </div>
+        <div onclick="loadPosts('city')" class="w-100 d-flex flex-row px-2 py-2 justify-content-start align-items-center gap-2" role="button">
+            <i class="fa-solid fa-location-pin"></i>
+            <h6>City</h6>
+        </div>
+        <div onclick="loadPosts('country')" class="w-100 d-flex flex-row px-2 py-2 justify-content-start align-items-center gap-2" role="button">
+            <i class="fa-solid fa-location-pin"></i>
+            <h6>Country</h6>
+        </div>
+    </div>
+
+    @* right panel where posts appear *@
+    <div class="w-75 d-flex flex-column justify-content-start align-items-start rounded-3">
+        @* add post *@
+        <div class="p-2">
+            <h3 class="fw-bold">Post</h3>
+        </div>
+        <div  class="w-75 shadow p-4 d-flex flex-row align-items-center gap-2">
+            <img id="profile-photo" class="rounded-circle" alt="user" src="https://ui-avatars.com/api/?background=random&bold=true&name=@pet.Name" style="height:48px;width:48px;" />
+            <div class="d-flex flex-column justify-content-start align-items-center" role="button">
+                <div onclick="PostBox.openPostBox()" class="rounded-pill border border-dark px-4 py-2 user-select-none">Bark, meow, or hiss your thoughts!</div>
+            </div>
+        </div>
+        <div class="p-2">
+            <h3 class="fw-bold">Feeds</h3>
+        </div>
+        <h5 class="">Showing posts based on: <span id="post-basis"></span></h5>
+        <div id="post-container" class="w-100 d-flex flex-column justify-content-start align-items-start">
+            @* auto generate posts *@
+        </div>
+    </div>
+</div>
+
+<div id="newPostBox" class="d-none position-absolute h-100 w-100 bg-dark bg-opacity-50 start-50 top-50 translate-middle">
+    <div class="w-50 position-absolute d-flex flex-column justify-content-center align-items-center start-50 top-50 translate-middle sbg-light shadow p-4 stext-darker">
+        <div class="w-100 d-flex flex-column justify-content-center align-items-center">
+            <h5 class="fw-bold">Create Post</h5>
+
+            <div onclick="PostBox.closePostBox()" class="position-absolute top-0 end-0 p-2 fs-4" role="button">
+                <i class="fa-solid fa-circle-xmark"></i>
+            </div>
+
+            <form id="postForm" class="w-100 d-flex flex-column justify-content-center align-items-start gap-2">
+                <div class="d-flex flex-row align-items-center gap-2">
+                    <img id="profile-photo" class="rounded-circle" alt="user" src="https://ui-avatars.com/api/?background=random&bold=true&name=@pet.Name" style="height:48px;width:48px;" />
+                    <h5 class="fw-bold">@pet.Name</h5>
+                </div>
+                <div class="w-100">
+                    <textarea id="postContent" rows="5" cols="10" class="w-100 sbg-lighter p-4 border-1 border-dark fs-5" placeholder="Bark, meow or hiss your thoughts, @pet.Name!"></textarea>
+                </div>
+                <div class="w-100 d-flex flex-column">
+                    <button type="submit" class="flex-grow-1 btn btn-outline-light border-0 sbg-darker">Post</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    function giveTreat(e) {
+        let postId = e.target.getAttribute("data-postid");
+        let likesHolder = document.querySelector(`#like-${postId} > span`).firstChild;
+        let btn = $("#like-" + postId);
+
+        let liked = btn.attr("data-postliked");
+        let likesCount = btn.attr("data-likescount");
+        if (liked == "true") {
+            btn.addClass("sbg-light").removeClass("sbg-base");
+            btn.attr("data-postliked", "false");
+            btn.attr("data-likescount", --likesCount);
+            likesHolder.textContent = likesCount+" ";
+        }
+        else {
+           btn.addClass("sbg-base").removeClass("sbg-light");
+           btn.attr("data-postliked", "true");
+           btn.attr("data-likescount", ++likesCount);
+           likesHolder.textContent = likesCount+" ";
+        }
+        fetch(`/post/like?id=${postId}&petid=@pet.Id`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": "Bearer " + getSessionToken()
+            }
+        })
+    }
+
+    function seeFullPost(e) {
+        const postId = e.target.getAttribute("data-postid");
+        window.location.href = `/post/${postId}?petid=@pet.Id`;
+    }
+
+    function addPost(data) {
+        const post = PostBox.postBoxTemplate(data.ProfileId, data.Id, "@pet.Name", data.PostContent, prettyDate(data.PostCreationDate), 0, 0, false);
+        $("#post-container").prepend(post);
+        $("#like-" + data.Id).click(giveTreat);
+        $("#comment-" + data.Id).click(seeFullPost);
+        PostBox.closePostBox();
+    }
+
+    function loadPosts(filter) {
+        const petId = window.location.pathname.split("/")[2];
+        $("#post-basisr").text("")
+        switch (filter) {
+
+            case "following": {
+                const url = `/posts?filter=following&petid=` + petId;
+
+                $("#post-basis").text("Followings")
+
+                fetch(url, {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": "Bearer " + getSessionToken()
+                    }
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.length == 0)
+                        $("#post-container").append("<p>Nothing to show</p>")
+
+                    else
+                        data.forEach(post=> {
+                            PostBox.createPostBox(post.ProfileId, post.Id, post.Name, post.Content, post.CreatedAt, post.LikesCount, post.CommentsCount, post.Liked);
+                        });
+                });
+                break;
+            }
+
+            case "country": {
+                const url = `/posts?filter=country&petid=` + petId;
+
+                $("#post-basis").text("Country")
+
+                fetch(url, {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": "Bearer " + getSessionToken()
+                    }
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.length == 0)
+                        $("#post-container").append("<p>Nothing to show</p>")
+
+                    else
+                        data.forEach(post=> {
+                            PostBox.createPostBox(post.ProfileId, post.Id, post.Name, post.Content, post.CreatedAt, post.LikesCount, post.CommentsCount, post.Liked);
+                        });
+                });
+                break;
+            }
+
+
+            case "city": {
+                const url = `/posts?filter=city&petid=` + petId;
+                $("#post-basis").text("City")
+
+                fetch(url, {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": "Bearer " + getSessionToken()
+                    }
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.length == 0)
+                        $("#post-container").append("<p>Nothing to show</p>")
+
+                    else
+                        data.forEach(post=> {
+                            PostBox.createPostBox(post.ProfileId, post.Id, post.Name, post.Content, post.CreatedAt, post.LikesCount, post.CommentsCount, post.Liked);
+                        });
+                });
+                break;
+            }
+
+
+            case "barangay": {
+                const url = `/posts?filter=barangay&petid=` + petId;
+                $("#post-basis").text("Barangay")
+                fetch(url, {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": "Bearer " + getSessionToken()
+                    }
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.length == 0)
+                        $("#post-container").append("<p>Nothing to show</p>")
+
+                    else
+                        data.forEach(post=> {
+                            PostBox.createPostBox(post.ProfileId, post.Id, post.Name, post.Content, post.CreatedAt, post.LikesCount, post.CommentsCount, post.Liked);
+                        });
+                });
+                break;
+            }
+
+
+            default: {
+                const url = `/posts?filter=default&petid=` + petId;
+                $("#post-basis").text("Followings and Country")
+                fetch(url, {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": "Bearer " + getSessionToken()
+                    }
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.length == 0)
+                        $("#post-container").append("<p>Nothing to show</p>")
+
+                    else
+                        data.forEach(post=> {
+                            
+                            PostBox.createPostBox(post.ProfileId, post.Id, post.Name, post.Content, post.CreatedAt, post.LikesCount, post.CommentsCount, post.Liked);
+                        });
+                });
+            }
+        }
+    }
+
+    $(document).ready(() => {
+            $("#postForm").submit(e=>{
+                PostBox.addPost(e, addPost);
+            })
+
+            loadPosts("default");
+    })
+</script>
