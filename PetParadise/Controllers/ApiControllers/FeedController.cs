@@ -231,7 +231,7 @@ namespace PetParadise.Controllers.ApiControllers
                         Id = postId,
                         PostContent = post.Content,
                         ProfileId = post.ProfileId,
-                        PostCreationDate = DateTime.Now
+                        PostCreationDate = DateTime.UtcNow
                     };
 
                     profile.profile_post.Add(profilePost);
@@ -362,7 +362,7 @@ namespace PetParadise.Controllers.ApiControllers
                         ProfileId = profile.Id,
                         PostId = comment.Id,
                         CommentContent = comment.Content,
-                        CommentCreationDate = DateTime.Now
+                        CommentCreationDate = DateTime.UtcNow
                     };
 
                     post.profile_post_comment.Add(postComment);

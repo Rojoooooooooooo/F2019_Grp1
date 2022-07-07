@@ -23,7 +23,8 @@
                                 <p class="w-100 text-wrap text-break fs-5 lh-sm">@comment.Content</p>
                                 <p id="comment-@comment.Id" class="fst-italic fs-6"></p>
                                 <script>
-                                    $("#comment-@comment.Id").text( prettyDate(new Date(@date).toLocaleString("en-PH")) )
+                                    $("#comment-@comment.Id").text( 
+                                    (new Date(@date).toLocaleString("en-PH")) )
                                 </script>
                             </div>
                         </div>
@@ -79,8 +80,7 @@
     }
 
     $(document).ready(() => {
-        const date = @post.CreatedAt.ToUniversalTime().Subtract(new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc)).TotalMilliseconds;
-        const post = PostBox.postBoxTemplate("@post.ProfileId", "@post.Id", "@post.Name", "@post.Content", prettyDate(new Date(date).toLocaleString("en-PH")), "@post.LikesCount", "@post.CommentsCount", "@post.Liked".toLowerCase());
+        const post = PostBox.postBoxTemplate("@post.ProfileId", "@post.Id", "@post.Name", "@post.Content", magicDate("@post.CreatedAt"), "@post.LikesCount", "@post.CommentsCount", "@post.Liked".toLowerCase());
         $("#post-container").prepend(post);
         $("#like-" + "@post.Id").click(giveTreat);
         if ("@post.Liked".toLowerCase() == "true")

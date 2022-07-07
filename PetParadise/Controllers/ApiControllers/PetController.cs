@@ -239,6 +239,7 @@ namespace PetParadise.Controllers.ApiControllers
                                         c.Id,
                                         c.Category
                                     })
+                                    .OrderBy(c=>c.Category)
                                     .ToList();
 
                     return Ok(categories);
@@ -268,6 +269,7 @@ namespace PetParadise.Controllers.ApiControllers
                                         c.Id,
                                         c.Breed
                                     })
+                                    .OrderBy(c=>c.Breed)
                                     .ToList();
 
                     return Ok(breeds);
@@ -527,7 +529,7 @@ namespace PetParadise.Controllers.ApiControllers
                         ReviewerId = id,
                         ReviewContent = feedback.Content,
                         Rating = feedback.Rating,
-                        ReviewCreationDate = DateTime.Now
+                        ReviewCreationDate = DateTime.UtcNow
                     };
 
                     db.clinic_review.Add(review);

@@ -7,8 +7,8 @@ namespace PetParadise.Extras
 {
     public static class Expiration
     {
-        public static DateTime MONTH { get { return DateTime.Now.AddMonths(1); } }
-        public static DateTime WEEK { get { return DateTime.Now.AddDays(7); } }
-        public static DateTime SHORT { get { return DateTime.Now.AddMinutes(3); } }
+        public static DateTime MONTH { get { return DateTime.UtcNow.AddMonths(1); } }
+        public static DateTime WEEK { get { return DateTime.UtcNow.AddDays(7); } }
+        public static DateTime SHORT { get { return DateTime.UtcNow.AddMinutes(3); } }
     }
 }

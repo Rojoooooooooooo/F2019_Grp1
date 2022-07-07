@@ -61,7 +61,7 @@ namespace PetParadise.Controllers.ApiControllers
                         Id = sessionId, // unique id
                         AccountId = newAcc.Id, // use user id as foreign key
                         Token = sessionToken,
-                        ExpiresAt = DateTime.Now.AddDays(30)
+                        ExpiresAt = DateTime.UtcNow.AddDays(30)
                     };
 
 
@@ -167,7 +167,7 @@ namespace PetParadise.Controllers.ApiControllers
                         Id = sessionId, // unique id
                         AccountId = user.Id, // use user id as foreign key
                         Token = sessionToken,
-                        ExpiresAt = DateTime.Now.AddDays(30)
+                        ExpiresAt = DateTime.UtcNow.AddDays(30)
                     };
 
 
