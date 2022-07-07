@@ -12,7 +12,23 @@
                 @* clinic name *@
                 <h3 id="clinic-name" class="fw-bold">@clinic.ClinicName</h3>
                 @* followers count *@
-                <p class="fw-bold"><span id="followers-count">@clinic.Followers</span> Followers</p>
+                <p id="followers-holder" class="fw-bold">@clinic.Followers Followers</p>
+
+                @if (!ViewBag.IsUser)
+                {
+                    if (ViewBag.Following == "both")
+                    {
+                        <button id="follow-btn" class="btn btn-success">You follow each other <i class="fa-solid fa-check-double"></i></button>
+                    }
+                    else if (ViewBag.Following == "user")
+                    {
+                        <button id="follow-btn" class="btn btn-success">Following <i class="fa-solid fa-check"></i></button>
+                    }
+                    else
+                    {
+                        <button id="follow-btn" class="btn btn-secondary">Follow <i class="fa-solid fa-plus"></i></button>
+                    }
+                }
 
                 @if (ViewBag.IsUser) {
                     <a class="stext-darker" href="#">Edit Profile</a>
@@ -32,13 +48,14 @@
                     @* overall rating *@
                     @if (@clinic.Rating == null)
                     {
-                        <p class="fw-bold"><span id="overall-rating">No ratings yet.</p>
+                        <p class="fw-bold"><span id="overall-rating">No ratings yet.</span></p>
                     }
                     else
                     {
                         <p class="fw-bold"><span id="overall-rating">@clinic.Rating</span>/5</p>
                         //star container 
                         <div id="overall-star-container" class="mb-3">
+                            @{
                                 double blankStar = 5 - (clinic.Rating ?? 1.0);
                                 for (int i = 1; i <= clinic.Rating; i++)
                                 {
@@ -56,9 +73,10 @@
                                         <i class="fa-regular fa-star"></i>
                                     }
                                 }
-                            
+
+                            }
                         </div>
-                        }
+                     }
                 </div>
             </div>
             @*  clinic head*@
@@ -151,6 +169,8 @@
 
     $(document).ready(() => {
 
+        $("#follow-btn").click(toggleFollow);
+
         $("#postForm").submit(e=> {
             PostBox.addFeedback(e, addFeedback);
         })
@@ -166,4 +186,40 @@
             });
         });
     })
+
+    function toggleFollowButton() {
+        const btn = $("#follow-btn");
+        let follower = $("#followers-holder").text().split(" ")[0];
+        // if followed
+        if (btn.attr("class").split(/\s+/).includes("btn-success")) {
+            btn.addClass("btn-secondary").removeClass("btn-success");
+            btn.html(`Follow <i class="fa-solid fa-plus"></i>`);
+            $("#followers-holder").html(--follower + " Followers")
+        }
+        else {
+            btn.addClass("btn-success").removeClass("btn-secondary");
+            btn.html(`Following <i class="fa-solid fa-check"></i>`);
+            $("#followers-holder").html(++follower + " Followers")
+
+        }
+    }
+
+    function toggleFollow(e) {
+        const url = `/follow?followingId=@clinic.Id&followerId=@ViewBag.PetId&type=clinic`;
+
+        fetch(url, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": "Bearer " + getSessionToken()
+            }
+        })
+        .then(res=> {
+            console.log(res)
+            if (res.status == 200) {
+                toggleFollowButton();
+
+            }
+        })
+    }
 </script>

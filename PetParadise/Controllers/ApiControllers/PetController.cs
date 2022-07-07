@@ -301,16 +301,18 @@ namespace PetParadise.Controllers.ApiControllers
                             Extras.Error.HttpError.InvalidSession);
 
                     bool followingExists = false;
-
+                    bool followerExists = false;
                     switch (type) {
                         case "clinic":
                             {
                                 followingExists = await db.clinic_profile.AnyAsync(i => i.Id.Equals(followingId));
+                                followerExists = await db.pet_profile.AnyAsync(i => i.Id.Equals(followerId));
                                 break;
                             }
                         case "pet":
                             {
                                 followingExists = await db.pet_profile.AnyAsync(i => i.Id.Equals(followingId));
+                                followerExists = await db.pet_profile.AnyAsync(i => i.Id.Equals(followerId));
                                 break;
                             }
                         default:
@@ -318,22 +320,35 @@ namespace PetParadise.Controllers.ApiControllers
                             break;
                     }
 
-                    if (!followingExists) 
+                    if (!followingExists || !followerExists) 
                         return new HttpErrorContent(Request, 
                             HttpStatusCode.BadRequest, 
                             Extras.Error.HttpError.InvalidSession);
-                    
 
-                    string followId = await new UID(IdSize.SHORT).GenerateIdAsync();
+                    var followed = await db.followings.AnyAsync(i => i.FollowerId.Equals(followerId) &&
+                                                            i.FollowingId.Equals(followingId));
+                    if (followed) {
+                        var follow = await db.followings.SingleAsync(i => i.FollowerId.Equals(followerId) &&
+                                                            i.FollowingId.Equals(followingId));
+                        db.followings.Remove(follow);
+                        await db.SaveChangesAsync();
+                        return Ok();
+                    }
 
-                    db.followings.Add(new following() {
-                        Id = followId,
-                        FollowingId = followingId,
-                        FollowerId = followerId,
-                        Type = type
-                    });
-                    await db.SaveChangesAsync();
-                    return Ok();
+                    else
+                    {
+                        string followId = await new UID(IdSize.SHORT).GenerateIdAsync();
+
+                        db.followings.Add(new following()
+                        {
+                            Id = followId,
+                            FollowingId = followingId,
+                            FollowerId = followerId,
+                            Type = type
+                        });
+                        await db.SaveChangesAsync();
+                        return Ok();
+                    }
                 }
 
             }

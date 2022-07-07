@@ -2,32 +2,35 @@
 
     @* controls *@
     <div class="w-25 h-100">
-        <form id="search-nearby" class="w-100 d-flex flex-column justify-content-center align-items-center gap-2">
-            @* Range in kilometer *@
-            <div class="w-100 d-flex flex-column p-2 shadow sbg-base rounded-2">
-                <h5>Range in Km: <span id="range-placeholder">5</span></h5>
-                <input id="range" type="range" step="5" value="5" min="0" max="25" class="form-range" />  
+        <form id="search-nearby" class="w-100 d-flex flex-column justify-content-center align-items-center gap-4">
+           
+             @* Range in kilometer *@
+            <div class="w-100 d-flex flex-column p-2 shadow-sm rounded-2">
+                <label for="range">Range in Km: <span id="range-placeholder">1</span></label>
+                <input id="range" type="range" step="1" value="1" min="0" max="5" class="form-range" />  
             </div>
             @* limit of results *@
-            <div class="w-100 p-2 shadow sbg-base rounded-2">
+            <div class="w-100 p-2 shadow-sm rounded-2">
+                <label for="limit">Limit Results</label>
                 <input id="limit" type="number" min="0" max="25" pattern="^\d+$" class="form-control required" value="5" placeholder="Results limit" />  
             </div>
 
             @* Current location *@
-            <div class="w-100 d-flex flex-column p-2 shadow sbg-base rounded-2">
+            <div class="w-100 d-flex flex-column p-2 shadow-sm rounded-2">
                 <input id="lat-holder" hidden />
                 <input id="lng-holder" hidden />
 
-                <button onclick="myLocationHandler()" type="button" class="btn btn-outline-light sbg-dark">Activate Location / GPS</button>
+                <button onclick="myLocationHandler()" type="button" class="btn btn-outline-light sbg-dark"><i class="fa-solid fa-location-crosshairs"></i> Activate Location / GPS</button>
                
                  <p class="fw-bold">Your current location: <span id="my-location-holder" class="fst-italic"></span></p>
                
-                 <span class="text-info"><i class="fa-solid fa-circle-info"></i> We use this feature to give approximate distance between you and the clinics</span>
+                 <span class="stext-dark"><i class="fa-solid fa-circle-info"></i> We use this feature to give approximate distance between you and the clinics</span>
             </div>
 
             @* submit *@
-            <div class="w-100 d-flex flex-column p-2 shadow sbg-base rounded-2">
-                <button type="submit" class="btn btn-outline-light sbg-darker">Find Nearby Clinics</button>
+            <div class="w-100 d-flex flex-column p-2 shadow-sm rounded-2">
+                <button type="submit" class="btn btn-outline-light sbg-darker"><i class="fa-solid fa-magnifying-glass-location"></i> Find Nearby Clinics</button>
+                <button id="reset-direction" type="button" class="btn btn-outline-dark">Reset</button>
             </div>
         </form>
     </div>
@@ -41,13 +44,13 @@
             <div class="w-25 flex-grow-1 p-4 sbg-light stext-darker">
                 <p class="fw-bold fs-6"><i class="fa-solid fa-a"></i> From your location: <span class="fw-normal fst-italic" id="from-location-holder"></span></p>
                 <p class="fw-bold fs-6"><i class="fa-solid fa-b"></i> To: <span class="fw-normal" id="clinic-name-holder"></span> <span class="fw-normal" id="to-location-holder"></span></p>
-                <p class="fw-bold fs-6"><i class="fa-solid fa-car"></i> Distance: <span class="fw-normal" id="distance-holder"></span></p>
+                <p class="fw-bold fs-6"><i class="fa-solid fa-car"></i> Travel Distance: <span class="fw-normal" id="distance-holder"></span></p>
                 <p class="fw-bold fs-6"><i class="fa-solid fa-clock"></i> Duration: <span class="fw-normal" id="duration-holder"></span></p>
             </div>
         </div>
         
         @* results *@
-        <h4>Nearby clinics found: <span id="nearby-count"></span></h4>
+        
         <div id="result-container" class="w-75 flex-grow-1 d-flex flex-column gap-2 justify-content-start align-items-start">
         </div>
     </div>
@@ -55,7 +58,7 @@
 
 <script>
 
-    let map;
+    let map, direction;
 
     function myLocationHandler() {
         MapManager.getBrowserLocation((res) => {
@@ -110,7 +113,9 @@
         })
         $("#search-nearby").submit(e=>{
             e.preventDefault();
-            $("#result-container")
+            
+            $("#result-container").html("");
+
             const range = $("#range").val();
             const limit = $("#limit").val();
             const pos = {
@@ -132,8 +137,8 @@
                 .then(res=>res.json())
                 .then(data=>{
                     console.log(data);
-                    $("#nearby-count").text(data.length);
-
+                    $("#result-container").append(`<h4>Nearby clinics found: <span id="nearby-count">${data.length}</span></h4>`)
+                    
                     if(data.length > 0 ){
                         
                         data.forEach(c=>{
@@ -142,7 +147,7 @@
 
                             // bind onclick listener
                             $("#result-"+c.Id).click(()=>{
-                                let direction = new DirectionsManager(map.getMap());
+                                direction = new DirectionsManager(map.getMap());
                                 $("#clinic-name-holder").text(c.ClinicName);
 
                                 direction.calcRoute(new google.maps.LatLng(pos.lat, pos.lng), new google.maps.LatLng(c.Latitude, c.Longitude))
@@ -151,6 +156,10 @@
                                 }, ()=>{})
                             })
                         })
+
+                        $("#reset-direction").on("click",e=>{
+                            direction.clear();
+                        })
                     }
                 })
         });
@@ -158,6 +167,28 @@
 
 
     function resultTemplate(id, clinicName, lat, lng){
-        return `<div id="result-${id}" data-lat="${lat}" data-lng="${lng}" class="w-100 d-flex flex-row justify-content-start align-items-center shadow-sm p-2 gap-2 border-start border-5 border-success" role="button"><img id="profile-photo" class="rounded-circle" alt="user" data-lat="${lat}" data-lng="${lng}" src="https://ui-avatars.com/api/?background=random&bold=true&name=${clinicName}" style="height:36px;width:36px"><a class="link-dark stext-darker" href="/clinic/${id}"><h5 class="fw-bold">${clinicName}</h5></a></div>`
+        return `<div id="result-${id}" data-lat="${lat}" data-lng="${lng}" class="w-100 d-flex flex-row justify-content-start align-items-center shadow-sm p-2 border-start border-5 border-success gap-2" role="button"><img id="profile-photo" class="rounded-circle" alt="user" data-lat="${lat}" data-lng="${lng}" src="https://ui-avatars.com/api/?background=random&bold=true&name=${clinicName}" style="height:36px;width:36px"><div><h5 class="fw-bold">${clinicName}</h5><a class="link-dark stext-darker" href="/clinic/${id}">View profile</a></div></div>`;
     }
 </script>
+
+
+@*<div id="result-${id}"
+     data-lat="${lat}"
+     data-lng="${lng}"
+     class="w-100 d-flex flex-row justify-content-start align-items-center shadow-sm p-2 border-start border-5 border-success gap-2"
+     role="button">
+
+    <img id="profile-photo"
+         class="rounded-circle"
+         alt="user"
+         data-lat="${lat}"
+         data-lng="${lng}"
+         src="https://ui-avatars.com/api/?background=random&bold=true&name=${clinicName}"
+         style="height:36px;width:36px" />
+
+    <div>
+        <h5 class="fw-bold">${clinicName}</h5>
+        <a class="link-dark stext-darker" href="/clinic/${id}">View profile</a>
+    </div>
+    
+</div>*@

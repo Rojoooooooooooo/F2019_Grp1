@@ -11,10 +11,26 @@
             <div class="d-flex flex-column justify-content-start align-items-start lh-1">
                 <h3 class="fw-bold">@pet.Name</h3>
                <div class="d-flex flex-row gap-2">
-                   <p class="fw-bold">@pet.Followers Followers</p>
+                   <p id="followers-holder" class="fw-bold">@pet.Followers Followers</p>
                    <span>|</span>
                    <p class="fw-bold">@pet.Following Following</p>
                </div>
+
+                @if (!ViewBag.IsUser)
+                {
+                    if (ViewBag.Following == "both")
+                    {
+                        <button id="follow-btn" class="btn btn-success">You follow each other <i class="fa-solid fa-check-double"></i></button>
+                    }
+                    else if (ViewBag.Following == "user")
+                    {
+                        <button id="follow-btn" class="btn btn-success">Following <i class="fa-solid fa-check"></i></button>
+                    }
+                    else
+                    {
+                        <button id="follow-btn" class="btn btn-secondary">Follow <i class="fa-solid fa-plus"></i></button>
+                    }
+                }
                 @if (ViewBag.IsUser)
                 {
                     <a class="stext-darker" href="#">Edit Profile</a>
@@ -48,7 +64,7 @@
         <div class="w-100 d-flex flex-column justify-content-start align-items-start rounded-3">
 
             @if (ViewBag.IsUser)
-            {
+                    {
                 @* add post *@
                 <div class="p-2">
                     <h3 class="fw-bold">Post</h3>
@@ -111,32 +127,32 @@
 <script>
 
      function giveTreat(e) {
-        let postId = e.target.getAttribute("data-postid");
-        let likesHolder = document.querySelector(`#like-${postId} > span`).firstChild;
+                    let postId = e.target.getAttribute("data-postid");
+                    let likesHolder = document.querySelector(`#like-${postId} > span`).firstChild;
         let btn = $("#like-" + postId);
 
-        let liked = btn.attr("data-postliked");
-        let likesCount = btn.attr("data-likescount");
-        if (liked == "true") {
-            btn.addClass("sbg-light").removeClass("sbg-base");
-            btn.attr("data-postliked", "false");
-            btn.attr("data-likescount", --likesCount);
-            likesHolder.textContent = likesCount+" ";
-        }
-        else {
-           btn.addClass("sbg-base").removeClass("sbg-light");
-           btn.attr("data-postliked", "true");
-           btn.attr("data-likescount", ++likesCount);
-           likesHolder.textContent = likesCount+" ";
-        }
+                    let liked = btn.attr("data-postliked");
+                    let likesCount = btn.attr("data-likescount");
+                    if (liked == "true") {
+                        btn.addClass("sbg-light").removeClass("sbg-base");
+                        btn.attr("data-postliked", "false");
+                        btn.attr("data-likescount", --likesCount);
+                        likesHolder.textContent = likesCount+" ";
+                    }
+                    else {
+                        btn.addClass("sbg-base").removeClass("sbg-light");
+                        btn.attr("data-postliked", "true");
+                        btn.attr("data-likescount", ++likesCount);
+                        likesHolder.textContent = likesCount+" ";
+                    }
 
-        fetch(`/post/like?id=${postId}&petid=@pet.Id`, {
-            method: "POST",
+                    fetch(`/post/like?id=${postId}&petid=@pet.Id`, {
+                        method: "POST",
             headers: {
-                "Content-Type": "application/json",
+                            "Content-Type": "application/json",
                 "Authorization": "Bearer " + getSessionToken()
             }
-        })
+                    })
         .catch(e=>console.log(e))
     }
 
@@ -153,6 +169,8 @@
     }
 
     $(document).ready(() => {
+
+        $("#follow-btn").click(toggleFollow);
 
         $("#postForm").submit(e=> {
             PostBox.addPost(e, addPost);
@@ -175,4 +193,41 @@
                 });
         });
     })
+
+    function toggleFollowButton() {
+        const btn = $("#follow-btn");
+        let follower = $("#followers-holder").text().split(" ")[0];
+        // if followed
+        if (btn.attr("class").split(/\s+/).includes("btn-success")) {
+            btn.addClass("btn-secondary").removeClass("btn-success");
+            btn.html(`Follow <i class="fa-solid fa-plus"></i>`);
+            $("#followers-holder").html(--follower + " Followers")
+        }
+        else {
+            btn.addClass("btn-success").removeClass("btn-secondary");
+            btn.html(`Following <i class="fa-solid fa-check"></i>`);
+            $("#followers-holder").html( ++follower + " Followers")
+            
+        }
+    }
+
+    function toggleFollow(e) {
+        const url = `/follow?followingId=@pet.Id&followerId=@ViewBag.PetId&type=pet`;
+
+        fetch(url, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": "Bearer " + getSessionToken()
+            }
+        })
+        .then(res=> {
+            console.log(res)
+            if (res.status == 200) {
+                toggleFollowButton();
+
+            }
+        })
+    }
+
 </script>

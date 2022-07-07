@@ -156,9 +156,10 @@ namespace PetParadise.Controllers.ViewsControllers
                     if (pet == null) return RedirectToAction("Index", "Home");
 
                     string userPetId = Request.Cookies["pet_id"] != null ? Request.Cookies["pet_id"].Value : "";
+
                     bool isUser = db.pet_profile
                                     .Single(i => i.Id.Equals(pet.Id)).OwnerId.Equals(payload.UserId) && pet.Id.Equals(userPetId);
-                    Debug.WriteLine("IsUser = " + isUser);
+
                     ViewBag.Title = pet.Name;
 
                     PetProfile profile = new PetProfile()
@@ -180,8 +181,29 @@ namespace PetParadise.Controllers.ViewsControllers
                         Contact = pet.Contact
                     };
 
+                    ViewBag.Following = "";
                     ViewBag.PetId = userPetId;
                     ViewBag.IsUser = isUser;
+
+                    if (!isUser) {
+                        var userFollows = db.followings
+                                                .Any(i => i.FollowingId.Equals(pet.Id) &&
+                                                        i.FollowerId.Equals(userPetId));
+                        var profileFollows = db.followings
+                                                .Any(i => i.FollowingId.Equals(userPetId) &&
+                                                        i.FollowerId.Equals(pet.Id));
+
+                        var bothFollows = userFollows && profileFollows;
+
+                        if (bothFollows)
+                        {
+                            ViewBag.Following = "both";
+                        }
+                        else {
+                           ViewBag.Following = userFollows ? "user" : "none";
+                        }
+                        
+                    }
 
                     ViewBag.EnableUserMenu = isUser;
                     ViewData["profile"] = profile;
@@ -265,6 +287,7 @@ namespace PetParadise.Controllers.ViewsControllers
                 ViewBag.Query = query;
                 ViewBag.Title = "Search results for: " + query;
                 using (MainDBEntities db = new MainDBEntities()) {
+                    string userPetId = Request.Cookies["pet_id"] != null ? Request.Cookies["pet_id"].Value : "";
                     var pets = db.pet_profile.Select(i => new SearchModel() {
                         Id = i.Id,
                         Name = i.Name,
@@ -282,7 +305,7 @@ namespace PetParadise.Controllers.ViewsControllers
                     SearchModel[] result = pets.Concat(clinic).ToArray();
 
                     ViewData["result"] = result;
-
+                    ViewBag.PetId = userPetId;
                     return View();
 
                 }
@@ -299,6 +322,8 @@ namespace PetParadise.Controllers.ViewsControllers
         {
             ViewBag.EnableSearchMenu = true;
             ViewBag.EnableUserMenu = false;
+            string userPetId = Request.Cookies["pet_id"] != null ? Request.Cookies["pet_id"].Value : "";
+            ViewBag.PetId = userPetId;
 
             return View();
         }

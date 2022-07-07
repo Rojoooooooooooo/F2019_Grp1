@@ -3,3 +3,4 @@ USE PetBook;
 DELETE FROM account_credential
 DELETE FROM owner_profile
 DELETE FROM clinic_profile
+DELETE FROM following

@@ -119,6 +119,29 @@ namespace PetParadise.Controllers.ViewsControllers
                     };
 
 
+                    ViewBag.Following = "";
+
+                    if (!isUser)
+                    {
+                        var userFollows = db.followings
+                                                .Any(i => i.FollowingId.Equals(clinic.Id) &&
+                                                        i.FollowerId.Equals(pet.Id));
+                        var profileFollows = db.followings
+                                                .Any(i => i.FollowingId.Equals(pet.Id) &&
+                                                        i.FollowerId.Equals(clinic.Id));
+
+                        var bothFollows = userFollows && profileFollows;
+
+                        if (bothFollows)
+                        {
+                            ViewBag.Following = "both";
+                        }
+                        else
+                        {
+                            ViewBag.Following = userFollows ? "user" : "none";
+                        }
+
+                    }
                     ViewData["profile"] = profile;
 
                     ViewBag.EnableSearchMenu = !isUser;

@@ -33,6 +33,13 @@
         $("#to-location-holder").text(to);
         $("#distance-holder").text(distance);
         $("#duration-holder").text(duration);
-        
+    }
+    clear(){
+        this.directionsRenderer.setMap(null);
+        $("#from-location-holder").text("");
+        $("#to-location-holder").text("");
+        $("#distance-holder").text("");
+        $("#duration-holder").text("");
+        $("#clinic-name-holder").text("");
     }
 }
