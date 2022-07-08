@@ -52,9 +52,7 @@
     }
 
     static createPostBox(petId, postId, name, content, date, likeCount, commentCount, liked) {
-        console.log(postId, date)
         date = magicDate(date);
-        console.log(postId, date)
         $("#post-container").append(PostBox.postBoxTemplate(petId, postId, name, content, date, likeCount, commentCount, liked));
         $("#like-" + postId).click(giveTreat);
         $("#comment-" + postId).click(seeFullPost);
@@ -63,7 +61,7 @@
         
     }
     static commentBoxTemplate(petId, commentId, name, content, date) {
-        date = magicDate(date);
+        date = prettyDate(date);
         return `<div class="w-100 px-4 py-2 sbg-light rounded-2"><div class="d-flex flex-row justify-content-start align-items-center gap-2"><img id="profile-photo" class="rounded-circle" alt="user" src="https://ui-avatars.com/api/?background=random&bold=true&name=${name}" style="height:36px;width:36px"><a href='/profile/${petId}' class="fw-bold fs-6 stext-darker text-decoration-none">${name}</a></div><div class="w-100 d-flex flex-column justify-content-start align-items-start ps-4"><div class="w-100 ps-4"><p class="w-100 text-wrap text-break fs-5 lh-sm">${content}</p><p id="comment-${commentId}" class="fst-italic fs-6">${date}</p></div></div></div>`;
     }
     static openPostBox() {

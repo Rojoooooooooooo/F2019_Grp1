@@ -32,7 +32,7 @@
 
             <div class="w-100 d-flex flex-row gap-2">
                 <div class="flex-grow-1">
-                    @Html.EditorFor(model => model.Birthdate, new { htmlAttributes = new { @class = "form-control bg-transparent", placeholder = "Birthdate", @readonly = "readonly" } })
+                    @Html.EditorFor(model => model.Birthdate, new { htmlAttributes = new { @class = "form-control bg-transparent", placeholder = "Birthdate", @readonly = "readonly", required = true } })
                     @Html.ValidationMessageFor(model => model.Birthdate, "", new { @class = "text-danger" })
                 </div>
                 <div class="flex-grow-1">
@@ -53,7 +53,6 @@
                 <div class="flex-grow-1">
                     <select id="breeds" class="form-control">
                         <option value="" selected disabled>Select Breed</option>
-                        
                     </select>
                 </div>
             </div>
@@ -71,6 +70,7 @@
 </div>
 
 <script>
+    $('#Birthdate').attr("required", "true");
     const fadeSpeed = 300;
     const addPetCard = $("#addPetCard");
     addPetCard.hide();
@@ -111,6 +111,8 @@
             categoriesSelect.change((e) => {
                 loadBreeds(e.target.value)
                 .then(breeds => {
+                    breedsSelect.html("");
+                    breedsSelect.prepend(`<option value="" selected disabled>Select Breed</option>`);
                     breeds.forEach(b=>{
                         breedsSelect.append(`<option value=${b.Id}>${b.Breed}</option>`);
                     })

@@ -71,14 +71,23 @@ namespace PetParadise.Controllers.ViewsControllers
                 if (token.Value != null)
                 {
                     var payload = token.GetPayload();
-                    if (payload.AccountTypeId == 1)
+                    using (MainDBEntities db = new MainDBEntities())
                     {
-                        return RedirectToAction("PetDashboard", "Account");
-                    }
-                    else if (payload.AccountTypeId == 2)
-                    {
-                        return View();
-                        //return RedirectToAction("PetDashboard", "Account");
+                        bool hasProfile = db.owner_profile
+                                        .Any(u => u.Id.Equals(payload.UserId)) ||
+                                        db.clinic_profile.Any(u => u.Id.Equals(payload.UserId));
+
+                        if (!hasProfile)
+                            return RedirectToAction("CreateProfile", "Account");
+
+                        if (payload.AccountTypeId == 1)
+                        {
+                            Response.Redirect("/owner/" + payload.UserId);
+                        }
+                        else if (payload.AccountTypeId == 2)
+                        {
+                            Response.Redirect("/clinic/" + payload.UserId);
+                        }
                     }
                 }
             }
@@ -268,6 +277,7 @@ namespace PetParadise.Controllers.ViewsControllers
 
                     ViewData["post"] = post;
                     ViewBag.PetId = petid;
+                    ViewBag.Title = post.Name + "'s Post";
                 }
 
                 return View();
@@ -325,6 +335,7 @@ namespace PetParadise.Controllers.ViewsControllers
         [Route("nearby/clinics")]
         public ActionResult NearbyClinics()
         {
+            ViewBag.Title = "Nearby Clinic";
             ViewBag.EnableSearchMenu = true;
             ViewBag.EnableUserMenu = false;
             string userPetId = Request.Cookies["pet_id"] != null ? Request.Cookies["pet_id"].Value : "";

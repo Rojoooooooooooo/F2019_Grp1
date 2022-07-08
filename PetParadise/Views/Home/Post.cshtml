@@ -23,8 +23,7 @@
                                 <p class="w-100 text-wrap text-break fs-5 lh-sm">@comment.Content</p>
                                 <p id="comment-@comment.Id" class="fst-italic fs-6"></p>
                                 <script>
-                                    $("#comment-@comment.Id").text( 
-                                    (new Date(@date).toLocaleString("en-PH")) )
+                                    $("#comment-@comment.Id").text(magicDate(@date))
                                 </script>
                             </div>
                         </div>
@@ -80,7 +79,8 @@
     }
 
     $(document).ready(() => {
-        const post = PostBox.postBoxTemplate("@post.ProfileId", "@post.Id", "@post.Name", "@post.Content", magicDate("@post.CreatedAt"), "@post.LikesCount", "@post.CommentsCount", "@post.Liked".toLowerCase());
+        const date = @(post.CreatedAt.ToUniversalTime().Subtract(new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc)).TotalMilliseconds);
+        const post = PostBox.postBoxTemplate("@post.ProfileId", "@post.Id", "@post.Name", "@post.Content", magicDate(new Date(date).toString()), "@post.LikesCount", "@post.CommentsCount", "@post.Liked".toLowerCase());
         $("#post-container").prepend(post);
         $("#like-" + "@post.Id").click(giveTreat);
         if ("@post.Liked".toLowerCase() == "true")
@@ -106,7 +106,7 @@
             })
             .then(res=>res.json())
             .then(comment=>{
-                const date = new Date().toLocaleString("en-PH");
+                const date = new Date().toLocaleString("en");
                 const commentBox = PostBox.commentBoxTemplate(comment.ProfileId, comment.Id, comment.Name, comment.CommentContent, date);
                 $("#comment-container").append(commentBox);
             })

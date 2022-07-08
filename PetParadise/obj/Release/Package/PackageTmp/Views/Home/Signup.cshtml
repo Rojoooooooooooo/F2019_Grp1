@@ -2,11 +2,9 @@
 
 @using (Html.BeginForm("Signup", "Home", FormMethod.Post, new { @class = "d-flex flex-column justify-content-center align-items-center gap-2" }))
 {
-    @Html.AntiForgeryToken()
 
     <div class="w-25 d-flex flex-column justify-content-center align-items-center gap-2">
         <h2 class="fw-bold">Create an Account</h2>
-        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
         <div class="btn-group" role="group">
             <input type="radio" class="btn-check" name="accountType" id="ownerBtn" value="1" autocomplete="off" checked>
@@ -18,18 +16,15 @@
 
         <div class="w-100">
             @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control", placeholder = "Email" } })
-            @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
         </div>
        
         <div class="w-100">
             @Html.EditorFor(model => model.Username, new { htmlAttributes = new { @class = "form-control", placeholder = "Username" } })
-            @Html.ValidationMessageFor(model => model.Username, "", new { @class = "text-danger" })
         </div>
 
 
         <div class="w-100">
             @Html.PasswordFor(model => model.Password, new { @class = "form-control", placeholder = "Password" })
-            @Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-danger" })
         </div>
 
         <div class="w-100">
@@ -135,31 +130,4 @@
     });
 
 </script>
-<script>
-    const accountTypeId = localStorage.accountType;
-    console.log(accountTypeId)
-    const url = "/auth/verify";
-    const sesh = getSessionToken();
-    fetch(url, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-            "Session-Token": sesh
-        }
-    })
-    .then(res=> {
-        console.log(res);
-        if (res.ok) {
-            console.log("logging you in, "+accountTypeId);
-            if (accountTypeId == 1) {
-                window.location.replace('/account/petdashboard');
-            }
-            else if (accountTypeId == 2) {
-                console.log('clinic you are, soon!');
-            }
-        }
-        else {
-            console.log("hey please log in!");
-        }
-    })
-</script>
+

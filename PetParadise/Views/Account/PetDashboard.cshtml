@@ -32,7 +32,7 @@
 
             <div class="w-100 d-flex flex-row gap-2">
                 <div class="flex-grow-1">
-                    @Html.EditorFor(model => model.Birthdate, new { htmlAttributes = new { @class = "form-control bg-transparent", placeholder = "Birthdate", @readonly = "readonly" } })
+                    @Html.EditorFor(model => model.Birthdate, new { htmlAttributes = new { @class = "form-control bg-transparent", placeholder = "Birthdate", @readonly = "readonly", required = true } })
                     @Html.ValidationMessageFor(model => model.Birthdate, "", new { @class = "text-danger" })
                 </div>
                 <div class="flex-grow-1">
@@ -70,6 +70,7 @@
 </div>
 
 <script>
+    $('#Birthdate').attr("required", "true");
     const fadeSpeed = 300;
     const addPetCard = $("#addPetCard");
     addPetCard.hide();

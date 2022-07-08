@@ -15,36 +15,43 @@ namespace PetParadise.Controllers.ViewsControllers
         // GET: Create
         public ActionResult CreateProfile()
         {
-            ViewBag.Title = "Create Profile";
-            ViewBag.EnableSearchMenu = false;
-            ViewBag.EnableUserMenu = false;
-            var session = Request.Cookies["session_token"] != null ? Request.Cookies["session_token"].Value : "";
-
-            if (!string.IsNullOrEmpty(session))
+            try
             {
-                var token = new JwtToken(session, new SessionManager().CreateValidationParameters(SessionType.SESSION));
+                ViewBag.Title = "Create Profile";
+                ViewBag.EnableSearchMenu = false;
+                ViewBag.EnableUserMenu = false;
+                var session = Request.Cookies["session_token"] != null ? Request.Cookies["session_token"].Value : "";
 
-                if (token.Value != null)
+                if (!string.IsNullOrEmpty(session))
                 {
-                    var payload = token.GetPayload();
-                    var accountType = payload.AccountTypeId;
+                    var token = new JwtToken(session, new SessionManager().CreateValidationParameters(SessionType.SESSION));
 
-                    // get account type
-                    if (accountType == 1)
+                    if (token.Value != null)
                     {
-                        ViewBag.Title = "Create Owner Profile";
-                        return View("CreateOwner");
+                        var payload = token.GetPayload();
+                        var accountType = payload.AccountTypeId;
+
+                        // get account type
+                        if (accountType == 1)
+                        {
+                            ViewBag.Title = "Create Owner Profile";
+                            return View("CreateOwner");
+                        }
+                        else if (accountType == 2)
+                        {
+                            ViewBag.Title = "Create Clinic Profile";
+                            return View("CreateClinic");
+                        }
+                        else return View();
                     }
-                    else if (accountType == 2)
-                    {
-                        ViewBag.Title = "Create Clinic Profile";
-                        return View("CreateClinic");
-                    }
-                    else return View("Index");
                 }
-            }
 
-            return View("Index");
+                return View();
+            }
+            catch (Exception)
+            {
+                return View("Index");
+            }
         }
 
         [Route("owner/{id}")]

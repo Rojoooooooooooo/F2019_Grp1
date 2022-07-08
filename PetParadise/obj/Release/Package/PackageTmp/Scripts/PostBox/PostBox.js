@@ -1,7 +1,7 @@
 ﻿class PostBox {
     
     static createFeedbackBoxTemplate(name, rating, content, date) {
-        date = prettyDate(date);
+        date = magicDate(date);
         if (rating < 1) rating = 1;
         switch (rating) {
             case 1: {
@@ -23,7 +23,7 @@
     }
 
     static addFeedbackBox(name, rating, content, date) {
-        date = prettyDate(date);
+        date = magicDate(date);
         if (rating < 1) rating = 1;
         switch (rating) {
             case 1: {
@@ -52,8 +52,7 @@
     }
 
     static createPostBox(petId, postId, name, content, date, likeCount, commentCount, liked) {
-        date = prettyDate(date);
-
+        date = magicDate(date);
         $("#post-container").append(PostBox.postBoxTemplate(petId, postId, name, content, date, likeCount, commentCount, liked));
         $("#like-" + postId).click(giveTreat);
         $("#comment-" + postId).click(seeFullPost);
@@ -161,6 +160,22 @@ function prettyDate(time) {
 		day_diff == 1 && "Yesterday" ||
 		day_diff < 7 && day_diff + " days ago" ||
 		day_diff < 31 && Math.ceil(day_diff / 7) + " weeks ago";
+}
+
+
+function UTCToLocal(utcDate) {
+    const date = new Date(utcDate); // utcdate string to date
+    const gmt = new Date().getTimezoneOffset() / 60; // get offset in hour
+
+    date.setHours(date.getHours() - gmt);
+    return new Date(date);
+}
+
+function magicDate(utcdatestring) {
+    const d = UTCToLocal(utcdatestring).toLocaleString("en");
+    
+    const pd = prettyDate(d);
+    return pd;
 }
 
 //// If jQuery is included in the page, adds a jQuery plugin to handle it as well

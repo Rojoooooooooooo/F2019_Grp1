@@ -42,6 +42,10 @@ namespace PetParadise.Controllers.ApiControllers
                     {
                         error = new { message = "Empty color." }
                     });
+                if (petInfo.Birthdate == DateTime.MinValue)
+                    return Content(HttpStatusCode.BadRequest, new {
+                        error =  new { message = "Invalid date format" }
+                    });
 
                 petInfo.Name = petInfo.Name.Trim().ToTitleCase();
                 petInfo.Color = petInfo.Color.Trim().ToTitleCase();

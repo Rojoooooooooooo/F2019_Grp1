@@ -92,7 +92,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>06/21/2022 09:12:20</publishTime>
     </File>
     <File Include="bin/PetParadise.dll">
-      <publishTime>07/08/2022 02:32:52</publishTime>
+      <publishTime>07/08/2022 17:20:42</publishTime>
     </File>
     <File Include="bin/roslyn/csc.exe">
       <publishTime>06/21/2022 09:12:18</publishTime>
@@ -407,7 +407,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>06/21/2022 09:12:14</publishTime>
     </File>
     <File Include="Scripts/PostBox/PostBox.js">
-      <publishTime>07/07/2022 21:45:58</publishTime>
+      <publishTime>07/08/2022 10:09:36</publishTime>
     </File>
     <File Include="Scripts/star-rating.js">
       <publishTime>07/04/2022 23:30:32</publishTime>
@@ -434,13 +434,13 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>07/04/2022 00:41:54</publishTime>
     </File>
     <File Include="Views/Account/PetDashboard.cshtml">
-      <publishTime>07/05/2022 00:41:04</publishTime>
+      <publishTime>08/07/2022 16:18:42</publishTime>
     </File>
     <File Include="Views/Home/Display.cshtml">
       <publishTime>06/21/2022 09:12:12</publishTime>
     </File>
     <File Include="Views/Home/Feeds.cshtml">
-      <publishTime>07/07/2022 18:25:38</publishTime>
+      <publishTime>08/07/2022 04:27:16</publishTime>
     </File>
     <File Include="Views/Home/Index.cshtml">
       <publishTime>06/21/2022 09:12:12</publishTime>
@@ -452,16 +452,16 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>07/07/2022 21:25:32</publishTime>
     </File>
     <File Include="Views/Home/Post.cshtml">
-      <publishTime>08/07/2022 01:20:24</publishTime>
+      <publishTime>08/07/2022 16:07:04</publishTime>
     </File>
     <File Include="Views/Home/Profile.cshtml">
-      <publishTime>07/07/2022 21:42:16</publishTime>
+      <publishTime>08/07/2022 03:47:32</publishTime>
     </File>
     <File Include="Views/Home/Search.cshtml">
       <publishTime>07/04/2022 21:45:42</publishTime>
     </File>
     <File Include="Views/Home/Signup.cshtml">
-      <publishTime>07/06/2022 01:36:12</publishTime>
+      <publishTime>07/08/2022 17:17:56</publishTime>
     </File>
     <File Include="Views/Home/_Welcome.cshtml">
       <publishTime>07/02/2022 21:37:32</publishTime>

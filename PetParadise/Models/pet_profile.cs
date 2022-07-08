@@ -31,11 +31,18 @@ namespace PetParadise.Models
         [MaxLength(35, ErrorMessage = "Pet name must be less than 35 characters.")]
         public string Name { get; set; }
 
+        [Required]
+        [Range(typeof(DateTime), "1/1/1960", "1/1/2030", ErrorMessage = "Invalid Date")]
         public System.DateTime Birthdate { get; set; }
+
+        [Required]
         public int CategoryId { get; set; }
+
+        [Required]
         public Nullable<int> BreedId { get; set; }
 
-        [RegularExpression("[a-zA-Z,-\\s]*", ErrorMessage = "Please use english characters or commas")]
+        [Required]
+        [RegularExpression(@"[a-zA-Z\s\p{P}]*", ErrorMessage = "Please use english characters or commas")]
         public string Color { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

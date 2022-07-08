@@ -113,7 +113,7 @@
     }
 
     function addPost(data) {
-        const post = PostBox.postBoxTemplate(data.ProfileId, data.Id, "@pet.Name", data.PostContent, prettyDate(data.PostCreationDate), 0, 0, false);
+        const post = PostBox.postBoxTemplate(data.ProfileId, data.Id, "@pet.Name", data.PostContent, magicDate(data.PostCreationDate), 0, 0, false);
         $("#post-container").prepend(post);
         $("#like-" + data.Id).click(giveTreat);
         $("#comment-" + data.Id).click(seeFullPost);
