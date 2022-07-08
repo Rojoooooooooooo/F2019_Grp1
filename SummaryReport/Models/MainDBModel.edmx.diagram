@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="18290aada1294948910700683079f7b4" Name="Diagram1">
+        <EntityTypeShape EntityType="MainDBModel.login_sessions" Width="1.5" PointX="0.75" PointY="3.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="MainDBModel.pet_breeds" Width="1.5" PointX="3" PointY="0.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="MainDBModel.pet_category" Width="1.5" PointX="0.75" PointY="1" IsExpanded="true" />
+        <EntityTypeShape EntityType="MainDBModel.ClinicProfile" Width="1.5" PointX="2.75" PointY="3.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="MainDBModel.OwnerProfile" Width="1.5" PointX="4.75" PointY="3.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="MainDBModel.PetProfile" Width="1.5" PointX="6.75" PointY="0.75" IsExpanded="true" />
+        <AssociationConnector Association="MainDBModel.FK_pet_breeds_pet_category" ManuallyRouted="false" />
+        <EntityTypeShape EntityType="MainDBModel.account_credential" Width="1.5" PointX="0.75" PointY="9.5" />
+        <AssociationConnector Association="MainDBModel.FK_login_sessions_account_credential" />
+        <EntityTypeShape EntityType="MainDBModel.account_type" Width="1.5" PointX="0.75" PointY="13" />
+        <AssociationConnector Association="MainDBModel.FK_account_credential_account_type" />
+        <EntityTypeShape EntityType="MainDBModel.pet_profile" Width="1.5" PointX="4.875" PointY="0.75" />
+        <AssociationConnector Association="MainDBModel.FK_pet_profile_pet_breeds" />
+        <AssociationConnector Association="MainDBModel.FK_pet_profile_pet_category" />
+        <EntityTypeShape EntityType="MainDBModel.owner_profile" Width="1.5" PointX="7.375" PointY="5.875" />
+        <AssociationConnector Association="MainDBModel.FK_pet_profile_owner_profile" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

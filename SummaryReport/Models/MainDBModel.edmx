@@ -1,0 +1,742 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="MainDBModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="account_credential">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="nvarchar" MaxLength="8" Nullable="false" />
+          <Property Name="Email" Type="nvarchar" MaxLength="60" Nullable="false" />
+          <Property Name="Username" Type="nvarchar" MaxLength="16" Nullable="false" />
+          <Property Name="Password" Type="nvarchar" MaxLength="60" Nullable="false" />
+          <Property Name="AccountTypeId" Type="int" Nullable="false" />
+          <Property Name="IsArchived" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="account_type">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" />
+          <Property Name="Value" Type="nvarchar" MaxLength="10" Nullable="false" />
+        </EntityType>
+        <EntityType Name="login_sessions">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="AccountId" Type="nvarchar" MaxLength="8" Nullable="false" />
+          <Property Name="Token" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="ExpiresAt" Type="datetime2" Precision="7" Nullable="false" />
+          <Property Name="Id" Type="nvarchar" MaxLength="8" Nullable="false" />
+        </EntityType>
+        <EntityType Name="owner_profile">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="nvarchar" MaxLength="8" Nullable="false" />
+          <Property Name="FirstName" Type="nvarchar" MaxLength="35" Nullable="false" />
+          <Property Name="MiddleName" Type="nvarchar" MaxLength="35" />
+          <Property Name="LastName" Type="nvarchar" MaxLength="35" Nullable="false" />
+        </EntityType>
+        <EntityType Name="pet_breeds">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="CategoryId" Type="int" Nullable="false" />
+          <Property Name="Breed" Type="nvarchar" MaxLength="25" Nullable="false" />
+        </EntityType>
+        <EntityType Name="pet_category">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Category" Type="nvarchar" MaxLength="25" Nullable="false" />
+        </EntityType>
+        <EntityType Name="pet_profile">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="nvarchar" MaxLength="8" Nullable="false" />
+          <Property Name="OwnerId" Type="nvarchar" MaxLength="8" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="35" Nullable="false" />
+          <Property Name="Birthdate" Type="date" Nullable="false" />
+          <Property Name="CategoryId" Type="int" Nullable="false" />
+          <Property Name="BreedId" Type="int" />
+          <Property Name="Color" Type="nvarchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'PetBook.dbo.ClinicProfile' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="ClinicProfile">
+          <Key>
+            <PropertyRef Name="Id" />
+            <PropertyRef Name="ClinicName" />
+            <PropertyRef Name="VetFirstName" />
+            <PropertyRef Name="VetLastName" />
+            <PropertyRef Name="Line" />
+            <PropertyRef Name="Barangay" />
+            <PropertyRef Name="City" />
+            <PropertyRef Name="Country" />
+            <PropertyRef Name="contactId" />
+          </Key>
+          <Property Name="Id" Type="nvarchar" MaxLength="8" Nullable="false" />
+          <Property Name="ClinicName" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="VetFirstName" Type="nvarchar" MaxLength="35" Nullable="false" />
+          <Property Name="VetMiddleName" Type="nvarchar" MaxLength="35" />
+          <Property Name="VetLastName" Type="nvarchar" MaxLength="35" Nullable="false" />
+          <Property Name="Line" Type="nvarchar" MaxLength="64" Nullable="false" />
+          <Property Name="Barangay" Type="nvarchar" MaxLength="35" Nullable="false" />
+          <Property Name="City" Type="nvarchar" MaxLength="35" Nullable="false" />
+          <Property Name="Country" Type="nvarchar" MaxLength="35" Nullable="false" />
+          <Property Name="contactId" Type="nvarchar" MaxLength="8" Nullable="false" />
+          <Property Name="Contact" Type="nvarchar" MaxLength="15" />
+          <Property Name="Followers" Type="int" />
+          <Property Name="Rating" Type="float" />
+          <Property Name="Latitude" Type="decimal" Precision="8" Scale="6" />
+          <Property Name="Longitude" Type="decimal" Precision="9" Scale="6" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'PetBook.dbo.OwnerProfile' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="OwnerProfile">
+          <Key>
+            <PropertyRef Name="Id" />
+            <PropertyRef Name="FirstName" />
+            <PropertyRef Name="LastName" />
+            <PropertyRef Name="Line" />
+            <PropertyRef Name="Barangay" />
+            <PropertyRef Name="City" />
+            <PropertyRef Name="Country" />
+            <PropertyRef Name="contactId" />
+            <PropertyRef Name="Contact" />
+          </Key>
+          <Property Name="Id" Type="nvarchar" MaxLength="8" Nullable="false" />
+          <Property Name="FirstName" Type="nvarchar" MaxLength="35" Nullable="false" />
+          <Property Name="MiddleName" Type="nvarchar" MaxLength="35" />
+          <Property Name="LastName" Type="nvarchar" MaxLength="35" Nullable="false" />
+          <Property Name="Line" Type="nvarchar" MaxLength="35" Nullable="false" />
+          <Property Name="Barangay" Type="nvarchar" MaxLength="35" Nullable="false" />
+          <Property Name="City" Type="nvarchar" MaxLength="35" Nullable="false" />
+          <Property Name="Country" Type="nvarchar" MaxLength="35" Nullable="false" />
+          <Property Name="contactId" Type="nvarchar" MaxLength="8" Nullable="false" />
+          <Property Name="Contact" Type="nvarchar" MaxLength="15" Nullable="false" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'PetBook.dbo.PetProfile' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="PetProfile">
+          <Key>
+            <PropertyRef Name="Line" />
+            <PropertyRef Name="Barangay" />
+            <PropertyRef Name="City" />
+            <PropertyRef Name="Country" />
+            <PropertyRef Name="Contact" />
+            <PropertyRef Name="ContactId" />
+          </Key>
+          <Property Name="Id" Type="nvarchar" MaxLength="8" />
+          <Property Name="OwnerId" Type="nvarchar" MaxLength="8" />
+          <Property Name="Name" Type="nvarchar" MaxLength="35" />
+          <Property Name="Birthdate" Type="date" />
+          <Property Name="Color" Type="nvarchar" MaxLength="50" />
+          <Property Name="Line" Type="nvarchar" MaxLength="35" Nullable="false" />
+          <Property Name="Barangay" Type="nvarchar" MaxLength="35" Nullable="false" />
+          <Property Name="City" Type="nvarchar" MaxLength="35" Nullable="false" />
+          <Property Name="Country" Type="nvarchar" MaxLength="35" Nullable="false" />
+          <Property Name="Followers" Type="int" />
+          <Property Name="Following" Type="int" />
+          <Property Name="Category" Type="nvarchar" MaxLength="25" />
+          <Property Name="Breed" Type="nvarchar" MaxLength="25" />
+          <Property Name="Contact" Type="nvarchar" MaxLength="15" Nullable="false" />
+          <Property Name="ContactId" Type="nvarchar" MaxLength="8" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_account_credential_account_type">
+          <End Role="account_type" Type="Self.account_type" Multiplicity="1" />
+          <End Role="account_credential" Type="Self.account_credential" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="account_type">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="account_credential">
+              <PropertyRef Name="AccountTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_login_sessions_account_credential">
+          <End Role="account_credential" Type="Self.account_credential" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="login_sessions" Type="Self.login_sessions" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="account_credential">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="login_sessions">
+              <PropertyRef Name="AccountId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_pet_breeds_pet_category">
+          <End Role="pet_category" Type="Self.pet_category" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="pet_breeds" Type="Self.pet_breeds" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="pet_category">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="pet_breeds">
+              <PropertyRef Name="CategoryId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_pet_profile_owner_profile">
+          <End Role="owner_profile" Type="Self.owner_profile" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="pet_profile" Type="Self.pet_profile" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="owner_profile">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="pet_profile">
+              <PropertyRef Name="OwnerId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_pet_profile_pet_breeds">
+          <End Role="pet_breeds" Type="Self.pet_breeds" Multiplicity="0..1" />
+          <End Role="pet_profile" Type="Self.pet_profile" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="pet_breeds">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="pet_profile">
+              <PropertyRef Name="BreedId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_pet_profile_pet_category">
+          <End Role="pet_category" Type="Self.pet_category" Multiplicity="1" />
+          <End Role="pet_profile" Type="Self.pet_profile" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="pet_category">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="pet_profile">
+              <PropertyRef Name="CategoryId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="MainDBModelStoreContainer">
+          <EntitySet Name="account_credential" EntityType="Self.account_credential" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="account_type" EntityType="Self.account_type" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="login_sessions" EntityType="Self.login_sessions" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="owner_profile" EntityType="Self.owner_profile" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="pet_breeds" EntityType="Self.pet_breeds" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="pet_category" EntityType="Self.pet_category" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="pet_profile" EntityType="Self.pet_profile" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ClinicProfile" EntityType="Self.ClinicProfile" store:Type="Views" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [ClinicProfile].[Id] AS [Id], 
+    [ClinicProfile].[ClinicName] AS [ClinicName], 
+    [ClinicProfile].[VetFirstName] AS [VetFirstName], 
+    [ClinicProfile].[VetMiddleName] AS [VetMiddleName], 
+    [ClinicProfile].[VetLastName] AS [VetLastName], 
+    [ClinicProfile].[Line] AS [Line], 
+    [ClinicProfile].[Barangay] AS [Barangay], 
+    [ClinicProfile].[City] AS [City], 
+    [ClinicProfile].[Country] AS [Country], 
+    [ClinicProfile].[contactId] AS [contactId], 
+    [ClinicProfile].[Contact] AS [Contact], 
+    [ClinicProfile].[Followers] AS [Followers], 
+    [ClinicProfile].[Rating] AS [Rating], 
+    [ClinicProfile].[Latitude] AS [Latitude], 
+    [ClinicProfile].[Longitude] AS [Longitude]
+    FROM [dbo].[ClinicProfile] AS [ClinicProfile]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="OwnerProfile" EntityType="Self.OwnerProfile" store:Type="Views" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [OwnerProfile].[Id] AS [Id], 
+    [OwnerProfile].[FirstName] AS [FirstName], 
+    [OwnerProfile].[MiddleName] AS [MiddleName], 
+    [OwnerProfile].[LastName] AS [LastName], 
+    [OwnerProfile].[Line] AS [Line], 
+    [OwnerProfile].[Barangay] AS [Barangay], 
+    [OwnerProfile].[City] AS [City], 
+    [OwnerProfile].[Country] AS [Country], 
+    [OwnerProfile].[contactId] AS [contactId], 
+    [OwnerProfile].[Contact] AS [Contact]
+    FROM [dbo].[OwnerProfile] AS [OwnerProfile]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="PetProfile" EntityType="Self.PetProfile" store:Type="Views" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [PetProfile].[Id] AS [Id], 
+    [PetProfile].[OwnerId] AS [OwnerId], 
+    [PetProfile].[Name] AS [Name], 
+    [PetProfile].[Birthdate] AS [Birthdate], 
+    [PetProfile].[Color] AS [Color], 
+    [PetProfile].[Line] AS [Line], 
+    [PetProfile].[Barangay] AS [Barangay], 
+    [PetProfile].[City] AS [City], 
+    [PetProfile].[Country] AS [Country], 
+    [PetProfile].[Followers] AS [Followers], 
+    [PetProfile].[Following] AS [Following], 
+    [PetProfile].[Category] AS [Category], 
+    [PetProfile].[Breed] AS [Breed], 
+    [PetProfile].[Contact] AS [Contact], 
+    [PetProfile].[ContactId] AS [ContactId]
+    FROM [dbo].[PetProfile] AS [PetProfile]</DefiningQuery>
+          </EntitySet>
+          <AssociationSet Name="FK_account_credential_account_type" Association="Self.FK_account_credential_account_type">
+            <End Role="account_type" EntitySet="account_type" />
+            <End Role="account_credential" EntitySet="account_credential" />
+          </AssociationSet>
+          <AssociationSet Name="FK_login_sessions_account_credential" Association="Self.FK_login_sessions_account_credential">
+            <End Role="account_credential" EntitySet="account_credential" />
+            <End Role="login_sessions" EntitySet="login_sessions" />
+          </AssociationSet>
+          <AssociationSet Name="FK_pet_breeds_pet_category" Association="Self.FK_pet_breeds_pet_category">
+            <End Role="pet_category" EntitySet="pet_category" />
+            <End Role="pet_breeds" EntitySet="pet_breeds" />
+          </AssociationSet>
+          <AssociationSet Name="FK_pet_profile_owner_profile" Association="Self.FK_pet_profile_owner_profile">
+            <End Role="owner_profile" EntitySet="owner_profile" />
+            <End Role="pet_profile" EntitySet="pet_profile" />
+          </AssociationSet>
+          <AssociationSet Name="FK_pet_profile_pet_breeds" Association="Self.FK_pet_profile_pet_breeds">
+            <End Role="pet_breeds" EntitySet="pet_breeds" />
+            <End Role="pet_profile" EntitySet="pet_profile" />
+          </AssociationSet>
+          <AssociationSet Name="FK_pet_profile_pet_category" Association="Self.FK_pet_profile_pet_category">
+            <End Role="pet_category" EntitySet="pet_category" />
+            <End Role="pet_profile" EntitySet="pet_profile" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="MainDBModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="login_sessions">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="AccountId" Type="String" MaxLength="8" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Token" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="ExpiresAt" Type="DateTime" Nullable="false" Precision="7" />
+          <Property Name="Id" Type="String" MaxLength="8" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="account_credential" Relationship="MainDBModel.FK_login_sessions_account_credential" FromRole="login_sessions" ToRole="account_credential" />
+        </EntityType>
+        <EntityType Name="pet_breeds">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CategoryId" Type="Int32" Nullable="false" />
+          <Property Name="Breed" Type="String" MaxLength="25" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="pet_category" Relationship="Self.FK_pet_breeds_pet_category" FromRole="pet_breeds" ToRole="pet_category" />
+          <NavigationProperty Name="pet_profile" Relationship="MainDBModel.FK_pet_profile_pet_breeds" FromRole="pet_breeds" ToRole="pet_profile" />
+        </EntityType>
+        <EntityType Name="pet_category">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Category" Type="String" MaxLength="25" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="pet_breeds" Relationship="Self.FK_pet_breeds_pet_category" FromRole="pet_category" ToRole="pet_breeds" />
+          <NavigationProperty Name="pet_profile" Relationship="MainDBModel.FK_pet_profile_pet_category" FromRole="pet_category" ToRole="pet_profile" />
+        </EntityType>
+        <EntityType Name="ClinicProfile">
+          <Key>
+            <PropertyRef Name="Id" />
+            <PropertyRef Name="ClinicName" />
+            <PropertyRef Name="VetFirstName" />
+            <PropertyRef Name="VetLastName" />
+            <PropertyRef Name="Line" />
+            <PropertyRef Name="Barangay" />
+            <PropertyRef Name="City" />
+            <PropertyRef Name="Country" />
+            <PropertyRef Name="contactId" />
+          </Key>
+          <Property Name="Id" Type="String" MaxLength="8" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="ClinicName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="VetFirstName" Type="String" MaxLength="35" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="VetMiddleName" Type="String" MaxLength="35" FixedLength="false" Unicode="true" />
+          <Property Name="VetLastName" Type="String" MaxLength="35" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Line" Type="String" MaxLength="64" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Barangay" Type="String" MaxLength="35" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="City" Type="String" MaxLength="35" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Country" Type="String" MaxLength="35" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="contactId" Type="String" MaxLength="8" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Contact" Type="String" MaxLength="15" FixedLength="false" Unicode="true" />
+          <Property Name="Followers" Type="Int32" />
+          <Property Name="Rating" Type="Double" />
+          <Property Name="Latitude" Type="Decimal" Precision="8" Scale="6" />
+          <Property Name="Longitude" Type="Decimal" Precision="9" Scale="6" />
+        </EntityType>
+        <EntityType Name="OwnerProfile">
+          <Key>
+            <PropertyRef Name="Id" />
+            <PropertyRef Name="FirstName" />
+            <PropertyRef Name="LastName" />
+            <PropertyRef Name="Line" />
+            <PropertyRef Name="Barangay" />
+            <PropertyRef Name="City" />
+            <PropertyRef Name="Country" />
+            <PropertyRef Name="contactId" />
+            <PropertyRef Name="Contact" />
+          </Key>
+          <Property Name="Id" Type="String" MaxLength="8" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="FirstName" Type="String" MaxLength="35" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="MiddleName" Type="String" MaxLength="35" FixedLength="false" Unicode="true" />
+          <Property Name="LastName" Type="String" MaxLength="35" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Line" Type="String" MaxLength="35" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Barangay" Type="String" MaxLength="35" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="City" Type="String" MaxLength="35" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Country" Type="String" MaxLength="35" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="contactId" Type="String" MaxLength="8" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Contact" Type="String" MaxLength="15" FixedLength="false" Unicode="true" Nullable="false" />
+        </EntityType>
+        <EntityType Name="PetProfile">
+          <Key>
+            <PropertyRef Name="Line" />
+            <PropertyRef Name="Barangay" />
+            <PropertyRef Name="City" />
+            <PropertyRef Name="Country" />
+            <PropertyRef Name="Contact" />
+            <PropertyRef Name="ContactId" />
+          </Key>
+          <Property Name="Id" Type="String" MaxLength="8" FixedLength="false" Unicode="true" />
+          <Property Name="OwnerId" Type="String" MaxLength="8" FixedLength="false" Unicode="true" />
+          <Property Name="Name" Type="String" MaxLength="35" FixedLength="false" Unicode="true" />
+          <Property Name="Birthdate" Type="DateTime" Precision="0" />
+          <Property Name="Color" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Line" Type="String" MaxLength="35" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Barangay" Type="String" MaxLength="35" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="City" Type="String" MaxLength="35" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Country" Type="String" MaxLength="35" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Followers" Type="Int32" />
+          <Property Name="Following" Type="Int32" />
+          <Property Name="Category" Type="String" MaxLength="25" FixedLength="false" Unicode="true" />
+          <Property Name="Breed" Type="String" MaxLength="25" FixedLength="false" Unicode="true" />
+          <Property Name="Contact" Type="String" MaxLength="15" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="ContactId" Type="String" MaxLength="8" FixedLength="false" Unicode="true" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_pet_breeds_pet_category">
+          <End Role="pet_category" Type="Self.pet_category" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="pet_breeds" Type="Self.pet_breeds" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="pet_category">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="pet_breeds">
+              <PropertyRef Name="CategoryId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="MainDBEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="login_sessions" EntityType="Self.login_sessions" />
+          <EntitySet Name="pet_breeds" EntityType="Self.pet_breeds" />
+          <EntitySet Name="pet_category" EntityType="Self.pet_category" />
+          <EntitySet Name="ClinicProfiles" EntityType="Self.ClinicProfile" />
+          <EntitySet Name="OwnerProfiles" EntityType="Self.OwnerProfile" />
+          <EntitySet Name="PetProfiles" EntityType="Self.PetProfile" />
+          <AssociationSet Name="FK_pet_breeds_pet_category" Association="Self.FK_pet_breeds_pet_category">
+            <End Role="pet_category" EntitySet="pet_category" />
+            <End Role="pet_breeds" EntitySet="pet_breeds" />
+          </AssociationSet>
+          <EntitySet Name="account_credential" EntityType="MainDBModel.account_credential" />
+          <AssociationSet Name="FK_login_sessions_account_credential" Association="MainDBModel.FK_login_sessions_account_credential">
+            <End Role="account_credential" EntitySet="account_credential" />
+            <End Role="login_sessions" EntitySet="login_sessions" />
+          </AssociationSet>
+          <EntitySet Name="account_type" EntityType="MainDBModel.account_type" />
+          <AssociationSet Name="FK_account_credential_account_type" Association="MainDBModel.FK_account_credential_account_type">
+            <End Role="account_type" EntitySet="account_type" />
+            <End Role="account_credential" EntitySet="account_credential" />
+          </AssociationSet>
+          <EntitySet Name="pet_profile" EntityType="MainDBModel.pet_profile" />
+          <AssociationSet Name="FK_pet_profile_pet_breeds" Association="MainDBModel.FK_pet_profile_pet_breeds">
+            <End Role="pet_breeds" EntitySet="pet_breeds" />
+            <End Role="pet_profile" EntitySet="pet_profile" />
+          </AssociationSet>
+          <AssociationSet Name="FK_pet_profile_pet_category" Association="MainDBModel.FK_pet_profile_pet_category">
+            <End Role="pet_category" EntitySet="pet_category" />
+            <End Role="pet_profile" EntitySet="pet_profile" />
+          </AssociationSet>
+          <EntitySet Name="owner_profile" EntityType="MainDBModel.owner_profile" />
+          <AssociationSet Name="FK_pet_profile_owner_profile" Association="MainDBModel.FK_pet_profile_owner_profile">
+            <End Role="owner_profile" EntitySet="owner_profile" />
+            <End Role="pet_profile" EntitySet="pet_profile" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="account_credential">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="String" Nullable="false" MaxLength="8" FixedLength="false" Unicode="true" />
+          <Property Name="Email" Type="String" Nullable="false" MaxLength="60" FixedLength="false" Unicode="true" />
+          <Property Name="Username" Type="String" Nullable="false" MaxLength="16" FixedLength="false" Unicode="true" />
+          <Property Name="Password" Type="String" Nullable="false" MaxLength="60" FixedLength="false" Unicode="true" />
+          <Property Name="AccountTypeId" Type="Int32" Nullable="false" />
+          <Property Name="IsArchived" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="login_sessions" Relationship="MainDBModel.FK_login_sessions_account_credential" FromRole="account_credential" ToRole="login_sessions" />
+          <NavigationProperty Name="account_type" Relationship="MainDBModel.FK_account_credential_account_type" FromRole="account_credential" ToRole="account_type" />
+        </EntityType>
+        <Association Name="FK_login_sessions_account_credential">
+          <End Type="MainDBModel.account_credential" Role="account_credential" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="MainDBModel.login_sessions" Role="login_sessions" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="account_credential">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="login_sessions">
+              <PropertyRef Name="AccountId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="account_type">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" />
+          <Property Name="Value" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="account_credential" Relationship="MainDBModel.FK_account_credential_account_type" FromRole="account_type" ToRole="account_credential" />
+        </EntityType>
+        <Association Name="FK_account_credential_account_type">
+          <End Type="MainDBModel.account_type" Role="account_type" Multiplicity="1" />
+          <End Type="MainDBModel.account_credential" Role="account_credential" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="account_type">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="account_credential">
+              <PropertyRef Name="AccountTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="pet_profile">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="String" Nullable="false" MaxLength="8" FixedLength="false" Unicode="true" />
+          <Property Name="OwnerId" Type="String" Nullable="false" MaxLength="8" FixedLength="false" Unicode="true" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="35" FixedLength="false" Unicode="true" />
+          <Property Name="Birthdate" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="CategoryId" Type="Int32" Nullable="false" />
+          <Property Name="BreedId" Type="Int32" />
+          <Property Name="Color" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="pet_breeds" Relationship="MainDBModel.FK_pet_profile_pet_breeds" FromRole="pet_profile" ToRole="pet_breeds" />
+          <NavigationProperty Name="pet_category" Relationship="MainDBModel.FK_pet_profile_pet_category" FromRole="pet_profile" ToRole="pet_category" />
+          <NavigationProperty Name="owner_profile" Relationship="MainDBModel.FK_pet_profile_owner_profile" FromRole="pet_profile" ToRole="owner_profile" />
+        </EntityType>
+        <Association Name="FK_pet_profile_pet_breeds">
+          <End Type="MainDBModel.pet_breeds" Role="pet_breeds" Multiplicity="0..1" />
+          <End Type="MainDBModel.pet_profile" Role="pet_profile" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="pet_breeds">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="pet_profile">
+              <PropertyRef Name="BreedId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_pet_profile_pet_category">
+          <End Type="MainDBModel.pet_category" Role="pet_category" Multiplicity="1" />
+          <End Type="MainDBModel.pet_profile" Role="pet_profile" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="pet_category">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="pet_profile">
+              <PropertyRef Name="CategoryId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="owner_profile">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="String" Nullable="false" MaxLength="8" FixedLength="false" Unicode="true" />
+          <Property Name="FirstName" Type="String" Nullable="false" MaxLength="35" FixedLength="false" Unicode="true" />
+          <Property Name="MiddleName" Type="String" MaxLength="35" FixedLength="false" Unicode="true" />
+          <Property Name="LastName" Type="String" Nullable="false" MaxLength="35" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="pet_profile" Relationship="MainDBModel.FK_pet_profile_owner_profile" FromRole="owner_profile" ToRole="pet_profile" />
+        </EntityType>
+        <Association Name="FK_pet_profile_owner_profile">
+          <End Type="MainDBModel.owner_profile" Role="owner_profile" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="MainDBModel.pet_profile" Role="pet_profile" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="owner_profile">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="pet_profile">
+              <PropertyRef Name="OwnerId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="MainDBModelStoreContainer" CdmEntityContainer="MainDBEntities">
+          <EntitySetMapping Name="login_sessions">
+            <EntityTypeMapping TypeName="MainDBModel.login_sessions">
+              <MappingFragment StoreEntitySet="login_sessions">
+                <ScalarProperty Name="AccountId" ColumnName="AccountId" />
+                <ScalarProperty Name="Token" ColumnName="Token" />
+                <ScalarProperty Name="ExpiresAt" ColumnName="ExpiresAt" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="pet_breeds">
+            <EntityTypeMapping TypeName="MainDBModel.pet_breeds">
+              <MappingFragment StoreEntitySet="pet_breeds">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="CategoryId" ColumnName="CategoryId" />
+                <ScalarProperty Name="Breed" ColumnName="Breed" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="pet_category">
+            <EntityTypeMapping TypeName="MainDBModel.pet_category">
+              <MappingFragment StoreEntitySet="pet_category">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Category" ColumnName="Category" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ClinicProfiles">
+            <EntityTypeMapping TypeName="MainDBModel.ClinicProfile">
+              <MappingFragment StoreEntitySet="ClinicProfile">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="ClinicName" ColumnName="ClinicName" />
+                <ScalarProperty Name="VetFirstName" ColumnName="VetFirstName" />
+                <ScalarProperty Name="VetMiddleName" ColumnName="VetMiddleName" />
+                <ScalarProperty Name="VetLastName" ColumnName="VetLastName" />
+                <ScalarProperty Name="Line" ColumnName="Line" />
+                <ScalarProperty Name="Barangay" ColumnName="Barangay" />
+                <ScalarProperty Name="City" ColumnName="City" />
+                <ScalarProperty Name="Country" ColumnName="Country" />
+                <ScalarProperty Name="contactId" ColumnName="contactId" />
+                <ScalarProperty Name="Contact" ColumnName="Contact" />
+                <ScalarProperty Name="Followers" ColumnName="Followers" />
+                <ScalarProperty Name="Rating" ColumnName="Rating" />
+                <ScalarProperty Name="Latitude" ColumnName="Latitude" />
+                <ScalarProperty Name="Longitude" ColumnName="Longitude" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="OwnerProfiles">
+            <EntityTypeMapping TypeName="MainDBModel.OwnerProfile">
+              <MappingFragment StoreEntitySet="OwnerProfile">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+                <ScalarProperty Name="MiddleName" ColumnName="MiddleName" />
+                <ScalarProperty Name="LastName" ColumnName="LastName" />
+                <ScalarProperty Name="Line" ColumnName="Line" />
+                <ScalarProperty Name="Barangay" ColumnName="Barangay" />
+                <ScalarProperty Name="City" ColumnName="City" />
+                <ScalarProperty Name="Country" ColumnName="Country" />
+                <ScalarProperty Name="contactId" ColumnName="contactId" />
+                <ScalarProperty Name="Contact" ColumnName="Contact" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PetProfiles">
+            <EntityTypeMapping TypeName="MainDBModel.PetProfile">
+              <MappingFragment StoreEntitySet="PetProfile">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="OwnerId" ColumnName="OwnerId" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Birthdate" ColumnName="Birthdate" />
+                <ScalarProperty Name="Color" ColumnName="Color" />
+                <ScalarProperty Name="Line" ColumnName="Line" />
+                <ScalarProperty Name="Barangay" ColumnName="Barangay" />
+                <ScalarProperty Name="City" ColumnName="City" />
+                <ScalarProperty Name="Country" ColumnName="Country" />
+                <ScalarProperty Name="Followers" ColumnName="Followers" />
+                <ScalarProperty Name="Following" ColumnName="Following" />
+                <ScalarProperty Name="Category" ColumnName="Category" />
+                <ScalarProperty Name="Breed" ColumnName="Breed" />
+                <ScalarProperty Name="Contact" ColumnName="Contact" />
+                <ScalarProperty Name="ContactId" ColumnName="ContactId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="account_credential">
+            <EntityTypeMapping TypeName="MainDBModel.account_credential">
+              <MappingFragment StoreEntitySet="account_credential">
+                <ScalarProperty Name="IsArchived" ColumnName="IsArchived" />
+                <ScalarProperty Name="AccountTypeId" ColumnName="AccountTypeId" />
+                <ScalarProperty Name="Password" ColumnName="Password" />
+                <ScalarProperty Name="Username" ColumnName="Username" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="account_type">
+            <EntityTypeMapping TypeName="MainDBModel.account_type">
+              <MappingFragment StoreEntitySet="account_type">
+                <ScalarProperty Name="Value" ColumnName="Value" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="pet_profile">
+            <EntityTypeMapping TypeName="MainDBModel.pet_profile">
+              <MappingFragment StoreEntitySet="pet_profile">
+                <ScalarProperty Name="Color" ColumnName="Color" />
+                <ScalarProperty Name="BreedId" ColumnName="BreedId" />
+                <ScalarProperty Name="CategoryId" ColumnName="CategoryId" />
+                <ScalarProperty Name="Birthdate" ColumnName="Birthdate" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="OwnerId" ColumnName="OwnerId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="owner_profile">
+            <EntityTypeMapping TypeName="MainDBModel.owner_profile">
+              <MappingFragment StoreEntitySet="owner_profile">
+                <ScalarProperty Name="LastName" ColumnName="LastName" />
+                <ScalarProperty Name="MiddleName" ColumnName="MiddleName" />
+                <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

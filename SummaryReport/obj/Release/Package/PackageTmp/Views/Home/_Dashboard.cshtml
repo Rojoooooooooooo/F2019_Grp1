@@ -1,0 +1,56 @@
+﻿
+<div class="h-100 w-100 d-flex flex-column justify-content-center align-items-center">
+    <h1>Pet Paradise Summary Report</h1>
+
+    <div class="w-75 d-flex flex-row flex-wrap justify-content-start align-items-center p-4 gap-4">
+        <div class="d-flex flex-column align-items-center justify-content-center shadow p-4">
+            <h1 class="fw-bolder">@ViewBag.RegisteredUsers <i class="fa-solid fa-users"></i></h1>
+            <h5>Total Users Registered</h5>
+        </div>
+        <div class="d-flex flex-column align-items-center justify-content-center shadow p-4">
+            <canvas id="usersRegisteredDitro" class="w-100 h-100"></canvas>
+        </div>
+        <div class="d-flex flex-column align-items-center justify-content-center shadow p-4">
+            <h1 class="fw-bolder">@ViewBag.PetsCount <i class="fa-solid fa-paw"></i></h1>
+            <h5>Total Existing Pets</h5>
+        </div>
+        <div class="d-flex flex-column align-items-center justify-content-center shadow p-4">
+            <h1 class="fw-bolder">@ViewBag.AvePetPerOwner <i class="fa-solid fa-paw"></i></h1>
+            <h5>Average Pets per Owner</h5>
+        </div>
+        <div class="d-flex flex-column align-items-center justify-content-center shadow p-4">
+            <h1 class="fw-bolder">@ViewBag.AvePetAge <i class="fa-solid fa-cake-candles"></i></h1>
+            <h5>Average Age of Pets</h5>
+        </div>
+    </div>
+</div>
+
+<script>
+    const ctx = document.getElementById('usersRegisteredDitro').getContext('2d');
+    const myChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: ['Owners', 'Clinics'],
+            datasets: [{
+                label: 'Users Distribution according to types',
+                data: [@ViewBag.OwnersCount, @ViewBag.ClinicsCount],
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.5)',
+                    'rgba(54, 162, 235, 0.5)'
+                ],
+                borderColor: [
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(54, 162, 235, 1)'
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+</script>

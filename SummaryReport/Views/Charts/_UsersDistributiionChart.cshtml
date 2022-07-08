@@ -1,0 +1,9 @@
+﻿
+@{
+    var chart = new Chart(width: 200, height: 200, theme: ChartTheme.Vanilla)
+                .AddTitle("Registered Users Distribution")
+                .AddSeries(chartType: "column",
+                xValue: new[] { "Owners", "Clinics" },
+                yValues: new[] { ViewBag.OwnersCount, ViewBag.ClinicsCount })
+        .Write();
+}
