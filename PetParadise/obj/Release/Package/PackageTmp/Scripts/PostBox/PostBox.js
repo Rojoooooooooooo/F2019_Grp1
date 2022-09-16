@@ -135,31 +135,33 @@
     }
 }
 
-/*
- * JavaScript Pretty Date
- * Copyright (c) 2011 John Resig (ejohn.org)
- * Licensed under the MIT and GPL licenses.
- */
-
-// Takes an ISO time and returns a string representing how
-// long ago the date represents.
-function prettyDate(time) {
-    var date = new Date((time || "").replace(/-/g, "/").replace(/[TZ]/g, " ")),
-		diff = (((new Date()).getTime() - date.getTime()) / 1000),
-		day_diff = Math.floor(diff / 86400);
-
-    if (isNaN(day_diff) || day_diff < 0 || day_diff >= 31)
-        return;
-
-    return day_diff == 0 && (
-			diff < 60 && "just now" ||
-			diff < 120 && "1 minute ago" ||
-			diff < 3600 && Math.floor(diff / 60) + " minutes ago" ||
-			diff < 7200 && "1 hour ago" ||
-			diff < 86400 && Math.floor(diff / 3600) + " hours ago") ||
-		day_diff == 1 && "Yesterday" ||
-		day_diff < 7 && day_diff + " days ago" ||
-		day_diff < 31 && Math.ceil(day_diff / 7) + " weeks ago";
+function prettyDate(date) {
+    var seconds = Math.floor((new Date() - date) / 1000);
+    var interval = Math.floor(seconds / 31536000);
+    if (interval > 1) {
+        return interval + " years ago";
+    }
+    interval = Math.floor(seconds / 2592000);
+    if (interval > 1) {
+        return interval + " months ago";
+    }
+    interval = Math.floor(seconds / 604800);
+    if (interval > 1) {
+        return interval + " weeks ago";
+    }
+    interval = Math.floor(seconds / 86400);
+    if (interval > 1) {
+        return interval + " days ago";
+    }
+    interval = Math.floor(seconds / 3600);
+    if (interval > 1) {
+        return interval + " hours ago";
+    }
+    interval = Math.floor(seconds / 60);
+    if (interval > 1) {
+        return interval + " minutes ago";
+    }
+    return Math.floor(seconds) + " seconds ago";
 }
 
 
@@ -173,12 +175,11 @@ function UTCToLocal(utcDate) {
 
 function magicDate(utcdatestring) {
     const d = UTCToLocal(utcdatestring).toLocaleString("en");
-    
-    const pd = prettyDate(d);
+    const pd = prettyDate(new Date(d));
     return pd;
 }
 
-//// If jQuery is included in the page, adds a jQuery plugin to handle it as well
+// If jQuery is included in the page, adds a jQuery plugin to handle it as well
 //if (typeof jQuery != "undefined")
 //    jQuery.fn.prettyDate = function () {
 //        return this.each(function () {
