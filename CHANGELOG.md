@@ -1,6 +1,18 @@
 # Changelog
 > The source code is also available in the [source-code branch](https://github.com/Rojoooooooooooo/F2019_Grp1/tree/source-code). Standby for regular updates.
 
+## As of 10/22/2022
+
+**Few Changes** 
+ - Some colors for components are changed
+ - Added CORS for transitioning to a new user interface while keeping the backend. (Soon)
+ - Fixed bug on toggleLike function–bug resulted in a multiple likes by one liker to a one specific post.
+ - Date bug fixed again.
+ - Date format for post dates and comment dates updated.
+ 
+> **Note:** This is a preparation for an incoming Systems Fair. We had no time to transition to a new and better 
+> user interface but soon it might be supported.
+
 ## As of 07/06/2022
 
 **Major Features Updated** 
