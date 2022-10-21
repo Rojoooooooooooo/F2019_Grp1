@@ -1,0 +1,145 @@
+﻿@model PetParadise.Models.Body.OwnerInformationModel
+
+@using (Html.BeginForm("Signup", "Home", FormMethod.Post, new { @class = "d-flex flex-column justify-content-center align-items-center gap-2" }))
+{
+    <div class="w-25 d-flex flex-column justify-content-center align-items-start flex-wrap gap-2">
+        <h2>Create your Profile</h2>
+
+        <label class="align-items-start">Full Name</label>
+        <div class="w-100 d-flex flex-row gap-2 justify-content-start align-items-start">
+            <div class="flex-grow-1">
+                @Html.EditorFor(model => model.FirstName, new { htmlAttributes = new { @class = "form-control", placeholder = "First Name" } })
+                @Html.ValidationMessageFor(model => model.FirstName, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="w-100 d-flex flex-row gap-2">
+            <div class="flex-grow-1">
+                @Html.EditorFor(model => model.MiddleName, new { htmlAttributes = new { @class = "form-control", placeholder = "Middle Name" } })
+                @Html.ValidationMessageFor(model => model.MiddleName, "", new { @class = "text-danger" })
+            </div>
+            <div class="flex-grow-1">
+                @Html.EditorFor(model => model.LastName, new { htmlAttributes = new { @class = "form-control", placeholder = "Last Name" } })
+                @Html.ValidationMessageFor(model => model.LastName, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <label> Contact</label>
+
+        <div class="w-100 d-flex flex-row gap-2 justify-content-start align-items-start">
+            <div class="flex-grow-1">
+                @Html.EditorFor(model => model.Contact, new { htmlAttributes = new { @class = "form-control", placeholder = "Mobile Number" } })
+                @Html.ValidationMessageFor(model => model.Contact, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <label>Address Line</label>
+
+        <div class="w-100 d-flex flex-row gap-2 justify-content-start align-items-start">
+            <div class="w-100">
+                @Html.EditorFor(model => model.Line, new { htmlAttributes = new { @class = "form-control", placeholder = "Room/Floor/House #/Block/Lot/Street" } })
+                @Html.ValidationMessageFor(model => model.Line, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+
+        <div class="w-100 d-flex flex-row gap-2 justify-content-start align-items-start">
+            <div class="w-100">
+                @Html.EditorFor(model => model.Barangay, new { htmlAttributes = new { @class = "form-control", placeholder = "Barangay/Village/Subdivision" } })
+                @Html.ValidationMessageFor(model => model.Barangay, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="w-100 d-flex flex-row gap-2">
+            <div class="flex-grow-1">
+                @Html.EditorFor(model => model.City, new { htmlAttributes = new { @class = "form-control", placeholder = "City" } })
+                @Html.ValidationMessageFor(model => model.City, "", new { @class = "text-danger" })
+            </div>
+
+
+            <div class="flex-grow-1">
+                @Html.EditorFor(model => model.Country, new { htmlAttributes = new { @class = "form-control", placeholder = "Country" } })
+                @Html.ValidationMessageFor(model => model.Country, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div id="validationNotes" class="w-100">
+            <ul id="notes-container"></ul>
+        </div>
+
+        <div class="w-100">
+            <button type="submit" value="Save Profile" class="w-100 btn btn-outline-light sbg-darker">Save Profile</button>
+        </div>
+    </div>
+}
+
+<script>
+    const validator = new Validator("#notes-container");
+    const url = '/user/owner';
+    $('form').submit((e) => {
+
+        e.preventDefault();
+        validator.removeErrors();
+
+        $('#loader').show(300);
+
+        const firstName = $('#FirstName').val();
+        const middleName = $('#MiddleName').val();
+        const lastName = $('#LastName').val();
+
+        const contact = $('#Contact').val();
+        const line = $('#Line').val();
+        const barangay = $('#Barangay').val();
+        const city = $('#City').val();
+        const country = $('#Country').val();
+
+        if (!firstName || !lastName || !contact || !line || !barangay || !city || !country) {
+            validator.addError(new InvalidObject("All", "Please fill out all required fields."));
+            validator.updateParent();
+            return $('#loader').hide();
+        }
+
+        const data = {
+            firstName,
+            middleName,
+            lastName,
+            contact,
+            line,
+            barangay,
+            city,
+            country
+        };
+
+        fetch(url, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": "Bearer " + getSessionToken()
+            },
+            body: JSON.stringify(data)
+        })
+        .then(res=>res.json())
+        .then(data => {
+            console.log(data);
+            if (data.stack) {
+                const stack = data.stack;
+                stack.forEach(s=> {
+                    const e = s._validationErrors[0];
+                    const error = new InvalidObject(e._propertyName, e._errorMessage);
+                    validator.addError(error);
+                })
+                validator.updateParent();
+            } else {
+                window.location.replace('/owner/'+data.userId);
+            }
+        })
+        .catch(e=> {
+            console.log(e);
+        })
+        .finally(_=> {
+            $('#loader').hide();
+        });
+    });
+    </script>
+
+

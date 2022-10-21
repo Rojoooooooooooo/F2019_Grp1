@@ -1,0 +1,38 @@
+﻿@model PetParadise.Models.account_credential
+@ViewBag.Title = "Sample";
+
+<div class="container">
+    @using (Html.BeginForm("Sample", "Home", FormMethod.Post, new { @class="", @id = "myForm"}))
+    {
+        @Html.TextBoxFor(m => m.Username, new { @class = "form-control", @id = "uname"})
+        @Html.PasswordFor(m => m.Password, new { @class = "form-control", @id = "pword"})
+        
+        <button id="login" class="btn btn-primary" type="submit" >Login</button>
+    }
+
+</div>
+<script>
+    let username = document.querySelector("#uname");
+    let password = document.querySelector("#pword");
+
+    let form = document.querySelector("#myForm");
+
+    form.addEventListener("submit", (e) => {
+        console.log(username.value, password.value)
+        e.preventDefault();
+        const data = {
+            username: username.value,
+            password: username.value
+        }
+        fetch("/api/sample", {
+            method: "post",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(data)
+        })
+        .then(res=>res.json())
+        .then(data=>console.log(data))
+        .catch(e=>console.log(e));
+    });
+</script>

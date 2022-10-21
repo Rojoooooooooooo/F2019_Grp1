@@ -14,10 +14,10 @@
     <div id="validationNotes" class="w-100">
         <ul id="notes-container"></ul>
     </div>
-    <button class="btn btn-outline-dark sbg-dark fw-bold" id="loginBtn" type="submit" value="Login">Login</button>
+    <button class="btn btn-outline-dark sbg-dark fw-bold stext-lighter" id="loginBtn" type="submit" value="Login">Login</button>
 }
-<span>Or</span>
-@Html.ActionLink("Signup", "Signup", null, new { @class = "btn btn-outline-light sbg-base" })
+<span>or</span>
+@Html.ActionLink("Signup", "Signup", null, new { @class = "btn btn-outline-light sbg-base stext-darker fw-bold" })
 
 <script>
     const validator = new Validator("#notes-container");

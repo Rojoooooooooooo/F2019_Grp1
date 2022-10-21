@@ -10,6 +10,9 @@ namespace PetParadise
     {
         public static void Register(HttpConfiguration config)
         {
+            // enable cors
+            config.EnableCors();
+
             // Web API configuration and services
             config.SuppressDefaultHostAuthentication();
             config.Filters.Add(new HostAuthenticationFilter(

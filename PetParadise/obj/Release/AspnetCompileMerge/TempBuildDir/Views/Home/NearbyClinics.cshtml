@@ -1,0 +1,186 @@
+﻿<div class="w-100 vh-100 d-flex flex-row justify-content-center align-items-center stext-darker gap-4">
+
+    @* controls *@
+    <div class="w-25 h-100">
+        <form id="search-nearby" class="w-100 d-flex flex-column justify-content-center align-items-center gap-4">
+           
+             @* Range in kilometer *@
+            <div class="w-100 d-flex flex-column p-2 shadow-sm rounded-2">
+                <label for="range">Range in Km: <span id="range-placeholder">1</span></label>
+                <input id="range" type="range" step="1" value="1" min="0" max="5" class="form-range" />  
+            </div>
+            @* limit of results *@
+            <div class="w-100 p-2 shadow-sm rounded-2">
+                <label for="limit">Limit Results</label>
+                <input id="limit" type="number" min="0" max="25" pattern="^\d+$" class="form-control required" value="5" placeholder="Results limit" />  
+            </div>
+
+            @* Current location *@
+            <div class="w-100 d-flex flex-column p-2 shadow-sm rounded-2">
+                <input id="lat-holder" hidden />
+                <input id="lng-holder" hidden />
+
+                <button onclick="myLocationHandler()" type="button" class="btn btn-outline-light sbg-dark"><i class="fa-solid fa-location-crosshairs"></i> Activate Location / GPS</button>
+               
+                 <p class="fw-bold">Your current location: <span id="my-location-holder" class="fst-italic"></span></p>
+               
+                 <span class="stext-dark"><i class="fa-solid fa-circle-info"></i> We use this feature to give approximate distance between you and the clinics</span>
+            </div>
+
+            @* submit *@
+            <div class="w-100 d-flex flex-column p-2 shadow-sm rounded-2">
+                <button type="submit" class="btn btn-outline-light sbg-darker"><i class="fa-solid fa-magnifying-glass-location"></i> Find Nearby Clinics</button>
+                <button id="reset-direction" type="button" class="btn btn-outline-dark">Reset</button>
+            </div>
+        </form>
+    </div>
+
+    @* map, results *@
+    <div class="w-75 h-100 d-flex flex-column justify-content-start align-items-start gap-4">
+
+        @* map *@
+        <div class="w-100 flex-grow-1 d-flex flex-row">
+            <div id="map-canvas" class="flex-grow-1 w-75 rounded-2"></div>
+            <div class="w-25 flex-grow-1 p-4 sbg-light stext-darker">
+                <p class="fw-bold fs-6"><i class="fa-solid fa-a"></i> From your location: <span class="fw-normal fst-italic" id="from-location-holder"></span></p>
+                <p class="fw-bold fs-6"><i class="fa-solid fa-b"></i> To: <span class="fw-normal" id="clinic-name-holder"></span> <span class="fw-normal" id="to-location-holder"></span></p>
+                <p class="fw-bold fs-6"><i class="fa-solid fa-car"></i> Travel Distance: <span class="fw-normal" id="distance-holder"></span></p>
+                <p class="fw-bold fs-6"><i class="fa-solid fa-clock"></i> Duration: <span class="fw-normal" id="duration-holder"></span></p>
+            </div>
+        </div>
+        
+        @* results *@
+        
+        <div id="result-container" class="w-75 flex-grow-1 d-flex flex-column gap-2 justify-content-start align-items-start">
+        </div>
+    </div>
+</div>
+
+<script>
+
+    let map, direction;
+
+    function myLocationHandler() {
+        MapManager.getBrowserLocation((res) => {
+            const { latitude, longitude } = res.coords
+            $("#lat-holder").val(latitude);
+            $("#lng-holder").val(longitude);
+            map.getGeocodePosition({ latLng: new google.maps.LatLng(latitude, longitude) }, (res) => {
+                console.log(res);
+                $("#my-location-holder").text(res[0].formatted_address);
+            }, ()=>{console.log("location not found")})
+            map.setPosition(new google.maps.LatLng(latitude, longitude));
+        })
+    }
+
+    function initMap() {
+        
+        let location = new google.maps.LatLng(0,0);
+
+        const mapOptions = {
+            center: location,
+            zoom: 50,
+            mapTypeId: "roadmap"
+        }
+        map = new MapManager(document.getElementById("map-canvas"), mapOptions);
+        map.setPosition(location);
+
+        const marker = map.getMarker();
+        google.maps.event.addListener(marker, "dragend", () => {
+            const pos = {
+                lat: marker.getPosition().lat(),
+                lng: marker.getPosition().lng()
+            }
+
+            map.setPosition(pos);
+            map.getGeocodePosition(null, (res) => {
+                $("#my-location-holder").text(res[0].formatted_address);
+                $("#from-location-holder").text(res[0].formatted_address);
+            }, ()=>{})
+
+            $("#lat-holder").val(pos.lat);
+            $("#lng-holder").val(pos.lng);
+
+            $("#latitude").val(pos.lat);
+            $("#longitude").val(pos.lng);
+        });
+
+    }
+    
+    $(document).ready(()=>{
+        $("#range").on("change", e => {
+            $("#range-placeholder").text(e.target.value);
+        })
+
+        let requestCounter = 0;
+
+        $("#search-nearby").on("submit", (e) => {
+            e.preventDefault();
+            if(requestCounter > 0) return;
+            
+            requestCounter++;
+
+            
+            $("#result-container").html("");
+
+            const range = $("#range").val();
+            const limit = $("#limit").val();
+            const pos = {
+                lat: $("#lat-holder").val(),
+                lng: $("#lng-holder").val()
+            };
+            if(pos.lat == "" || pos.lng == "") return alert("Please activate location for this feature to work. Thank you!");
+            
+            const latlng = `${pos.lat},${pos.lng}`;
+
+            
+
+            fetch(`/findnearby?latlng=${latlng}&range=${range}&limit=${limit}`,
+                {
+                    method:"GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": "Bearer " + getSessionToken() 
+                    }
+                })
+                .then(res=>res.json())
+                .then(data=>{
+                    requestCounter = 0; // reset counter
+
+                    $("#result-container").append(`<h4>Nearby clinics found: <span id="nearby-count">${data.length}</span></h4>`)
+                    
+                    if(data.length > 0 ){
+                        
+                        data.forEach(c=>{
+                            const template = resultTemplate(c.Id, c.ClinicName, c.Latitude, c.Longitude);
+                            $("#result-container").append(template);
+
+                            // bind onclick listener
+                            $("#result-"+c.Id).click(()=>{
+                                direction = new DirectionsManager(map.getMap());
+                                $("#clinic-name-holder").text(c.ClinicName);
+
+                                direction.calcRoute(new google.maps.LatLng(pos.lat, pos.lng), new google.maps.LatLng(c.Latitude, c.Longitude))
+                                map.getGeocodePosition({latLng: new google.maps.LatLng(pos.lat, pos.lng)}, (res)=>{
+                                    $("#my-location-holder").text(res[0].formatted_address);
+                                }, 
+                                ()=>{})
+                            })
+                        })
+
+                        $("#reset-direction").on("click",e=>{
+                            direction.clear();
+                        })
+
+                    }
+                }); // end of fetch
+        }); // end of search onclick
+
+    }); // end of ready
+    
+
+    function resultTemplate(id, clinicName, lat, lng){
+        return `<div id="result-${id}" data-lat="${lat}" data-lng="${lng}" class="w-100 d-flex flex-row justify-content-start align-items-center shadow-sm p-2 border-start border-5 border-success gap-2" role="button"><img id="profile-photo" class="rounded-circle" alt="user" data-lat="${lat}" data-lng="${lng}" src="https://ui-avatars.com/api/?background=random&bold=true&name=${clinicName}" style="height:36px;width:36px"><div><h5 class="fw-bold">${clinicName}</h5><a class="link-dark stext-darker" href="/clinic/${id}">View profile</a></div></div>`;
+    }
+</script>
+

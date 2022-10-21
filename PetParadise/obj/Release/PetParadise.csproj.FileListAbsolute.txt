@@ -182,3 +182,6 @@ D:\Dev\c-sharp\updated\F2019_Grp1\PetParadise\obj\Release\PetParadise.Properties
 D:\Dev\c-sharp\updated\F2019_Grp1\PetParadise\obj\Release\PetParadise.csproj.GenerateResource.Cache
 D:\Dev\c-sharp\updated\F2019_Grp1\PetParadise\obj\Release\PetParadise.dll
 D:\Dev\c-sharp\updated\F2019_Grp1\PetParadise\obj\Release\PetParadise.pdb
+D:\Dev\c-sharp\updated\F2019_Grp1\PetParadise\bin\System.Web.Cors.dll
+D:\Dev\c-sharp\updated\F2019_Grp1\PetParadise\bin\System.Web.Http.Cors.dll
+D:\Dev\c-sharp\updated\F2019_Grp1\PetParadise\bin\System.Web.Http.Cors.xml

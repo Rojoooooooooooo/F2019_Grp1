@@ -1,17 +1,16 @@
-﻿<div class="navbar navbar-dark h-100">
+﻿<div class="w-100 navbar navbar-dark h-100">
     <div class="container-fluid h-100 d-flex flex-row justify-content-start align-items-center">
         <div class="navbar-brand h-100 d-flex flex-row gap-2" role="button" onclick="window.location.replace('/')">
-            <img src="~/Images/pet-paradise-logo.png" style="height:100%">
-            <h1 class="navbar-brand h3 fw-bolder stext-lighter">PetParadise</h1>
+            <img src="~/Images/pet-paradise-flat-circular.png" style="height:100%">
+            @if (ViewBag.EnableSearchMenu)
+            {
+                <h1 class="navbar-brand h5 fw-bolder stext-lighter">Pet Dashboard</h1>
+            }
         </div>
-        
+
         @if (ViewBag.EnableSearchMenu)
         {
-            <div id="pet-nav-controls" class="w-50 d-flex flex-row gap-4">
-                <form id="searchForm" class="flex-grow-1 d-flex flex-row">
-                    <input id="search-input" type="search" name="search" autocomplete="on" class="form-control flex-grow-1" />
-                    <button type="submit" class="flex-grow-1 btn btn-secondary">Search</button>
-                </form>
+            <div id="pet-nav-controls" class="w-50 d-flex flex-row gap-2">
                 <ul class="flex-grow-1 nav navbar-nav d-flex flex-row gap-3">
                     <li class="nav-item" role="button">
                         <a href="/pet/@ViewBag.PetId" class="nav-link @(ViewContext.RouteData.Values["Action"].ToString() == "Feeds" ? "active" : "")">Feeds</a>
@@ -23,6 +22,11 @@
                         <a href="/profile/@ViewBag.PetId" class="nav-link @(ViewContext.RouteData.Values["Action"].ToString() == "Profile" ? "active" : "")">Profile</a>
                     </li>
                 </ul>
+
+                <form id="searchForm" class="flex-grow-1 d-flex flex-row gap-2 justify-content-center align-items-end">
+                    <input id="search-input" type="search" placeholder="Search for pet or clinic" name="search" autocomplete="on" class="form-control flex-grow-1" />
+                    <button type="submit" class="flex-grow-1 h4" style="background: none; border:none;"><i class="fa-solid fa-magnifying-glass stext-lighter"></i></button>
+                </form>
             </div>
         }
     </div>
@@ -33,12 +37,14 @@
                 <li class="nav-item d-flex flex-row justify-content-center align-items-center gap-1">
                     <span class="stext-lighter">Welcome back, </span>
                     <a class="nav-link text-decoration-underline fw-bold" role="button">@ViewBag.Username</a>
-                    <button id="logout" class="btn btn-outline-danger ms-2 fw-bold stext-darker" role="button">Logout</button>
+                    <button id="logout" class="btn btn-outline-warning ms-2 fw-bold stext-lighter" role="button">Logout</button>
                 </li>
             </ul>
         </div>
     }
 </div>
+
+
 
 <script>
 

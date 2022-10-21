@@ -19,9 +19,11 @@ using PetParadise.Extras.Extensions.HttpRequestHeaders;
 using System.Data.Entity;
 using PetParadise.Extras.Extensions.Models;
 using PetParadise.Extras.Error;
+using System.Web.Http.Cors;
 
 namespace PetParadise.Controllers.ApiControllers
 {   
+    [EnableCors(origins: "*", headers: "*", methods:"*")]
     public class AuthenticationController : ApiController
     {
         [AllowAnonymous]

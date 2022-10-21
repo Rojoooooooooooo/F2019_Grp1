@@ -46,8 +46,6 @@
 </div>
 <script>
 
-
-
     function giveTreat(e) {
         let postId = e.target.getAttribute("data-postid");
         let likesHolder = document.querySelector(`#like-${postId} > span`).firstChild;
@@ -106,9 +104,10 @@
             })
             .then(res=>res.json())
             .then(comment=>{
-                const date = new Date().toLocaleString("en");
+                const date = new Date();
                 const commentBox = PostBox.commentBoxTemplate(comment.ProfileId, comment.Id, comment.Name, comment.CommentContent, date);
                 $("#comment-container").append(commentBox);
+                $("comment-content").html = "";
             })
         })
     })

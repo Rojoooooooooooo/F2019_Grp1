@@ -439,7 +439,7 @@ namespace PetParadise.Controllers.ApiControllers
                     var likeExists = post.profile_post_like.Any(i => i.ProfileId.Equals(petid));
 
                     if (likeExists) {
-                        var existingLike = post.profile_post_like.Single(i=>i.ProfileId.Equals(petid));
+                        var existingLike = post.profile_post_like.FirstOrDefault(i=>i.ProfileId.Equals(petid));
                         db.profile_post_like.Remove(existingLike);
                         await db.SaveChangesAsync();
 
@@ -488,6 +488,7 @@ namespace PetParadise.Controllers.ApiControllers
             catch (Exception e)
             {
                 Debug.WriteLine(e.StackTrace);
+                
                 return InternalServerError();
             }
         }

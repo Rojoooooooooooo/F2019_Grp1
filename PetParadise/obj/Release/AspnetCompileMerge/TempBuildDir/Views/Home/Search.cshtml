@@ -1,0 +1,22 @@
+﻿@using PetParadise.Models.Body
+@{ 
+    var result = ViewData["result"] as SearchModel[];
+}
+<div class="w-100 d-flex flex-column justify-content-center align-items-center p-4">
+    <div>
+        <h3>Search Results for: @ViewBag.Query</h3>
+        <p>Found @result.Length results</p>
+    </div>
+   
+
+    @{ 
+        for (int i = 0; i < result.Length; i++) {
+            var data = result[i] as SearchModel;
+            
+            <div class="w-50 d-flex flex-row justify-content-start align-items-center shadow gap-2 p-4">
+                <img id="profile-photo" class="rounded-circle" alt="user" src="https://ui-avatars.com/api/?background=random&bold=true&name=@data.Name" style="height:48px;width:48px;" />
+                <a href=@(data.Type == 2 ? "/clinic/"+data.Id : "/profile/"+data.Id ) class="fw-bold fs-5 link-dark">@data.Name</a>
+            </div>
+        }
+    }
+</div>
