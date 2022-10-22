@@ -20,10 +20,10 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>09/16/2022 20:39:40</publishTime>
     </File>
     <File Include="bin/App_global.asax.compiled">
-      <publishTime>09/16/2022 22:30:52</publishTime>
+      <publishTime>10/22/2022 02:51:38</publishTime>
     </File>
     <File Include="bin/App_global.asax.dll">
-      <publishTime>09/16/2022 22:30:48</publishTime>
+      <publishTime>10/22/2022 02:51:36</publishTime>
     </File>
     <File Include="bin/BCrypt.Net-Next.dll">
       <publishTime>09/16/2022 20:39:40</publishTime>
@@ -98,7 +98,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>09/16/2022 20:39:42</publishTime>
     </File>
     <File Include="bin/PetParadise.dll">
-      <publishTime>09/16/2022 21:36:06</publishTime>
+      <publishTime>10/22/2022 02:51:20</publishTime>
     </File>
     <File Include="bin/roslyn/csc.exe">
       <publishTime>09/16/2022 20:39:42</publishTime>
@@ -145,8 +145,14 @@ by editing this MSBuild file. In order to learn more about this please visit htt
     <File Include="bin/System.Net.Http.Formatting.dll">
       <publishTime>09/16/2022 20:39:40</publishTime>
     </File>
+    <File Include="bin/System.Web.Cors.dll">
+      <publishTime>05/27/2022 23:41:44</publishTime>
+    </File>
     <File Include="bin/System.Web.Helpers.dll">
       <publishTime>09/16/2022 20:39:40</publishTime>
+    </File>
+    <File Include="bin/System.Web.Http.Cors.dll">
+      <publishTime>05/27/2022 23:42:16</publishTime>
     </File>
     <File Include="bin/System.Web.Http.dll">
       <publishTime>09/16/2022 20:39:40</publishTime>
@@ -320,7 +326,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>09/16/2022 20:39:40</publishTime>
     </File>
     <File Include="Content/Site.css">
-      <publishTime>09/16/2022 20:41:04</publishTime>
+      <publishTime>10/22/2022 01:50:44</publishTime>
     </File>
     <File Include="Content/star-rating.css">
       <publishTime>09/16/2022 20:39:40</publishTime>
@@ -337,17 +343,26 @@ by editing this MSBuild file. In order to learn more about this please visit htt
     <File Include="Images/loader.svg">
       <publishTime>09/16/2022 20:39:40</publishTime>
     </File>
+    <File Include="Images/pet-paradise-flat-circular.png">
+      <publishTime>10/15/2022 19:51:50</publishTime>
+    </File>
+    <File Include="Images/pet-paradise-flat.png">
+      <publishTime>10/15/2022 19:46:38</publishTime>
+    </File>
     <File Include="Images/pet-paradise-logo.png">
       <publishTime>09/16/2022 20:39:40</publishTime>
+    </File>
+    <File Include="Images/pet-paradise-shadow.png">
+      <publishTime>10/15/2022 19:46:36</publishTime>
     </File>
     <File Include="Models/MainDBModel.edmx.diagram">
       <publishTime>09/16/2022 20:39:40</publishTime>
     </File>
     <File Include="packages.config">
-      <publishTime>09/16/2022 20:39:40</publishTime>
+      <publishTime>10/17/2022 01:35:00</publishTime>
     </File>
     <File Include="PrecompiledApp.config">
-      <publishTime>09/16/2022 22:30:32</publishTime>
+      <publishTime>10/22/2022 02:51:30</publishTime>
     </File>
     <File Include="Scripts/access.js">
       <publishTime>09/16/2022 20:39:40</publishTime>
@@ -416,7 +431,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>09/16/2022 20:39:40</publishTime>
     </File>
     <File Include="Scripts/PostBox/PostBox.js">
-      <publishTime>09/16/2022 21:33:16</publishTime>
+      <publishTime>10/22/2022 02:11:12</publishTime>
     </File>
     <File Include="Scripts/star-rating.js">
       <publishTime>09/16/2022 20:39:40</publishTime>
@@ -434,7 +449,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>09/16/2022 20:39:40</publishTime>
     </File>
     <File Include="Views/Account/Clinic.cshtml">
-      <publishTime>09/16/2022 20:39:40</publishTime>
+      <publishTime>10/22/2022 02:27:28</publishTime>
     </File>
     <File Include="Views/Account/CreateClinic.cshtml">
       <publishTime>09/16/2022 20:39:40</publishTime>
@@ -443,28 +458,28 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>09/16/2022 20:39:40</publishTime>
     </File>
     <File Include="Views/Account/PetDashboard.cshtml">
-      <publishTime>09/16/2022 20:39:40</publishTime>
+      <publishTime>10/22/2022 02:06:26</publishTime>
     </File>
     <File Include="Views/Home/Display.cshtml">
       <publishTime>09/16/2022 20:39:40</publishTime>
     </File>
     <File Include="Views/Home/Feeds.cshtml">
-      <publishTime>09/16/2022 20:39:40</publishTime>
+      <publishTime>10/22/2022 02:26:40</publishTime>
     </File>
     <File Include="Views/Home/Index.cshtml">
       <publishTime>09/16/2022 20:39:40</publishTime>
     </File>
     <File Include="Views/Home/Login.cshtml">
-      <publishTime>09/16/2022 20:39:40</publishTime>
+      <publishTime>10/22/2022 01:59:08</publishTime>
     </File>
     <File Include="Views/Home/NearbyClinics.cshtml">
       <publishTime>09/16/2022 20:39:40</publishTime>
     </File>
     <File Include="Views/Home/Post.cshtml">
-      <publishTime>09/16/2022 20:39:40</publishTime>
+      <publishTime>10/17/2022 22:18:20</publishTime>
     </File>
     <File Include="Views/Home/Profile.cshtml">
-      <publishTime>09/16/2022 20:39:40</publishTime>
+      <publishTime>10/22/2022 02:27:00</publishTime>
     </File>
     <File Include="Views/Home/Search.cshtml">
       <publishTime>09/16/2022 20:39:40</publishTime>
@@ -479,7 +494,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>09/16/2022 20:39:40</publishTime>
     </File>
     <File Include="Views/Shared/_Header.cshtml">
-      <publishTime>09/16/2022 20:39:40</publishTime>
+      <publishTime>10/22/2022 02:48:56</publishTime>
     </File>
     <File Include="Views/Shared/_Layout.cshtml">
       <publishTime>09/16/2022 21:05:04</publishTime>
@@ -494,7 +509,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>09/16/2022 20:39:40</publishTime>
     </File>
     <File Include="Web.config">
-      <publishTime>09/16/2022 22:30:28</publishTime>
+      <publishTime>10/22/2022 02:51:28</publishTime>
     </File>
   </ItemGroup>
 </Project>

@@ -122,8 +122,10 @@
 
     function loadPosts(filter) {
         const petId = window.location.pathname.split("/")[2];
-        $("#post-basis").text("")
-        $("#post-container").html("")
+
+        $("#post-basis").text("");
+        $("#post-container").html(""); // reset posts
+
         switch (filter) {
 
             case "following": {

@@ -8,7 +8,7 @@ namespace PetParadise.Extras
 {
     public static class PasswordManager
     {
-        private static int cost = 16;
+        private static int cost = 12;
         public static async Task<string> HashAsync(string password)
         {
 

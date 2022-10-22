@@ -1,16 +1,16 @@
-﻿<div class="w-100 navbar navbar-dark h-100">
+﻿<div class="w-100 h-100 navbar navbar-dark">
     <div class="container-fluid h-100 d-flex flex-row justify-content-start align-items-center">
-        <div class="navbar-brand h-100 d-flex flex-row gap-2" role="button" onclick="window.location.replace('/')">
+        <div class="navbar-brand h-100 d-flex flex-row gap-2 align-items-center" role="button" onclick="window.location.replace('/')">
             <img src="~/Images/pet-paradise-flat-circular.png" style="height:100%">
             @if (ViewBag.EnableSearchMenu)
             {
-                <h1 class="navbar-brand h5 fw-bolder stext-lighter">Pet Dashboard</h1>
+                <h5 class="fw-bolder stext-lighter">Pet Dashboard</h5>
             }
         </div>
 
         @if (ViewBag.EnableSearchMenu)
         {
-            <div id="pet-nav-controls" class="w-50 d-flex flex-row gap-2">
+            <div id="pet-nav-controls" class="w-50 d-flex flex-row gap-2 flex-wrap">
                 <ul class="flex-grow-1 nav navbar-nav d-flex flex-row gap-3">
                     <li class="nav-item" role="button">
                         <a href="/pet/@ViewBag.PetId" class="nav-link @(ViewContext.RouteData.Values["Action"].ToString() == "Feeds" ? "active" : "")">Feeds</a>
